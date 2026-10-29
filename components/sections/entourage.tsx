@@ -98,8 +98,9 @@ const roleTitleStyle: React.CSSProperties = {
 }
 
 const ROMAN_NUMERAL = /^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV)$/i
-const SPECIAL_GLYPH = /^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|&|\+|[.’'`´-]|—|–)$/i
-const SPECIAL_SPLIT = /(\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV)\b|&|\+|[.’'`´-]|—|–)/g
+// Roman numerals, digits and punctuation switch to a different font (The Seasons has no clean glyphs for them)
+const SPECIAL_GLYPH = /^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|&|\+|\d+|[.’'`´,()\/:;!?"“”-]|—|–)$/i
+const SPECIAL_SPLIT = /(\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV)\b|&|\+|\d+|[.’'`´,()\/:;!?"“”-]|—|–)/g
 const DASH_GLYPH = /^[-—–]$/
 const PLUS_GLYPH = /^\+$/
 
@@ -586,6 +587,7 @@ const SINGLE_COLUMN_SECTIONS = new Set([
   "Bible Bearer",
   "Flower Girls",
   "Presider",
+  "Principal Sponsor",
 ])
 
 const ROLE_CATEGORY_DISPLAY_TITLES: Record<string, string> = {
@@ -626,6 +628,9 @@ function normalizeRoleCategory(category: string): string {
   }
   const alias = honorAliases[normalized.toLowerCase()]
   if (alias) return alias
+  if (/^principal sponsors?$/i.test(normalized)) return "Principal Sponsor"
+  if (/^(?:siblings?|family) of the groom$/i.test(normalized)) return "Family of the Groom"
+  if (/^(?:siblings?|family) of the bride$/i.test(normalized)) return "Family of the Bride"
   if (/^little love bearers?$/i.test(normalized)) return "Little Love Bearer"
   if (/^candle bearers?$/i.test(normalized)) return "Candle Bearer"
   if (/^ch?ord sponsors?$/i.test(normalized)) return "Cord Sponsors"
@@ -1029,40 +1034,8 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                             <GroupDivider />
                           </div>
                         )}
-                        {hasGroomParents && hasBrideParents && (
-                          <TwoColumnLayout leftTitle="Parents of the Groom" rightTitle="Parents of the Bride">
-                            {(() => {
-                              const leftArr = sortParents(parentsGroom)
-                              const rightArr = sortParents(parentsBride)
-                              const maxLen = Math.max(leftArr.length, rightArr.length)
-                              const rows = []
-                              for (let i = 0; i < maxLen; i++) {
-                                const left = leftArr[i]
-                                const right = rightArr[i]
-                                rows.push(
-                                  <React.Fragment key={`parents-row-${i}`}>
-                                    <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                      {left ? (
-                                        <NameItem member={left} align="right" showRole={false} />
-                                      ) : (
-                                        <div className="py-0.5" />
-                                      )}
-                                    </div>
-                                    <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                      {right ? (
-                                        <NameItem member={right} align="left" showRole={false} />
-                                      ) : (
-                                        <div className="py-0.5" />
-                                      )}
-                                    </div>
-                                  </React.Fragment>
-                                )
-                              }
-                              return rows
-                            })()}
-                          </TwoColumnLayout>
-                        )}
-                        {hasGroomParents && !hasBrideParents && (
+                        {/* Parents stack in one centred column: the groom's, then the bride's */}
+                        {hasGroomParents && (
                           <TwoColumnLayout singleTitle="Parents of the Groom" centerContent={true}>
                             {sortParents(parentsGroom).map((member, idx) => (
                               <div
@@ -1074,7 +1047,8 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                             ))}
                           </TwoColumnLayout>
                         )}
-                        {!hasGroomParents && hasBrideParents && (
+                        {hasBrideParents && (
+                          <div className={hasGroomParents ? "mt-3 sm:mt-5 md:mt-6" : ""}>
                           <TwoColumnLayout singleTitle="Parents of the Bride" centerContent={true}>
                             {sortParents(parentsBride).map((member, idx) => (
                               <div
@@ -1085,6 +1059,7 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                               </div>
                             ))}
                           </TwoColumnLayout>
+                          </div>
                         )}
 
                         {/* Officiating Minister section - displayed above Principal Sponsors */}
@@ -1111,42 +1086,23 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                           <div key="SponsorsAfterParents">
                             <div className="flex justify-center py-1 sm:py-2 md:py-2.5 mb-1.5 sm:mb-2.5 md:mb-3" />
                             <TwoColumnLayout singleTitle="Principal Sponsors" centerContent={true}>
-                              {sponsors.map((sponsor, idx) => (
-                                <React.Fragment key={`sponsor-row-${idx}`}>
-                                  <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                    {sponsor.malePrincipalSponsor ? (
+                              {/* One centred column: each pair's names one under the other */}
+                              {sponsors.flatMap((sponsor, idx) =>
+                                [sponsor.malePrincipalSponsor, sponsor.femalePrincipalSponsor]
+                                  .filter((name) => name && name.trim())
+                                  .map((name, j) => (
+                                    <div
+                                      key={`sponsor-${idx}-${j}`}
+                                      className="col-span-2 flex justify-center min-w-0 overflow-hidden px-0.5 sm:px-1"
+                                    >
                                       <NameItem
-                                        member={{
-                                          name: sponsor.malePrincipalSponsor,
-                                          roleCategory: "",
-                                          roleTitle: "",
-                                          email: "",
-                                        }}
-                                        align="right"
+                                        member={{ name, roleCategory: "", roleTitle: "", email: "" }}
+                                        align="center"
                                         showRole={false}
                                       />
-                                    ) : (
-                                      <div className="py-0.5 sm:py-1 md:py-1.5" />
-                                    )}
-                                  </div>
-                                  <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                    {sponsor.femalePrincipalSponsor ? (
-                                      <NameItem
-                                        member={{
-                                          name: sponsor.femalePrincipalSponsor,
-                                          roleCategory: "",
-                                          roleTitle: "",
-                                          email: "",
-                                        }}
-                                        align="left"
-                                        showRole={false}
-                                      />
-                                    ) : (
-                                      <div className="py-0.5 sm:py-1 md:py-1.5" />
-                                    )}
-                                  </div>
-                                </React.Fragment>
-                              ))}
+                                    </div>
+                                  )),
+                              )}
                             </TwoColumnLayout>
                           </div>
                         )}
@@ -1236,27 +1192,48 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                             <GroupDivider />
                           </div>
                         )}
-                        <TwoColumnLayout leftTitle="Family of the Groom" rightTitle="Family of the Bride">
-                          {(() => {
-                            const maxLen = Math.max(familyGroom.length, familyBride.length)
-                            const rows = []
-                            for (let i = 0; i < maxLen; i++) {
-                              const left = familyGroom[i]
-                              const right = familyBride[i]
-                              rows.push(
-                                <React.Fragment key={`family-row-${i}`}>
-                                  <div key={`family-groom-${i}`} className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                    {left ? <NameItem member={left} align="right" /> : <div className="py-0.5" />}
-                                  </div>
-                                  <div key={`family-bride-${i}`} className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
-                                    {right ? <NameItem member={right} align="left" /> : <div className="py-0.5" />}
-                                  </div>
-                                </React.Fragment>
-                              )
-                            }
-                            return rows
-                          })()}
-                        </TwoColumnLayout>
+                        {/* Siblings of the Groom: two columns of names */}
+                        {familyGroom.length > 0 && (
+                          <TwoColumnLayout singleTitle="Family of the Groom" centerContent={true}>
+                            {familyGroom.map((member, idx) => (
+                              <div
+                                key={`family-groom-${idx}-${member.name}`}
+                                className={`min-w-0 overflow-hidden px-0.5 sm:px-1 md:px-1.5 ${
+                                  // A lone last name sits centred under the two columns
+                                  familyGroom.length % 2 === 1 && idx === familyGroom.length - 1
+                                    ? "col-span-2 flex justify-center"
+                                    : ""
+                                }`}
+                              >
+                                <NameItem
+                                  member={member}
+                                  align={
+                                    familyGroom.length % 2 === 1 && idx === familyGroom.length - 1
+                                      ? "center"
+                                      : idx % 2 === 0
+                                        ? "right"
+                                        : "left"
+                                  }
+                                />
+                              </div>
+                            ))}
+                          </TwoColumnLayout>
+                        )}
+                        {/* Sibling of the Bride: one centred column */}
+                        {familyBride.length > 0 && (
+                          <div className={familyGroom.length > 0 ? "mt-3 sm:mt-5 md:mt-6" : ""}>
+                            <TwoColumnLayout singleTitle="Family of the Bride" centerContent={true}>
+                              {familyBride.map((member, idx) => (
+                                <div
+                                  key={`family-bride-${idx}-${member.name}`}
+                                  className="col-span-2 flex justify-center min-w-0 overflow-hidden px-0.5 sm:px-1"
+                                >
+                                  <NameItem member={member} align="center" />
+                                </div>
+                              ))}
+                            </TwoColumnLayout>
+                          </div>
+                        )}
                       </div>
                     )
                   }
@@ -1686,7 +1663,8 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                         if (SINGLE_COLUMN_SECTIONS.has(category) || members.length <= 2) {
                           return (
                             <div className="col-span-full">
-                              <div className="flex flex-col items-center gap-5 sm:gap-6">
+                              {/* Long single-column lists (e.g. Principal Sponsors) sit closer together */}
+                              <div className={`flex flex-col items-center ${members.length > 3 ? "gap-1 sm:gap-1.5" : "gap-5 sm:gap-6"}`}>
                                 {members.map((member, idx) => (
                                   <NameItem key={`${category}-${idx}-${member.name}`} member={member} align="center" />
                                 ))}
@@ -1734,7 +1712,8 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                         if (SINGLE_COLUMN_SECTIONS.has(category) || members.length <= 2) {
                           return (
                             <div className="col-span-full">
-                              <div className="flex flex-col items-center gap-5 sm:gap-6">
+                              {/* Long single-column lists (e.g. Principal Sponsors) sit closer together */}
+                              <div className={`flex flex-col items-center ${members.length > 3 ? "gap-1 sm:gap-1.5" : "gap-5 sm:gap-6"}`}>
                                 {members.map((member, idx) => (
                                   <NameItem key={`${category}-${idx}-${member.name}`} member={member} align="center" />
                                 ))}
