@@ -177,6 +177,12 @@ const ICONS: Record<TimelineIconName, TimelineIcon> = {
   cocktail: CocktailIcon,
   fireworks: FireworksIcon,
   dance: DanceIcon,
+  arch: ArchIcon,
+  crescent: CrescentIcon,
+  camera: CameraIcon,
+  teacup: TeacupIcon,
+  lantern: LanternIcon,
+  feast: FeastIcon,
 }
 
 export function WeddingTimeline() {
@@ -601,3 +607,76 @@ function DanceIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
+
+// Arched doorway — arrival
+function ArchIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M7 28V14a9 9 0 0 1 18 0v14" />
+      <path d="M12 28v-9a4 4 0 0 1 8 0v9" />
+      <path d="M4 28h24" />
+      <path d="M16 5V3" />
+    </svg>
+  )
+}
+
+// Crescent and star — the Nikkah
+function CrescentIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M19 6.5A10 10 0 1 0 25.5 22 8 8 0 1 1 19 6.5Z" />
+      <path d="m24 9 .9 1.9 2.1.3-1.5 1.5.4 2.1-1.9-1-1.9 1 .4-2.1-1.5-1.5 2.1-.3L24 9Z" />
+    </svg>
+  )
+}
+
+// Camera — photo session
+function CameraIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M5 11h5l2-3h8l2 3h5v14H5V11Z" />
+      <circle cx="16" cy="17.5" r="4.5" />
+      <path d="M23.5 14h1" />
+    </svg>
+  )
+}
+
+// Teacup — refreshments
+function TeacupIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M7 14h15v4a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7v-4Z" />
+      <path d="M22 15.5h1.5a2.5 2.5 0 0 1 0 5H22" />
+      <path d="M5 28h20" />
+      <path d="M12 6c-1 1.5 1 2.5 0 4" />
+      <path d="M17 6c-1 1.5 1 2.5 0 4" />
+    </svg>
+  )
+}
+
+// Lantern (fanous) — walimah program
+function LanternIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M16 3v3" />
+      <path d="M11 10l5-4 5 4" />
+      <path d="M10 10h12v14H10z" />
+      <path d="M13.5 24v-7a2.5 2.5 0 0 1 5 0v7" />
+      <path d="M12 24l1 4h6l1-4" />
+    </svg>
+  )
+}
+
+// Plate, fork and knife — walimah feast
+function FeastIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke={iconStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="16" cy="16" r="7.5" />
+      <circle cx="16" cy="16" r="4.5" />
+      <path d="M5 6v6a2 2 0 0 0 2 2v12" />
+      <path d="M5 6v4M7 6v4M9 6v6a2 2 0 0 1-2 2" />
+      <path d="M27 26V6c-2 1-3 4-3 8h3" />
+    </svg>
+  )
+}
+

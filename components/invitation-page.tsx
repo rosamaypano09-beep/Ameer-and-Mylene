@@ -86,7 +86,7 @@ const sectionsRevealVariants = {
 }
 
 /** WebGL Silk needs a hex color. */
-const SILK_COLOR = "#012E4B"
+const SILK_COLOR = "#556B2F"
 
 type InvitationPageProps = {
   /** Which principal-sponsor sheet the entourage shows (googleAPI.sponsorsInviteOne / Two) */
@@ -258,34 +258,26 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
                 animate={cinematicEntry ? "show" : detailsVisible ? "show" : "hidden"}
                 transition={cinematicEntry ? undefined : { duration: 0.01 }}
               >
-               {/* <Welcome /> */}
-              {/* <CoupleVideo /> */}
-              {/* LoveStory paints its own sky (an outer PlainBubbles would cover it) */}
-              {/* <LoveStory /> */}
+               <Welcome /> 
+               {/* <CoupleVideo />  */}
+             <LoveStory /> 
               <Countdown />
               <Details />
-              <Registry />
+              <Messages />
+
               {showEntourage && <Entourage sponsorsList={sponsorsList} />}
               <GuestList />
-              <Messages />
-              <SnapShare />
+              <BookOfGuests /> 
+              <WeddingTimeline /> 
+              <FAQ /> 
+              <Registry />
               <WeddingPlaylist />
-              {/* <Gallery /> */}
+              <SnapShare />
 
+              {/* <Gallery />  */}
               {/* Details includes the Attire Guidelines and Gentle Reminders */}
  
-              {/* <WeddingTimeline /> */}
-
-
-              {/* <BookOfGuests /> */}
-
-              {/* <FAQ /> */}
-
-              {/* <MessageVideo /> */}
-
-
-
-
+ {/* <MessageVideo />  */}
               <SeeYouThere />
               <Footer />
               </motion.div>

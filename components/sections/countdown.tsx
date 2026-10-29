@@ -1,20 +1,30 @@
 "use client"
 
-import Image from "next/image"
+import { useEffect, useState } from "react"
+import { Section } from "@/components/section"
+import { motion } from "motion/react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
-import { motion, useReducedMotion, type Variants } from "motion/react"
-import { Section } from "@/components/section"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
 import { useSiteConfig } from "@/hooks/use-site-config"
-import { siteConfig as defaultSiteConfig } from "@/content/site"
+import Counter from "@/components/Counter"
+import Image from "next/image"
+import { parseWeddingDate } from "@/lib/wedding-date"
 
-// Verse & invitation: monogram → Ecclesiastes 3:11 → invitation message → couple's names.
-// (File and section id keep the old "countdown" name so existing #countdown links still work.)
+interface TimeLeft {
+  days: number
+  hours: number
+  minutes: number
+  seconds: number
+}
+
+interface CountdownUnitProps {
+  value: number
+  label: string
+}
 
 const cinzel = Cinzel({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["700"],
 })
 
 const theSeasons = localFont({
@@ -29,168 +39,317 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-// Palette lives in globals.css → motif / welcome tokens. Text sits on a white card in navy ink,
-// so it stays readable where the sky behind fades from navy to blush.
-const C = {
-  title: "var(--color-welcome-navy)",
-  body: "color-mix(in srgb, var(--color-welcome-navy) 88%, white)",
-  // Deeper rose than the motif accent so small text holds contrast on white
-  cite: "color-mix(in srgb, var(--color-motif-accent) 55%, var(--color-welcome-navy))",
-  script: "var(--color-motif-accent)",
-  accent: "var(--color-motif-accent)",
+// Light palette — ivory tones from globals.css motif tokens.
+const light = {
+  title: "var(--color-motif-soft)",
+  script: "var(--color-motif-cream)",
+  label: "var(--color-motif-silver)",
 } as const
 
-// Same circle pattern as the other sections (PlainBubbles paints the base)
-const sectionBg = "var(--color-bg-pattern-base)"
-
-// Same paper card as the FAQ / details sections
-const cardStyle = {
+const outsideDividerLineStyle = {
   background:
-    "radial-gradient(90% 30% at 50% 0%, rgb(255 255 255 / 95%) 0%, transparent 70%), linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, var(--color-motif-medium) 10%, white) 100%)",
-  border: "1px solid color-mix(in srgb, var(--color-motif-medium) 70%, transparent)",
-  boxShadow:
-    "0 0 0 6px rgb(255 255 255 / 45%), 0 26px 56px -30px color-mix(in srgb, var(--color-welcome-navy) 55%, transparent)",
+    "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-soft) 70%, transparent), transparent)",
 } as const
 
-// Hairline frame just inside the card edge
-const innerFrameStyle = {
-  boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-motif-medium) 55%, transparent)",
+const sectionDividerLineStyleLeft = {
+  background:
+    "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-soft) 70%, transparent), transparent)",
 } as const
 
-const lineRight = {
-  background: "linear-gradient(to right, transparent, var(--color-motif-accent))",
-} as const
-const lineLeft = {
-  background: "linear-gradient(to left, transparent, var(--color-motif-accent))",
-} as const
-
-function DiamondDivider() {
+function OutsideDivider() {
   return (
-    <div className="flex items-center justify-center gap-2" aria-hidden>
-      <span className="h-px w-10 sm:w-16 md:w-20" style={lineRight} />
-      <span className="h-1.5 w-1.5 rotate-45" style={{ background: C.accent }} />
-      <span className="h-px w-10 sm:w-16 md:w-20" style={lineLeft} />
+    <div className="flex items-center justify-center gap-1.5">
+      <span className="h-px w-6 sm:w-10" style={outsideDividerLineStyle} />
+      <span className="h-0.5 w-0.5 rounded-full bg-motif-soft/80 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={sectionDividerLineStyleLeft} />
     </div>
   )
 }
 
-const ease = [0.22, 1, 0.36, 1] as const
-
-const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
+function CountdownTitle() {
+  return (
+    <h2
+      className="relative mx-auto w-full max-w-full text-center"
+      style={
+        {
+          "--title-size": "clamp(2.15rem, 11vw, 4.5rem)",
+          "--script-size": "clamp(1.1rem, 4.5vw, 2.25rem)",
+        } as React.CSSProperties
+      }
+    >
+      <span
+        className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.15em] md:tracking-[0.18em] pb-1 sm:pb-1.5`}
+        style={{
+          fontSize: "var(--title-size)",
+          color: light.title,
+        }}
+      >
+        Counting Down
+      </span>
+      <span
+        aria-hidden
+        className={`${aboveTheBeyond.className} mx-auto block w-fit max-w-full px-1 leading-[0.88] sm:leading-[0.9] mt-2 sm:mt-2.5 md:mt-3`}
+        style={{
+          fontSize: "var(--script-size)",
+          color: light.script,
+        }}
+      >
+        To our forever
+      </span>
+      <span className="sr-only">To our forever</span>
+    </h2>
+  )
 }
 
-const rise: Variants = {
-  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease } },
+// Palette lives in globals.css → @theme inline → --color-motif-*
+// Edit there once to update every component.
+
+function CountdownUnit({ value, label }: CountdownUnitProps) {
+  const places = value >= 100 ? [100, 10, 1] : [10, 1]
+
+  return (
+    <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+      {/* Card container */}
+      <div className="relative w-full max-w-[88px] sm:max-w-[96px] md:max-w-[110px] lg:max-w-[120px]">
+        {/* Main card */}
+        <div className="relative rounded-xl border border-motif-soft/50 bg-transparent px-2.5 py-2.5 sm:rounded-2xl sm:px-3.5 sm:py-3.5 md:px-4 md:py-4">
+          <div className="relative z-10 flex items-center justify-center">
+            <Counter
+              value={value}
+              places={places}
+              fontSize={26}
+              padding={4}
+              gap={2}
+              textColor={light.title}
+              fontWeight={800}
+              borderRadius={6}
+              horizontalPadding={3}
+              gradientHeight={0}
+              gradientFrom="transparent"
+              gradientTo="transparent"
+              counterStyle={{
+                backgroundColor: "transparent",
+              }}
+              digitStyle={{
+                minWidth: "1.15ch",
+                fontFamily: "Arial, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: light.title,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <span
+        className="text-[10px] font-inter font-semibold uppercase tracking-[0.16em] sm:text-xs md:text-sm"
+        style={{ color: light.label }}
+      >
+        {label}
+      </span>
+    </div>
+  )
 }
 
 export function Countdown() {
   const siteConfig = useSiteConfig()
-  const reduceMotion = useReducedMotion()
-  const content = siteConfig.invitationVerse ?? defaultSiteConfig.invitationVerse
-  const { brideNickname, groomNickname, monogram } = siteConfig.couple
-  const initial = reduceMotion ? "show" : "hidden"
+  const ceremonyDate = siteConfig.ceremony.date
+  const ceremonyTimeDisplay = siteConfig.ceremony.time
+  const parsedDate = parseWeddingDate(ceremonyDate)
+  const ceremonyMonth = parsedDate.month
+  const ceremonyDayNumber = parsedDate.day
+  const ceremonyYear = parsedDate.year
+  const { brideNickname, groomNickname } = siteConfig.couple
+  const ceremonyDay = siteConfig.ceremony.day || parsedDate.dayOfWeek
+  const ceremonyDayShort = ceremonyDay.slice(0, 3).toUpperCase()
+  // Parse the date: December 20, 2025 at 10:30 AM PH Time (GMT+0800)
+  // Extract time from "10:30 A.M., PH Time" -> "10:30 A.M."
+  const timeStr = ceremonyTimeDisplay.split(",")[0].trim() // "10:30 A.M."
+  
+  // Create date string in ISO-like format for better parsing
+  // December 20, 2025 -> 2025-12-20
+  const monthMap: { [key: string]: string } = {
+    "January": "01", "February": "02", "March": "03", "April": "04",
+    "May": "05", "June": "06", "July": "07", "August": "08",
+    "September": "09", "October": "10", "November": "11", "December": "12"
+  }
+  const monthNum =
+    monthMap[ceremonyMonth.charAt(0) + ceremonyMonth.slice(1).toLowerCase()] || "12"
+  const dayNum = ceremonyDayNumber
+  
+  // Parse time: "3:00 PM" -> 15:00
+  const timeMatch = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i)
+  let hour = 15 // default 3 PM
+  let minutes = 0
+  
+  if (timeMatch) {
+    hour = parseInt(timeMatch[1])
+    minutes = parseInt(timeMatch[2])
+    const ampm = timeMatch[3].toUpperCase()
+    if (ampm === "PM" && hour !== 12) hour += 12
+    if (ampm === "AM" && hour === 12) hour = 0
+  }
+  
+  // Create date in GMT+8 (PH Time)
+  // Using Date.UTC and adjusting for GMT+8 offset (subtract 8 hours to convert GMT+8 to UTC)
+  const parsedTargetDate = new Date(Date.UTC(
+    parseInt(ceremonyYear),
+    parseInt(monthNum) - 1,
+    parseInt(dayNum),
+    hour - 8, // Convert GMT+8 to UTC
+    minutes,
+    0
+  ))
+  
+  const targetTimestamp = Number.isNaN(parsedTargetDate.getTime())
+    ? new Date(Date.UTC(2026, 1, 8, 8, 0, 0)).getTime() // Fallback: February 8, 2026, 4:00 PM GMT+8 = 8:00 AM UTC
+    : parsedTargetDate.getTime()
+
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const targetDate = targetTimestamp
+      const now = new Date().getTime()
+      const difference = targetDate - now
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        })
+      } else {
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        })
+      }
+    }
+
+    calculateTimeLeft()
+    const timer = setInterval(calculateTimeLeft, 1000)
+    return () => clearInterval(timer)
+  }, [targetTimestamp])
 
   return (
     <div
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full`}
-      style={{ background: sectionBg }}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full bg-transparent`}
     >
-      <PlainBubbles />
-      <Section id="countdown" className="relative z-10 overflow-hidden py-16 sm:py-20 md:py-24 lg:py-28">
+    <Section
+      id="countdown"
+      className="relative overflow-hidden py-10 sm:py-12 md:py-16 lg:py-20"
+    >
+      {/* Monogram - centered at top */}
+      <div className="relative flex justify-center pt-8 sm:pt-10 md:pt-12 mb-6 sm:mb-8 md:mb-10 z-10">
         <motion.div
-          className="relative z-20 mx-auto flex max-w-2xl flex-col items-center px-3 text-center sm:px-4"
-          variants={stagger}
-          initial={initial}
-          whileInView="show"
-          viewport={{ once: true, amount: 0.25 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="relative"
         >
-          {/* Monogram */}
-          <motion.div
-            variants={rise}
-            className="relative h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96"
-          >
+          <div className="relative w-72 h-72 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[36rem] lg:h-[36rem] xl:w-[40rem] xl:h-[40rem] opacity-90">
             <Image
-              src={monogram}
+              src={siteConfig.couple.monogram}
               alt={`${groomNickname} & ${brideNickname} Monogram`}
               fill
-              sizes="(min-width: 1024px) 384px, (min-width: 768px) 320px, (min-width: 640px) 288px, 224px"
-              className="object-contain drop-shadow-[0_10px_24px_rgb(1_46_75_/_35%)]"
+              className="object-contain brightness-0 invert"
+              priority={false}
             />
-          </motion.div>
-
-          {/* Paper card holding the verse, message and names */}
-          <motion.div
-            variants={rise}
-            className="relative mt-6 w-full max-w-xl rounded-[1.75rem] px-6 py-9 sm:mt-8 sm:px-10 sm:py-12 md:px-14"
-            style={cardStyle}
-          >
-            <span className="pointer-events-none absolute inset-2.5 rounded-[1.4rem] sm:inset-3" style={innerFrameStyle} aria-hidden />
-
-            {/* Verse */}
-            <figure className="relative">
-              <DiamondDivider />
-              <blockquote
-                className={`${theSeasons.className} mx-auto mt-5 max-w-[22rem] text-[clamp(1.35rem,6.2vw,2.4rem)] leading-[1.2] sm:mt-6 sm:max-w-xl`}
-                style={{ color: C.title }}
-              >
-                “{content.verse}”
-              </blockquote>
-              <figcaption
-                className={`${cinzel.className} mt-3 font-semibold uppercase tracking-[0.28em] sm:mt-4 text-[0.72rem] sm:text-xs md:text-sm`}
-                style={{ color: C.cite }}
-              >
-                {content.citation}
-              </figcaption>
-            </figure>
-
-            {/* Invitation message */}
-            <p
-              className="font-goudy-italic relative mx-auto mt-7 max-w-md text-[0.95rem] leading-[1.7] sm:mt-9 sm:text-[1.05rem] md:text-lg"
-              style={{ color: C.body }}
-            >
-              {content.message.map((line, i) => (
-                <span key={i} className="block">
-                  {line}
-                </span>
-              ))}
-            </p>
-
-            {/* Sign-off */}
-            <div className="relative mt-7 flex flex-col items-center sm:mt-9">
-              <DiamondDivider />
-              <p
-                className="mt-4 flex items-baseline justify-center gap-3 sm:mt-5 sm:gap-4"
-                aria-label={`${groomNickname} ${content.signOffJoiner} ${brideNickname}`}
-              >
-                <span
-                  aria-hidden
-                  className={`${theSeasons.className} text-[clamp(1.6rem,7vw,2.75rem)] uppercase leading-none tracking-[0.12em]`}
-                  style={{ color: C.title }}
-                >
-                  {groomNickname}
-                </span>
-                <span
-                  aria-hidden
-                  className={`${aboveTheBeyond.className} text-[clamp(1.4rem,6vw,2.4rem)] leading-none`}
-                  style={{ color: C.script }}
-                >
-                  {content.signOffJoiner}
-                </span>
-                <span
-                  aria-hidden
-                  className={`${theSeasons.className} text-[clamp(1.6rem,7vw,2.75rem)] uppercase leading-none tracking-[0.12em]`}
-                  style={{ color: C.title }}
-                >
-                  {brideNickname}
-                </span>
-              </p>
-            </div>
-          </motion.div>
+          </div>
         </motion.div>
-      </Section>
+      </div>
+
+      {/* Header */}
+      <div className="relative z-10 mb-6 px-3 text-center sm:mb-8 sm:px-4 md:mb-10">
+        <div className="mx-auto mb-4 sm:mb-5">
+          <OutsideDivider />
+        </div>
+        <CountdownTitle />
+        <div className="mt-3 flex items-center justify-center sm:mt-4">
+          <span className="h-px w-16 sm:w-24 md:w-32 bg-motif-soft/60" />
+        </div>
+      </div>
+
+      {/* Save The Date Card */}
+      <div className="relative z-10">
+        <div className="flex justify-center px-3 sm:px-4">
+          <div className="max-w-2xl w-full">
+
+            {/* Numeric countdown: Days / Hours / Minutes / Seconds */}
+            <div className="mt-2 sm:mt-4 md:mt-6 font-inter">
+              <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6">
+                {/* 2x2 on mobile, 4 in a row from md+ */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full max-w-sm sm:max-w-md md:max-w-xl">
+                  <CountdownUnit value={timeLeft.days} label="Days" />
+                  <CountdownUnit value={timeLeft.hours} label="Hours" />
+                  <CountdownUnit value={timeLeft.minutes} label="Minutes" />
+                  <CountdownUnit value={timeLeft.seconds} label="Seconds" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+            {/* Date Section - Layout matched with hero date block */}
+            <div className="relative sm:rounded-3xl p-6 sm:p-8 md:p-10 mb-6 sm:mb-8">
+              <div className="w-full max-w-2xl mx-auto">
+                <div
+                  className={`${cinzel.className} flex flex-col items-center gap-1.5 font-bold sm:gap-2.5 md:gap-3`}
+                  style={{ color: light.title }}
+                >
+                  {/* Month */}
+                  <span className="text-[0.65rem] uppercase tracking-[0.4em] sm:text-xs sm:tracking-[0.5em] md:text-sm">
+                    {ceremonyMonth}
+                  </span>
+
+                  {/* Day and time row */}
+                  <div className="flex w-full items-center gap-2 sm:gap-4 md:gap-5">
+                    {/* Day of week & divider */}
+                    <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2.5">
+                      <span className="h-[0.5px] flex-1 bg-motif-soft/60" />
+                      <span className="text-[0.6rem] uppercase tracking-[0.3em] sm:text-[0.7rem] sm:tracking-[0.4em] md:text-xs">
+                        {ceremonyDayShort}
+                      </span>
+                      <span className="h-[0.5px] w-6 bg-motif-soft/60 sm:w-8 md:w-10" />
+                    </div>
+
+                    {/* Day number */}
+                    <div className="relative flex items-center justify-center px-3 sm:px-4 md:px-5">
+                      <span
+                        className={`${cinzel.className} relative text-[3rem] font-bold leading-none tracking-wider sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem]`}
+                      >
+                        {ceremonyDayNumber}
+                      </span>
+                    </div>
+
+                    {/* Time */}
+                    <div className="flex flex-1 items-center gap-1.5 sm:gap-2.5">
+                      <span className="h-[0.5px] w-6 bg-motif-soft/60 sm:w-8 md:w-10" />
+                      <span className="text-[0.6rem] uppercase tracking-[0.3em] sm:text-[0.7rem] sm:tracking-[0.4em] md:text-xs">
+                        {ceremonyTimeDisplay.split(",")[0]}
+                      </span>
+                      <span className="h-[0.5px] flex-1 bg-motif-soft/60" />
+                    </div>
+                  </div>
+
+                  {/* Year */}
+                  <span className="text-[0.65rem] uppercase tracking-[0.4em] sm:text-xs sm:tracking-[0.5em] md:text-sm">
+                    {ceremonyYear}
+                  </span>
+                </div>
+              </div>
+            </div>
+      </div>
+    </Section>
     </div>
   )
 }

@@ -8,7 +8,8 @@ import { Cinzel } from "next/font/google"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 import { fetchInvitationList } from "@/lib/invitation-data"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
+import Image from "next/image"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
 import { CornerFlorals } from "@/components/corner-florals"
 
 const cinzel = Cinzel({
@@ -45,19 +46,22 @@ const DEEP_GRADIENT =
 const SAGE_GRADIENT =
   "linear-gradient(180deg, var(--color-motif-yellow) 0%, color-mix(in srgb, var(--color-motif-yellow) 70%, #2C3619) 100%)"
 
-// Section background = the circle pattern used across the invitation (PlainBubbles paints the base)
-const sectionBg = "var(--color-bg-pattern-base)"
+// Section background: cream under the loader's (softly blurred) background picture — same as Details
+const sectionBg = "var(--color-motif-soft, #FDF8EC)"
 
-// Text sitting directly on the navy part of the sky: light ink with a navy edge
-const textGlow = "0 1px 2px rgb(1 46 75 / 85%), 0 0 18px rgb(1 46 75 / 60%)"
+// Text sitting directly on the background picture: olive ink with a soft white edge
+const textGlow = "0 1px 0 rgb(255 255 255 / 90%), 0 0 14px rgb(255 255 255 / 85%)"
 const onBg = {
-  color: "var(--color-motif-soft)",
+  color: "var(--color-ink-deep, #556B2F)",
   textShadow: textGlow,
 } as const
-// Eyebrow + script lines on the navy pick up the blush accent
-const onBgBlue = { color: "var(--color-motif-accent)", textShadow: textGlow } as const
-// The guest list heading sits below the stats card, on the blush: solid navy, no halo
-const onBlush = { color: "var(--color-welcome-navy)" } as const
+// Script subtitle in a gold deep enough to read on the light picture
+const onBgBlue = {
+  color: "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)",
+  textShadow: textGlow,
+} as const
+// The guest list heading sits below the stats card, also on the picture
+const onBlush = onBg
 
 const palette = {
   body: BODY,
@@ -190,6 +194,8 @@ export function BookOfGuests() {
   const { cornerDecos } = copy
   const CARDS_PER_VIEW = Math.max(1, copy.cardsPerView || 4)
   const reduceMotion = useReducedMotion()
+  const backgroundImage =
+    siteConfig.loadingScreen?.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
   const [totalGuests, setTotalGuests] = useState(0)
   const [rsvpCount, setRsvpCount] = useState(0)
   const [confirmedGuests, setConfirmedGuests] = useState<Guest[]>([])
@@ -327,11 +333,19 @@ export function BookOfGuests() {
   return (
     <div
       id="guests"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative isolate z-10 overflow-hidden pt-24 pb-28 sm:pt-28 sm:pb-36 md:pt-32 md:pb-44 lg:pt-36 lg:pb-52`}
+      // overflow-clip (not hidden) so the sticky background can stick
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative isolate z-10 overflow-clip pt-24 pb-28 sm:pt-28 sm:pb-36 md:pt-32 md:pb-44 lg:pt-36 lg:pb-52`}
       style={{ background: sectionBg }}
     >
-      {/* Same circle pattern as the hero */}
-      <PlainBubbles />
+      {/* Same blurred picture as the loader, hero and Details (styles: .details-bg in loading-screen.css) */}
+      {backgroundImage ? (
+        <div className="details-bg" aria-hidden="true">
+          <div className="details-bg__frame">
+            <Image src={backgroundImage} alt="" fill sizes="100vw" className="details-bg__img object-cover" />
+            <div className="details-bg__veil" />
+          </div>
+        </div>
+      ) : null}
 
       {/* Corner florals; the extra top / bottom padding keeps them clear of the content */}
       <CornerFlorals decos={cornerDecos} compact />

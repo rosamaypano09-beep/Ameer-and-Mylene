@@ -1,16 +1,14 @@
 "use client"
 
-import React, { useLayoutEffect, useMemo, useRef } from "react"
+import React, { useRef, useState } from "react"
 import localFont from "next/font/local"
-import { motion, useReducedMotion } from "motion/react"
-import { StorySection } from "@/components/StorySection"
-import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
+import { Amiri, Cinzel } from "next/font/google"
+import { motion, useReducedMotion, useScroll, useSpring, type Variants } from "motion/react"
+import { layeredSectionTitleSize } from "@/lib/section-typography"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { siteConfig as defaultSiteConfig } from "@/content/site"
-import "@/components/loader/loading-screen.css"
-import { TintedDeco } from "@/components/tinted-deco"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
 import { CornerFlorals } from "@/components/corner-florals"
+import "./love-story.css"
 
 const theSeasons = localFont({
   src: "../../Font/Fontspring-DEMO-theseasons-reg.otf",
@@ -24,227 +22,175 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+})
+
+// Arabic calligraphy — same face as the Bismillah on the loader and home hero
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  display: "swap",
+})
+
 const revealEase = [0.22, 1, 0.36, 1] as const
 
-// Share of the chapters that sit on the navy part of the sky (the rest sit on blush)
-const NAVY_CHAPTER_SHARE = 0.6
-
-// Soft white edge so text stays crisp over the blush part of the sky
-const onBgGlow = "0 1px 0 rgb(255 255 255 / 85%), 0 0 12px rgb(255 255 255 / 70%)"
-// Navy edge for the light title over the navy band at the top
-const onNavyGlow = "0 1px 2px rgb(1 46 75 / 85%), 0 0 18px rgb(1 46 75 / 60%)"
-
-function formatStoryParagraph(
-  paragraph: string,
-  groom: string,
-  bride: string,
-): string {
-  return paragraph
-    .replace(/\{groom\}/g, groom)
-    .replace(/\{bride\}/g, bride)
+// One story step plays in order: diamond pops in → label settles → text rises out of a soft blur
+const stepVariants: Variants = {
+  hidden: {},
+  shown: { transition: { staggerChildren: 0.18 } },
+}
+const markerVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.2, rotate: -90 },
+  shown: { opacity: 1, scale: 1, rotate: 45, transition: { duration: 0.7, ease: revealEase } },
+}
+const labelVariants: Variants = {
+  hidden: { opacity: 0, letterSpacing: "0.6em" },
+  shown: { opacity: 1, letterSpacing: "0.24em", transition: { duration: 0.9, ease: revealEase } },
+}
+const textVariants: Variants = {
+  hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
+  shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease: revealEase } },
 }
 
-function OrnamentalDivider() {
+// Gold hairlines with a diamond in the middle
+function GemDivider({ className = "" }: { className?: string }) {
   return (
-    <div className="flex items-center justify-center gap-1.5">
-      <span
-        className="h-px w-10 sm:w-16"
-        style={{ background: "linear-gradient(to right, transparent, var(--color-motif-yellow))" }}
-      />
-      <span className="h-1 w-1 rounded-full sm:h-1.5 sm:w-1.5" style={{ background: "var(--color-motif-accent)" }} aria-hidden />
-      <span
-        className="h-px w-10 sm:w-16"
-        style={{ background: "linear-gradient(to left, transparent, var(--color-motif-yellow))" }}
-      />
+    <div className={`ls-story-divider ${className}`} aria-hidden="true">
+      <span />
+      <i />
+      <span />
     </div>
-  )
-}
-
-function LoveStoryTitle({
-  title,
-  subtitle,
-}: {
-  title: string
-  subtitle: string
-}) {
-  return (
-    <h1
-      className="welcome-title-lockup relative mx-auto w-full max-w-full text-center"
-      style={
-        {
-          "--title-size": layeredSectionTitleSize.main,
-          "--script-size": layeredSectionTitleSize.script,
-        } as React.CSSProperties
-      }
-    >
-      <span
-        className={`${theSeasons.className} block pb-1 uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
-        style={{
-          fontSize: "var(--title-size)",
-          color: "var(--color-motif-soft)",
-          textShadow: onNavyGlow,
-        }}
-      >
-        {title}
-      </span>
-      <span
-        aria-hidden
-        className={`${aboveTheBeyond.className} mx-auto mt-2 block w-fit max-w-full px-1 leading-[0.88] sm:mt-2.5 sm:leading-[0.9] md:mt-3`}
-        style={{
-          fontSize: "var(--script-size)",
-          color: "var(--color-motif-accent)",
-          textShadow: onNavyGlow,
-        }}
-      >
-        {subtitle}
-      </span>
-      <span className="sr-only">{subtitle}</span>
-    </h1>
-  )
-}
-
-function chapterTextFromParagraphs(
-  paragraphs: readonly string[],
-  groom: string,
-  bride: string,
-) {
-  return (
-    <>
-      {paragraphs.map((paragraph, index) => (
-        <p
-          key={index}
-          className={
-            paragraphs.length > 1 && index < paragraphs.length - 1 ? "mb-4" : undefined
-          }
-        >
-          {formatStoryParagraph(paragraph, groom, bride)}
-        </p>
-      ))}
-    </>
   )
 }
 
 export function LoveStory() {
   const siteConfig = useSiteConfig()
-  const loading = siteConfig.loadingScreen ?? defaultSiteConfig.loadingScreen
   const loveStory = siteConfig.loveStory ?? defaultSiteConfig.loveStory
-  const isPlain = loading.display === "plain"
+  const chapters = loveStory.chapters ?? defaultSiteConfig.loveStory.chapters
+  const cornerDecos = loveStory.cornerDecos ?? defaultSiteConfig.loveStory.cornerDecos
   const reduceMotion = useReducedMotion()
 
-  const groom =
-    siteConfig.couple.groomNickname || siteConfig.couple.groom
-  const bride =
-    siteConfig.couple.brideNickname || siteConfig.couple.bride
+  // The gold thread draws down the story as it scrolls through the screen
+  const threadRef = useRef<HTMLOListElement>(null)
+  const { scrollYProgress } = useScroll({ target: threadRef, offset: ["start 85%", "end 55%"] })
+  const threadDraw = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 })
 
-  const chapters = useMemo(
-    () => loveStory.chapters ?? defaultSiteConfig.loveStory.chapters,
-    [loveStory.chapters],
-  )
-  const eucalyptusDecos =
-    loveStory.eucalyptusDecos ?? defaultSiteConfig.loveStory.eucalyptusDecos
-  const cornerDecos = loveStory.cornerDecos ?? defaultSiteConfig.loveStory.cornerDecos
-  const intro = loveStory.intro ?? defaultSiteConfig.loveStory.intro
+  // The closing line is written in (CSS pen stroke) once it scrolls into view
+  const [highlightWritten, setHighlightWritten] = useState(false)
 
-  // First chapter on blush; everything above it sits on navy
-  const firstBlushChapter = isPlain ? Math.round(chapters.length * NAVY_CHAPTER_SHARE) : 0
-  const rootRef = useRef<HTMLDivElement>(null)
+  // Steps start hidden and play once when scrolled into view (static with reduced motion)
+  const playOnView = reduceMotion
+    ? {}
+    : { initial: "hidden", whileInView: "shown", viewport: { once: true, amount: 0.45 } }
 
-  // End the sky's navy inside the first blush chapter's extra top space (CSS gives
-  // it 10rem), so the cloud edge clears the text on both sides. Re-measured as
-  // images load / resize.
-  useLayoutEffect(() => {
-    const root = rootRef.current
-    if (!root || firstBlushChapter <= 0) return
-    const measure = () => {
-      const chapter = root.querySelectorAll<HTMLElement>(".story-open")[firstBlushChapter]
-      if (!chapter) return
-      const rem = parseFloat(getComputedStyle(root).fontSize) || 16
-      root.style.setProperty("--ls-sky-band", `${Math.max(0, chapter.offsetTop + 3 * rem)}px`)
-    }
-    measure()
-    const observer = new ResizeObserver(measure)
-    observer.observe(root)
-    return () => observer.disconnect()
-  }, [firstBlushChapter, chapters.length])
+  const reveal = (delay = 0) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 20 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: "-40px" },
+          transition: { duration: 0.75, delay, ease: revealEase },
+        }
 
   return (
-    <div
+    <section
       id="love-story"
-      ref={rootRef}
-      className={`love-story-root love-story-root--sky ${theSeasons.variable} ${aboveTheBeyond.variable} relative min-h-screen w-full overflow-hidden`}
+      className={`ls-story ${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}
     >
-      <PlainBubbles className="ls-plain-sky" />
       <CornerFlorals decos={cornerDecos} />
+      {/* Thin gold frame just inside the edges */}
+      <div className="ls-story__frame" aria-hidden="true" />
 
-      <header className="ls-sky-header relative z-20 px-4 text-center sm:px-6 md:px-8">
-        <motion.div
-          className="relative mx-auto w-full max-w-5xl @container/love-story"
-          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.75, ease: revealEase }}
-        >
-          <LoveStoryTitle title={loveStory.title} subtitle={loveStory.subtitle} />
-          {intro ? (
-            <p
-              className={`font-goudy-italic ls-sky-intro mx-auto mt-5 max-w-md sm:mt-7 sm:max-w-lg ${sectionType.textRelaxed}`}
+      <div className="relative z-20 mx-auto w-full max-w-2xl px-6 sm:px-10">
+        <motion.header className="text-center" {...reveal()}>
+          <h2
+            className="relative mx-auto w-full max-w-full text-center"
+            style={
+              {
+                "--title-size": layeredSectionTitleSize.main,
+                "--script-size": layeredSectionTitleSize.script,
+              } as React.CSSProperties
+            }
+          >
+            <span
+              className={`${theSeasons.className} ls-story__title block uppercase leading-[0.85] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em]`}
+              style={{ fontSize: "var(--title-size)" }}
             >
-              {intro}
-            </p>
-          ) : null}
-        </motion.div>
-      </header>
+              {loveStory.title}
+            </span>
+            <span
+              aria-hidden
+              className={`${aboveTheBeyond.className} ls-story__subtitle mx-auto mt-2 block w-fit max-w-full px-1 leading-[1.05] sm:mt-3`}
+              style={{ fontSize: "var(--script-size)" }}
+            >
+              {loveStory.subtitle}
+            </span>
+            <span className="sr-only"> {loveStory.subtitle}</span>
+          </h2>
+          <GemDivider className="mt-5 sm:mt-6" />
+        </motion.header>
 
-      {chapters.map((chapter, index) => (
-        <StorySection
-          key={`${chapter.image}-${index}`}
-          title={chapter.title}
-          theme={chapter.theme}
-          layout={chapter.layout}
-          imageSrc={chapter.image}
-          imageAlt={formatStoryParagraph(chapter.imageAlt ?? "", groom, bride)}
-          date={chapter.date}
-          text={chapterTextFromParagraphs(chapter.paragraphs, groom, bride)}
-          plain={isPlain}
-          chapterIndex={index}
-          isFirst={index === 0}
-          isLast={index === chapters.length - 1}
-          eucalyptusDecos={isPlain ? eucalyptusDecos : undefined}
-          chapterLabelText={loveStory.chapterLabel}
-          onNavy={index < firstBlushChapter}
-        />
-      ))}
+        {/* Story told down a gold thread, a diamond marking each step */}
+        <ol ref={threadRef} className="ls-story__thread">
+          <motion.span
+            className="ls-story__thread-line"
+            style={reduceMotion ? undefined : { scaleY: threadDraw }}
+            aria-hidden="true"
+          />
+          {chapters.map((chapter, index) => (
+            <motion.li key={index} className="ls-story__step" variants={stepVariants} {...playOnView}>
+              <motion.span className="ls-story__marker" variants={markerVariants} aria-hidden="true" />
+              {chapter.label && (
+                <motion.p className={`${cinzel.className} ls-story__label`} variants={labelVariants}>
+                  {chapter.label}
+                </motion.p>
+              )}
+              <motion.p className="ls-story__text" variants={textVariants}>
+                {chapter.text}
+              </motion.p>
+            </motion.li>
+          ))}
+        </ol>
 
-      <footer
-        className="ls-sky-footer relative z-20 px-4 pt-8 text-center sm:px-6 sm:pt-10 md:px-8 md:pt-12"
-      >
-        <motion.div
-          className="relative mx-auto max-w-xl px-2"
-          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.75, delay: 0.08, ease: revealEase }}
-        >
-          <OrnamentalDivider />
-          <blockquote className="mt-5 sm:mt-6">
-            <p
-              className={`font-goudy-italic ${sectionType.textRelaxed} italic leading-relaxed`}
-              style={{ color: "var(--color-welcome-navy)", textShadow: onBgGlow }}
+        <footer className="text-center">
+          {loveStory.highlight && (
+            // Written in left to right, like a pen stroke
+            <motion.p
+              className={`${aboveTheBeyond.className} ls-story__highlight${
+                reduceMotion ? "" : highlightWritten ? " is-pen is-written" : " is-pen"
+              }`}
+              viewport={{ once: true, amount: 0.5 }}
+              onViewportEnter={() => setHighlightWritten(true)}
             >
-              &ldquo;{loveStory.closingQuote}&rdquo;
-            </p>
-            <footer
-              className={`font-goudy-italic mt-2 sm:mt-3 ${sectionType.label} not-italic tracking-wide`}
-              style={{ color: "var(--color-welcome-heading)", textShadow: onBgGlow }}
-            >
-              — {loveStory.closingCitation}
-            </footer>
-          </blockquote>
-          {isPlain && eucalyptusDecos.sectionBottom ? (
-            <TintedDeco src={eucalyptusDecos.sectionBottom} className="love-story-footer-euc mx-auto mt-8 sm:mt-10" />
-          ) : null}
-        </motion.div>
-      </footer>
-    </div>
+              {loveStory.highlight}
+            </motion.p>
+          )}
+
+          {(loveStory.closingArabic || loveStory.closingQuote) && (
+            <motion.figure className="ls-story__verse" {...reveal(0.2)}>
+              <GemDivider />
+              {loveStory.closingArabic && (
+                <p className={`${amiri.className} ls-story__verse-arabic`} lang="ar" dir="rtl">
+                  {loveStory.closingArabic}
+                </p>
+              )}
+              {loveStory.closingQuote && (
+                <blockquote className="font-goudy-italic ls-story__verse-text">
+                  &ldquo;{loveStory.closingQuote}&rdquo;
+                </blockquote>
+              )}
+              {loveStory.closingCitation && (
+                <figcaption className={`${cinzel.className} ls-story__verse-cite`}>
+                  {loveStory.closingCitation}
+                </figcaption>
+              )}
+            </motion.figure>
+          )}
+        </footer>
+      </div>
+    </section>
   )
 }

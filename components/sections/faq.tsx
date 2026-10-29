@@ -7,7 +7,8 @@ import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
+import Image from "next/image"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
 import { CornerFlorals } from "@/components/corner-florals"
 
 const cinzel = Cinzel({
@@ -37,17 +38,20 @@ const BODY = "var(--color-welcome-text)"
 const ACCENT = "var(--color-welcome-heading)"
 const SKY_TINT = (pct: number) => `color-mix(in srgb, var(--color-motif-medium) ${pct}%, white)`
 
-// Section background = the hero's circle pattern (PlainBubbles paints its own aqua base)
-const sectionBg = "var(--color-bg-pattern-base)"
+// Section background: cream under the loader's (softly blurred) background picture — same as Details
+const sectionBg = "var(--color-motif-soft, #FDF8EC)"
 
-// Text sitting directly on the navy part of the sky: light ink with a navy edge
-const textGlow = "0 1px 2px rgb(1 46 75 / 85%), 0 0 18px rgb(1 46 75 / 60%)"
+// Text sitting directly on the background picture: olive ink with a soft white edge
+const textGlow = "0 1px 0 rgb(255 255 255 / 90%), 0 0 14px rgb(255 255 255 / 85%)"
 const onBg = {
-  color: "var(--color-motif-soft)",
+  color: "var(--color-ink-deep, #556B2F)",
   textShadow: textGlow,
 } as const
-// Eyebrow + script lines on the navy pick up the blush accent
-const onBgBlue = { color: "var(--color-motif-accent)", textShadow: textGlow } as const
+// Eyebrow + script lines in a gold deep enough to read on the light picture
+const onBgBlue = {
+  color: "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)",
+  textShadow: textGlow,
+} as const
 
 const cardStyle = {
   background:
@@ -195,6 +199,8 @@ export function FAQ() {
   const content = siteConfig.faq
   const { cornerDecos } = content
   const reduceMotion = useReducedMotion()
+  const backgroundImage =
+    siteConfig.loadingScreen?.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const rsvp = siteConfig.details.rsvp
@@ -213,11 +219,19 @@ export function FAQ() {
 
   return (
     <div
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}
+      // overflow-clip (not hidden) so the sticky background can stick
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-clip`}
       style={{ background: sectionBg }}
     >
-      {/* Same circle pattern as the other invitation sections */}
-      <PlainBubbles />
+      {/* Same blurred picture as the loader, hero and Details (styles: .details-bg in loading-screen.css) */}
+      {backgroundImage ? (
+        <div className="details-bg" aria-hidden="true">
+          <div className="details-bg__frame">
+            <Image src={backgroundImage} alt="" fill sizes="100vw" className="details-bg__img object-cover" />
+            <div className="details-bg__veil" />
+          </div>
+        </div>
+      ) : null}
       <section
         id="faq"
         // Extra top / bottom room so the corner florals clear the header and the card

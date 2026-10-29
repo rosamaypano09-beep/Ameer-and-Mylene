@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import Image from 'next/image';
 import localFont from 'next/font/local';
+import { Amiri, Cinzel } from 'next/font/google';
 import {
   motion,
   useReducedMotion,
@@ -29,6 +30,18 @@ import './envelope-invite.css';
 const theSeasons = localFont({
   src: '../../Font/Fontspring-DEMO-theseasons-reg.otf',
   display: 'swap',
+});
+
+// Arabic calligraphy for the Bismillah on the card (same face as the loader)
+const amiri = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  display: 'swap',
+});
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '600'],
 });
 
 const aboveTheBeyond = localFont({
@@ -107,10 +120,14 @@ export const Hero: React.FC<HeroProps> = ({
   const cornerDecos = content.cornerDecos ?? defaultSiteConfig.loadingScreen.cornerDecos;
   const plainInvite = content.plainInvite ?? defaultSiteConfig.loadingScreen.plainInvite;
   // Navy loader: keep its full-color corner florals in the exact same spot, so they hold still through the hand-off
-  const navyDecos =
-    isPlain && (content.plainLayout ?? defaultSiteConfig.loadingScreen.plainLayout) === 'navy'
-      ? (content.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite).decos
-      : null;
+  const isNavy = isPlain && (content.plainLayout ?? defaultSiteConfig.loadingScreen.plainLayout) === 'navy';
+  const navyInvite = content.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite;
+  const navyDecos = isNavy ? navyInvite.decos : null;
+  // Arch loader: the envelope sits on the same (softly blurred) background picture
+  const isArch = isNavy && navyInvite.cardStyle === 'arch';
+  const archBackground = isArch
+    ? content.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
+    : '';
   const reduceMotion = useReducedMotion();
   const openedRef = useRef(false);
   const enterBtnRef = useRef<HTMLButtonElement>(null);
@@ -155,6 +172,17 @@ export const Hero: React.FC<HeroProps> = ({
     return `${month} | ${day} | ${wedding.getFullYear()}`;
   }, [siteConfig.ceremony.date, siteConfig.wedding.date]);
 
+  // Nikkah card: "SUNDAY · DEC 13 · 2026", then time and venue
+  const nikkahDate = useMemo(() => {
+    const parsed = parseWeddingDate(siteConfig.ceremony.date ?? siteConfig.wedding.date);
+    return {
+      weekday: parsed.dayOfWeek,
+      line: `${String(parsed.month).slice(0, 3)} ${String(parsed.day).padStart(2, '0')} ${parsed.year}`,
+    };
+  }, [siteConfig.ceremony.date, siteConfig.wedding.date]);
+  const ceremonyTime = siteConfig.ceremony.time ?? siteConfig.wedding.time;
+  const ceremonyVenue = siteConfig.ceremony.location || siteConfig.wedding.venue;
+
   const weddingDateGhost = useMemo(() => {
     const [month, day, year] = letterDateNumeric.split(' | ');
     return { month, day, year };
@@ -168,7 +196,8 @@ export const Hero: React.FC<HeroProps> = ({
   // Navy loader's photo marquee carries on behind the envelope (instead of the video)
   const showNavyMarquee =
     !!navyDecos &&
-    (content.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite).backgroundMarquee !== false &&
+    !archBackground &&
+    navyInvite.backgroundMarquee !== false &&
     backgroundPhotos.length > 0;
 
   // envelopePhotos show in any display mode; otherwise photo mode falls back to the date-card photos
@@ -364,17 +393,19 @@ export const Hero: React.FC<HeroProps> = ({
     Letter starts deep in the pocket (positive y) and pulls up through the lip.
     Mobile rises higher during entry; desktop keeps its settled position.
   */
+  // The taller Nikkah card lifts less on phones, so its lower part stays inside the pocket
+  const mobileLetterLift = isArch ? '-10%' : '-22%';
   const letterVariants: Variants = useMemo(
     () => ({
       hidden: { y: '100%', scale: 0.86, opacity: 1, rotate: -0.4 },
       rising: {
-        y: isMobileViewport ? '-22%' : '14%',
+        y: isMobileViewport ? mobileLetterLift : '14%',
         scale: 1,
         opacity: 1,
         rotate: 0,
       },
       out: {
-        y: isMobileViewport ? '-22%' : '14%',
+        y: isMobileViewport ? mobileLetterLift : '14%',
         scale: 1,
         opacity: 1,
         rotate: 0,
@@ -387,7 +418,7 @@ export const Hero: React.FC<HeroProps> = ({
         zIndex: 48,
       },
     }),
-    [isMobileViewport],
+    [isMobileViewport, mobileLetterLift],
   );
 
   const photoLeftVariants: Variants = {
@@ -519,7 +550,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <motion.div
-      className={`env-invite-screen${isPlain ? ' env-invite-screen--plain' : ''}${showNavyMarquee ? ' env-invite-screen--marquee' : ''}${isPlain && showEnvelopePhotos ? ' env-invite-screen--with-photos' : ''}${isPlain && enterFromLoading && visible && !reduceMotion ? ' is-arriving' : ''} ${visible ? '' : 'is-hidden'}`}
+      className={`env-invite-screen${isPlain ? ' env-invite-screen--plain' : ''}${showNavyMarquee ? ' env-invite-screen--marquee' : ''}${isArch ? ' env-invite-screen--arch' : ''}${isPlain && showEnvelopePhotos ? ' env-invite-screen--with-photos' : ''}${isPlain && enterFromLoading && visible && !reduceMotion ? ' is-arriving' : ''} ${visible ? '' : 'is-hidden'}`}
       data-phase={isExiting ? 'exiting' : phase}
       aria-hidden={!visible}
       initial={false}
@@ -557,7 +588,11 @@ export const Hero: React.FC<HeroProps> = ({
 
       {isPlain && (
         <>
-          {showNavyMarquee ? (
+          {archBackground ? (
+            <div className="env-invite-bg-image" aria-hidden="true">
+              <Image src={archBackground} alt="" fill priority sizes="100vw" className="object-cover" />
+            </div>
+          ) : showNavyMarquee ? (
             <NavyMarquee photos={backgroundPhotos} reduceMotion={!!reduceMotion} />
           ) : (
             <BackgroundVideo veil={0.5} />
@@ -566,10 +601,10 @@ export const Hero: React.FC<HeroProps> = ({
             {navyDecos
               ? (
                   [
-                    ['tl', navyDecos.topLeft, 720, 584],
-                    ['tr', navyDecos.topRight, 714, 615],
-                    ['bl', navyDecos.bottomLeft, 733, 454],
-                    ['br', navyDecos.bottomRight, 719, 439],
+                    ['tl', navyDecos.topLeft, 650, 547],
+                    ['tr', navyDecos.topRight, 646, 547],
+                    ['bl', navyDecos.bottomLeft, 750, 528],
+                    ['br', navyDecos.bottomRight, 745, 530],
                   ] as const
                 ).map(([pos, src, w, h]) =>
                   src ? (
@@ -736,41 +771,71 @@ export const Hero: React.FC<HeroProps> = ({
                     }
                   >
                     <div className="env-invite-letter-frame" aria-hidden="true" />
-                    <div className="env-invite-letter-inner">
-                      {isPlain && plainInvite.ornament && (
-                        <TintedDeco src={plainInvite.ornament} className="env-invite-letter-ornament" />
-                      )}
-                      <span className="env-invite-letter-label" aria-label={content.headline}>
-                        {content.headline.split(/\s+/).filter(Boolean).map((word, i) => (
-                          <span
-                            key={i}
-                            aria-hidden="true"
-                            className={
-                              SCRIPT_WORDS.has(word.toLowerCase())
-                                ? 'env-invite-letter-label__script'
-                                : 'env-invite-letter-label__word'
-                            }
-                          >
-                            {word}
+                    {isArch ? (
+                      // Nikkah card: Bismillah → invitation → names → date, time & venue
+                      <div className="env-invite-letter-inner env-nikkah-card">
+                        {navyInvite.bismillah && (
+                          <p className={`${amiri.className} env-nikkah-card__bismillah`} lang="ar" dir="rtl">
+                            {navyInvite.bismillah}
+                          </p>
+                        )}
+                        <span className="env-nikkah-card__gem" aria-hidden="true" />
+                        <p className="env-nikkah-card__message">{content.letterMessage ?? content.eyebrow}</p>
+                        <h2 className="env-nikkah-card__names" aria-label={`${groomName} and ${brideName}`}>
+                          <span className={aboveTheBeyond.className} aria-hidden="true">{groomName}</span>
+                          <span className={`${aboveTheBeyond.className} env-nikkah-card__and`} aria-hidden="true">
+                            and
                           </span>
-                        ))}
-                      </span>
-                      <span className="env-invite-letter-date">{letterDate}</span>
-                      <span className="env-invite-letter-invited env-invite-letter-invited--message">
-                        {content.letterMessage ?? content.eyebrow}
-                      </span>
-                      <h2 className="env-invite-letter-names env-invite-letter-names--text" aria-label={coupleNames}>
-                        <span className={`${theSeasons.className} env-invite-names__nick`} aria-hidden="true">
-                          {groomName}
+                          <span className={aboveTheBeyond.className} aria-hidden="true">{brideName}</span>
+                        </h2>
+                        <span className="env-nikkah-card__rule" aria-hidden="true" />
+                        <p className={`${cinzel.className} env-nikkah-card__weekday`}>{nikkahDate.weekday}</p>
+                        <p className={`${cinzel.className} env-nikkah-card__date`}>{nikkahDate.line}</p>
+                        {(ceremonyTime || ceremonyVenue) && (
+                          <p className="env-nikkah-card__venue">
+                            {ceremonyTime}
+                            {ceremonyTime && ceremonyVenue && <span aria-hidden="true"> · </span>}
+                            {ceremonyVenue}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="env-invite-letter-inner">
+                        {isPlain && plainInvite.ornament && (
+                          <TintedDeco src={plainInvite.ornament} className="env-invite-letter-ornament" />
+                        )}
+                        <span className="env-invite-letter-label" aria-label={content.headline}>
+                          {content.headline.split(/\s+/).filter(Boolean).map((word, i) => (
+                            <span
+                              key={i}
+                              aria-hidden="true"
+                              className={
+                                SCRIPT_WORDS.has(word.toLowerCase())
+                                  ? 'env-invite-letter-label__script'
+                                  : 'env-invite-letter-label__word'
+                              }
+                            >
+                              {word}
+                            </span>
+                          ))}
                         </span>
-                        <span className={`${aboveTheBeyond.className} env-invite-names__and`} aria-hidden="true">
-                          and
+                        <span className="env-invite-letter-date">{letterDate}</span>
+                        <span className="env-invite-letter-invited env-invite-letter-invited--message">
+                          {content.letterMessage ?? content.eyebrow}
                         </span>
-                        <span className={`${theSeasons.className} env-invite-names__nick`} aria-hidden="true">
-                          {brideName}
-                        </span>
-                      </h2>
-                    </div>
+                        <h2 className="env-invite-letter-names env-invite-letter-names--text" aria-label={coupleNames}>
+                          <span className={`${theSeasons.className} env-invite-names__nick`} aria-hidden="true">
+                            {groomName}
+                          </span>
+                          <span className={`${aboveTheBeyond.className} env-invite-names__and`} aria-hidden="true">
+                            and
+                          </span>
+                          <span className={`${theSeasons.className} env-invite-names__nick`} aria-hidden="true">
+                            {brideName}
+                          </span>
+                        </h2>
+                      </div>
+                    )}
                   </motion.div>
 
                   {showEnvelopePhotos && (

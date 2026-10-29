@@ -1,16 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Cinzel } from "next/font/google"
+import { Amiri, Cinzel } from "next/font/google"
 import localFont from "next/font/local"
-import Image from "next/image"
 import { motion, useReducedMotion, type Variants } from "motion/react"
 import { useSiteConfig } from "@/hooks/use-site-config"
-import { CrossfadeImages } from "@/components/crossfade-images"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
+import { CornerFlorals } from "@/components/corner-florals"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+})
+
+// Arabic calligraphy — same face as the Bismillah on the loader and home hero
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  display: "swap",
 })
 
 const theSeasons = localFont({
@@ -25,33 +31,24 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const IVORY = "#fffaf4"
-const BUTTER = "var(--color-motif-silver)"
+// Olive ink and gold on an ivory card — matches the arch loader and home hero
+const OLIVE = "var(--color-ink-deep, #556B2F)"
+const OLIVE_TEXT = "color-mix(in srgb, var(--color-ink-deep, #556B2F) 85%, black)"
+const GOLD = "var(--color-motif-accent, #D4AF37)"
+const GOLD_INK = "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)"
+const PAPER = "var(--color-motif-soft, #FDF8EC)"
 const entryEase = [0.22, 1, 0.36, 1] as const
-const SLIDE_MS = 5000
 
-const titleSize = "clamp(2.85rem, 13.5vw, 6.75rem)"
-const photoTitleShadow =
-  "0 1px 0 rgb(255 250 244 / 28%), 0 2px 18px rgb(1 32 54 / 60%), 0 12px 36px rgb(1 32 54 / 45%)"
-const softShadow = "0 1px 2px rgb(1 32 54 / 85%), 0 2px 8px rgb(1 32 54 / 70%), 0 6px 24px rgb(1 32 54 / 55%)"
+const titleSize = "clamp(2.85rem, 13.5vw, 6.25rem)"
 
 const stagger: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.14, delayChildren: 0.55 } },
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.2 } },
 }
 
 const rise: Variants = {
   hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
   show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.85, ease: entryEase } },
-}
-
-// Desktop panels wipe up from the bottom one after another
-const panelReveal: Variants = {
-  hidden: { clipPath: "inset(100% 0% 0% 0%)" },
-  show: (i: number) => ({
-    clipPath: "inset(0% 0% 0% 0%)",
-    transition: { duration: 1.2, delay: 0.15 + i * 0.18, ease: entryEase },
-  }),
 }
 
 // "!" and other symbols in Cinzel, letters in The Seasons
@@ -71,148 +68,108 @@ function SpecialCharFont({ text }: { text: string }) {
   )
 }
 
+function GemDivider() {
+  return (
+    <div className="flex items-center justify-center gap-2" aria-hidden>
+      <span className="h-px w-12 sm:w-20" style={{ background: `linear-gradient(to right, transparent, ${GOLD})` }} />
+      <span className="h-1.5 w-1.5 rotate-45" style={{ background: GOLD }} />
+      <span className="h-px w-12 sm:w-20" style={{ background: `linear-gradient(to left, transparent, ${GOLD})` }} />
+    </div>
+  )
+}
+
 export function SeeYouThere() {
   const siteConfig = useSiteConfig()
-  const content = siteConfig.seeYouThere
+  const content = siteConfig.seeYouThere ?? defaultSiteConfig.seeYouThere
+  const cornerDecos = content.cornerDecos ?? defaultSiteConfig.seeYouThere.cornerDecos
   const reduceMotion = useReducedMotion()
   const { groomNickname, brideNickname } = siteConfig.couple
   const couple = `${groomNickname} & ${brideNickname}`
   const fill = (text: string) => text.split("{couple}").join(couple)
-  const alt = fill(content.photoAlt)
-  const photos = content.photos.map((src) => encodeURI(src))
-  const [active, setActive] = useState(0)
-
-  // Mobile slideshow
-  useEffect(() => {
-    if (reduceMotion || photos.length < 2) return
-    const timer = setInterval(() => setActive((i) => (i + 1) % photos.length), SLIDE_MS)
-    return () => clearInterval(timer)
-  }, [reduceMotion, photos.length])
 
   return (
     <section
       id="see-you-there"
       className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative isolate w-full overflow-hidden`}
-      style={{ background: "var(--color-welcome-navy)" }}
+      style={{
+        background: `radial-gradient(80% 50% at 50% 45%, #fff 0%, transparent 70%), ${PAPER}`,
+      }}
     >
+      <CornerFlorals decos={cornerDecos} />
+      {/* Thin gold frame just inside the edges */}
+      <div
+        className="pointer-events-none absolute inset-[clamp(10px,2.4vw,20px)] z-[1] rounded-md"
+        style={{ border: `1px solid color-mix(in srgb, ${GOLD} 40%, transparent)` }}
+        aria-hidden
+      />
+
       <motion.div
-        className="relative min-h-[100svh] w-full"
+        className="relative z-20 mx-auto flex min-h-[80svh] max-w-3xl flex-col items-center justify-center px-6 py-36 text-center sm:py-40"
+        variants={stagger}
         initial={reduceMotion ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
       >
-        {/* Mobile: one full-screen photo cross-fading through the set */}
-        <div className="absolute inset-0 md:hidden" aria-hidden={photos.length > 1 ? true : undefined}>
-          <CrossfadeImages
-            images={photos}
-            active={active}
-            sizes="100vw"
-            alt={alt}
-            className="object-cover object-[center_30%]"
-            reduceMotion={reduceMotion}
-          />
-        </div>
+        {content.arabic ? (
+          <motion.p
+            variants={rise}
+            className={`${amiri.className} text-[clamp(1.6rem,7vw,2.4rem)] font-bold leading-[1.4]`}
+            style={{ color: OLIVE }}
+            lang="ar"
+            dir="rtl"
+          >
+            {content.arabic}
+          </motion.p>
+        ) : null}
 
-        {/* md+: portrait triptych */}
-        <div className="absolute inset-0 hidden gap-[3px] md:flex">
-          {photos.map((src, i) => (
-            <motion.div key={src} className="relative h-full flex-1 overflow-hidden" variants={panelReveal} custom={i}>
-              <Image
-                src={src}
-                alt={i === 0 ? alt : ""}
-                fill
-                sizes="34vw"
-                className={`object-cover object-[center_30%] ${reduceMotion ? "" : "see-you-drift"}`}
-                style={{ animationDelay: `${i * -2.5}s` }}
-              />
-            </motion.div>
-          ))}
-        </div>
+        {content.eyebrow ? (
+          <motion.p
+            variants={rise}
+            className={`${cinzel.className} mt-1 text-[0.75rem] font-semibold uppercase tracking-[0.3em] sm:text-[0.8125rem]`}
+            style={{ color: GOLD_INK }}
+          >
+            {content.eyebrow}
+          </motion.p>
+        ) : null}
 
-        {/* Mobile wash: the type sits low, so the bottom half goes deep navy */}
-        <div
-          className="pointer-events-none absolute inset-0 md:hidden"
-          style={{
-            background:
-              "linear-gradient(180deg, rgb(1 46 75 / 40%) 0%, rgb(1 46 75 / 8%) 26%, rgb(1 46 75 / 28%) 45%, rgb(1 40 66 / 78%) 66%, rgb(1 32 54 / 92%) 100%)",
-          }}
-          aria-hidden
-        />
-        {/* md+ wash: the type is centred, so darken a soft oval behind it */}
-        <div
-          className="pointer-events-none absolute inset-0 hidden md:block"
-          style={{
-            background:
-              "radial-gradient(48% 42% at 50% 50%, rgb(1 40 66 / 68%) 0%, rgb(1 40 66 / 40%) 60%, transparent 100%), linear-gradient(180deg, rgb(1 46 75 / 40%) 0%, rgb(1 46 75 / 15%) 35%, rgb(1 46 75 / 15%) 65%, rgb(1 46 75 / 60%) 100%)",
-          }}
-          aria-hidden
-        />
-
-        <motion.div
-          className="relative z-10 mx-auto flex min-h-[100svh] max-w-3xl flex-col items-center justify-end px-6 pb-[12svh] pt-24 text-center md:justify-center md:pb-24"
-          variants={stagger}
-        >
-          {content.eyebrow ? (
-            <motion.p
-              variants={rise}
-              className={`${cinzel.className} text-[0.75rem] font-semibold uppercase tracking-[0.3em] sm:text-[0.8125rem]`}
-              style={{ color: IVORY, textShadow: softShadow }}
-            >
-              {content.eyebrow}
-            </motion.p>
-          ) : null}
-
-          <motion.h2 variants={rise} className="relative mt-3 sm:mt-4">
-            <span className="sr-only">
-              {content.titleLine1} {content.titleLine2}
-            </span>
-            <span
-              aria-hidden
-              className={`${theSeasons.className} block uppercase leading-[0.88] tracking-[0.06em] sm:tracking-[0.08em]`}
-              style={{ fontSize: titleSize, color: IVORY, textShadow: photoTitleShadow }}
-            >
-              <SpecialCharFont text={content.titleLine1} />
-              <br />
-              <SpecialCharFont text={content.titleLine2} />
-            </span>
-          </motion.h2>
-
-          {content.script ? (
-            <motion.p
-              variants={rise}
-              className={`${aboveTheBeyond.className} mt-3 text-[1.5rem] leading-tight sm:mt-4 sm:text-[2rem] md:text-[2.35rem]`}
-              style={{ color: BUTTER, textShadow: softShadow }}
-            >
-              {fill(content.script)}
-            </motion.p>
-          ) : null}
-
-          {content.message ? (
-            <motion.p
-              variants={rise}
-              className="font-goudy-italic mx-auto mt-4 max-w-md text-[0.9375rem] leading-relaxed sm:mt-5 sm:text-[1.0625rem]"
-              style={{ color: "#FFFFFF", textShadow: softShadow, fontWeight: 600 }}
-            >
-              {fill(content.message)}
-            </motion.p>
-          ) : null}
-
-          {/* Mobile slideshow position */}
-          {photos.length > 1 && (
-            <motion.div variants={rise} className="mt-7 flex items-center gap-1.5 md:hidden" aria-hidden>
-              {photos.map((src, i) => (
-                <span
-                  key={src}
-                  className="h-[3px] rounded-full transition-all duration-[1400ms] ease-in-out"
-                  style={{
-                    width: i === active ? "1.5rem" : "0.5rem",
-                    background: i === active ? BUTTER : "rgb(255 250 244 / 45%)",
-                  }}
-                />
-              ))}
-            </motion.div>
-          )}
+        <motion.div variants={rise} className="mt-5 sm:mt-6">
+          <GemDivider />
         </motion.div>
+
+        <motion.h2 variants={rise} className="relative mt-5 sm:mt-6">
+          <span className="sr-only">
+            {content.titleLine1} {content.titleLine2}
+          </span>
+          <span
+            aria-hidden
+            className={`${theSeasons.className} block uppercase leading-[0.88] tracking-[0.06em] sm:tracking-[0.08em]`}
+            style={{ fontSize: titleSize, color: OLIVE, textShadow: "0 1px 0 rgb(255 255 255 / 80%)" }}
+          >
+            <SpecialCharFont text={content.titleLine1} />
+            <br />
+            <SpecialCharFont text={content.titleLine2} />
+          </span>
+        </motion.h2>
+
+        {content.script ? (
+          <motion.p
+            variants={rise}
+            className={`${aboveTheBeyond.className} mt-4 text-[1.6rem] leading-tight sm:mt-5 sm:text-[2.1rem] md:text-[2.4rem]`}
+            style={{ color: GOLD_INK }}
+          >
+            {fill(content.script)}
+          </motion.p>
+        ) : null}
+
+        {content.message ? (
+          <motion.p
+            variants={rise}
+            className="font-goudy-italic mx-auto mt-4 max-w-md text-[1rem] leading-relaxed sm:mt-5 sm:text-[1.1rem]"
+            style={{ color: OLIVE_TEXT }}
+          >
+            {fill(content.message)}
+          </motion.p>
+        ) : null}
       </motion.div>
     </section>
   )

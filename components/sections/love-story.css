@@ -354,3 +354,203 @@
     margin-top: 1.35rem;
   }
 }
+
+/* ==========================================================================
+   Love story — plain ivory section (components/sections/love-story.tsx)
+   Olive ink and gold ornaments, matching the arch loader and home hero.
+   ========================================================================== */
+
+.ls-story {
+  --lss-ink: var(--color-ink-deep, #556B2F);
+  --lss-text: color-mix(in srgb, var(--lss-ink) 85%, black);
+  --lss-gold: var(--color-motif-accent, #D4AF37);
+  /* Gold deep enough to read on ivory */
+  --lss-gold-ink: color-mix(in srgb, var(--lss-gold) 62%, #4A3A0C);
+  --lss-paper: var(--color-motif-soft, #FDF8EC);
+  /* Room top and bottom so the corner florals never sit on the text */
+  padding: clamp(7rem, 24vw, 10rem) 0 clamp(9rem, 36vw, 12rem);
+  background:
+    radial-gradient(80% 40% at 50% 0%, #fff 0%, transparent 70%),
+    radial-gradient(70% 35% at 50% 100%, color-mix(in srgb, var(--lss-gold) 8%, transparent) 0%, transparent 70%),
+    var(--lss-paper);
+}
+
+.ls-story__frame {
+  position: absolute;
+  inset: clamp(10px, 2.4vw, 20px);
+  z-index: 1;
+  border: 1px solid color-mix(in srgb, var(--lss-gold) 40%, transparent);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.ls-story__frame::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 0.5px solid color-mix(in srgb, var(--lss-gold) 22%, transparent);
+  border-radius: 3px;
+}
+
+.ls-story__title {
+  color: var(--lss-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+.ls-story__subtitle {
+  color: var(--lss-gold-ink);
+}
+
+/* Gold hairlines with a diamond */
+.ls-story-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.ls-story-divider span {
+  width: clamp(2.5rem, 12vw, 4.5rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lss-gold));
+}
+.ls-story-divider span:last-child {
+  background: linear-gradient(90deg, var(--lss-gold), transparent);
+}
+.ls-story-divider i {
+  width: 6px;
+  height: 6px;
+  background: var(--lss-gold);
+  transform: rotate(45deg);
+}
+
+/* ---------- The story, down a gold thread ---------- */
+.ls-story__thread {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 6vw, 2.75rem);
+  margin: clamp(2.25rem, 7vw, 3.25rem) auto;
+  padding: 0;
+  max-width: 34rem;
+  list-style: none;
+  text-align: center;
+}
+
+/* The thread runs behind the steps, fading in and out at the ends; it draws down on scroll */
+.ls-story__thread-line {
+  position: absolute;
+  transform-origin: 50% 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  margin-left: -0.75px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--lss-gold) 75%, transparent) 8%,
+    color-mix(in srgb, var(--lss-gold) 75%, transparent) 92%,
+    transparent
+  );
+}
+
+.ls-story__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Paper behind each step so the thread only shows between them */
+  padding: 0.9rem 0.5rem;
+  background: var(--lss-paper);
+}
+
+.ls-story__marker {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin-bottom: 0.85rem;
+  border: 1px solid var(--lss-gold);
+  background: var(--lss-paper);
+  box-shadow: 0 0 0 3px var(--lss-paper), 0 0 0 4px color-mix(in srgb, var(--lss-gold) 35%, transparent);
+  transform: rotate(45deg);
+}
+
+.ls-story__label {
+  margin: 0 0 0.6rem;
+  font-size: clamp(0.7rem, 2.9vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--lss-gold-ink);
+}
+
+/* Upright serif at a comfortable size: italics this long are hard to read on a phone */
+.ls-story__text {
+  max-width: 30rem;
+  margin: 0;
+  font-family: "SortsMillGoudy", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.02rem, 4.3vw, 1.18rem);
+  font-style: normal;
+  line-height: 1.7;
+  letter-spacing: 0.005em;
+  color: color-mix(in srgb, var(--lss-ink) 70%, #1c2210);
+  text-wrap: pretty;
+}
+
+/* ---------- Closing line + verse ---------- */
+.ls-story__highlight {
+  max-width: 24rem;
+  margin: 0 auto;
+  font-size: clamp(1.75rem, 7.6vw, 2.7rem);
+  line-height: 1.25;
+  color: var(--lss-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+/* Pen stroke: a soft-edged mask sweeps left to right; padding gives the swashes room */
+.ls-story__highlight.is-pen {
+  padding: 0.25em 0.4em;
+  margin-block: -0.25em;
+  -webkit-mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 250% 100% no-repeat;
+  mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 250% 100% no-repeat;
+}
+
+.ls-story__highlight.is-written {
+  animation: ls-pen 2.2s cubic-bezier(0.5, 0.1, 0.3, 1) forwards;
+}
+
+@keyframes ls-pen {
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+
+.ls-story__verse {
+  max-width: 26rem;
+  margin: clamp(1.75rem, 6vw, 2.5rem) auto 0;
+}
+
+.ls-story__verse-arabic {
+  margin: 1rem 0 0;
+  font-size: clamp(1.45rem, 6vw, 2rem);
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--lss-ink);
+}
+
+.ls-story__verse-text {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1rem, 4.2vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--lss-text);
+}
+
+.ls-story__verse-cite {
+  margin-top: 0.5rem;
+  font-size: clamp(0.62rem, 2.5vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lss-gold-ink);
+}

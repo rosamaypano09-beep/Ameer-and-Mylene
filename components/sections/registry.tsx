@@ -4,7 +4,7 @@ import { useEffect, useState, type CSSProperties } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import localFont from "next/font/local"
-import { Cinzel } from "next/font/google"
+import { Amiri, Cinzel } from "next/font/google"
 import { Download, Gift, Heart, X } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -13,6 +13,13 @@ import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
+})
+
+// Arabic calligraphy — same face as the Bismillah on the loader and home hero
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  display: "swap",
 })
 
 const theSeasons = localFont({
@@ -27,13 +34,14 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-// Text outside the card sits on the dusty-blue page backdrop: white with a soft navy shadow
+// Text outside the card sits on the dark olive page backdrop: white with a soft dark edge
 const onBg = {
   color: "white",
   textShadow:
     "0 1px 2px color-mix(in srgb, var(--color-welcome-navy) 50%, transparent), 0 2px 14px color-mix(in srgb, var(--color-welcome-navy) 40%, transparent)",
 } as const
-const onBgScript = { ...onBg, color: "var(--color-motif-silver)" } as const
+// Script subtitle in soft gold
+const onBgScript = { ...onBg, color: "var(--color-motif-accent, #D4AF37)" } as const
 
 const onBgLine = "color-mix(in srgb, white 85%, transparent)"
 
@@ -62,7 +70,7 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
 }
 
-// Sits outside the card, so drawn in white
+// Sits outside the card, drawn in white
 function DiamondDivider() {
   return (
     <div className="flex items-center justify-center gap-2" aria-hidden>
@@ -167,9 +175,8 @@ export function Registry() {
   const active = accounts[activeIndex]
 
   return (
-    <div
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}
-    >
+    // Transparent: the page backdrop shows through; only the card has a background
+    <div className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}>
       <section
         id="registry"
         className="relative z-10 overflow-hidden pt-14 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 lg:pt-24 lg:pb-20"
@@ -435,6 +442,40 @@ export function Registry() {
                 ) : null}
               </div>
             </motion.div>
+
+            {/* Closing du'a: Arabic, transliteration, meaning */}
+            {content.closing && (content.closing.arabic || content.closing.title || content.closing.text) ? (
+              <motion.div variants={itemVariants} className="relative mt-8 sm:mt-10">
+                <div className="flex items-center justify-center gap-2" aria-hidden>
+                  <span className="h-px w-10 sm:w-16" style={{ background: `linear-gradient(to right, transparent, ${c.line})` }} />
+                  <span className="h-1.5 w-1.5 rotate-45" style={{ background: "var(--color-motif-accent)" }} />
+                  <span className="h-px w-10 sm:w-16" style={{ background: `linear-gradient(to left, transparent, ${c.line})` }} />
+                </div>
+                {content.closing.arabic ? (
+                  <p
+                    className={`${amiri.className} mt-4 text-[1.7rem] font-bold leading-[1.5] sm:text-[2rem]`}
+                    style={{ color: c.title }}
+                    lang="ar"
+                    dir="rtl"
+                  >
+                    {content.closing.arabic}
+                  </p>
+                ) : null}
+                {content.closing.title ? (
+                  <p
+                    className={`${cinzel.className} mt-1 text-[0.85rem] font-semibold uppercase tracking-[0.2em] sm:text-[0.95rem]`}
+                    style={{ color: "color-mix(in srgb, var(--color-motif-accent) 62%, #4A3A0C)" }}
+                  >
+                    {content.closing.title}
+                  </p>
+                ) : null}
+                {content.closing.text ? (
+                  <p className="font-goudy-italic mt-1.5 text-[1rem] sm:text-[1.08rem]" style={{ color: c.body }}>
+                    {content.closing.text}
+                  </p>
+                ) : null}
+              </motion.div>
+            ) : null}
 
           </motion.div>
         </div>

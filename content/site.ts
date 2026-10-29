@@ -10,6 +10,12 @@ export type TimelineIconName =
   | "cocktail"
   | "fireworks"
   | "dance"
+  | "arch"
+  | "crescent"
+  | "camera"
+  | "teacup"
+  | "lantern"
+  | "feast"
 
 export type AttireGroupId = "entourage" | "family" | "sponsors" | "guests"
 // A palette color: "#9CAF88" or { name: "Sage", hex: "#9CAF88" }
@@ -68,35 +74,35 @@ export type AttireRole = { role: string; attire: string; colors?: AttireColor[] 
 
 // ── The couple ──────────────────────────────────────────────────────────────
 const COUPLE = {
-  bride: "Ellaine Capili",
-  brideNickname: "Ellaine",
-  groom: "Carl Domingo",
-  groomNickname: "Carl",
+  bride: "Mylene", // ⚠ add the bride's full name
+  brideNickname: "Mylene",
+  groom: "Ameer", // ⚠ add the groom's full name
+  groomNickname: "Ameer",
 }
 
 // ── Date & times ────────────────────────────────────────────────────────────
-const WEDDING_DATE = "January 23, 2027" // e.g. "June 5, 2027"
-const WEDDING_DAY = "Saturday"
+const WEDDING_DATE = "December 13, 2026" // e.g. "June 5, 2027"
+const WEDDING_DAY = "Sunday"
 const TIMES = {
-  entourageCall: "1:00 PM", // entourage arrival
-  guestArrival: "1:30 PM", // guests arrival (shown in Event Details + reminders)
-  ceremony: "2:00 PM",
-  reception: "4:30 PM", // program proper
+  entourageCall: "1:00 PM", // ⚠ entourage arrival — not updated for the 10:00 AM Nikkah
+  guestArrival: "1:30 PM", // ⚠ guests arrival (shown in Event Details + reminders) — not updated
+  ceremony: "10:00 AM",
+  reception: "4:30 PM", // ⚠ program proper — not updated
 }
 
 // ── Venues ──────────────────────────────────────────────────────────────────
 
 const CEREMONY_VENUE = {
-  name: "Chat's Resort Hotel & Events Place",
-  address: "Mc Arthur highway Cambio, San Miguel, 3011 Bulakan",
-  map: "https://maps.app.goo.gl/XBBqUeQBtBcSpnFn7",
-  photos: ["/Details/new-ceremony (1).jpg", "/Details/new-ceremony (2).jpg", "/Details/new-ceremony (3).jpg"],
+  name: "Venue 88 Hotel & Events Place",
+  address: "Mabuhay Rd, General Santos City (Dadiangas), South Cotabato, Philippines", // ⚠ previous venue's address
+  map: "https://maps.app.goo.gl/fe5SqqiSjtpowSZ37", // ⚠ previous venue's map link
+  photos: ["/Details/venue (1).png", "/Details/venue (2).png", "/Details/venue (3).png","/Details/venue (4).png"],
 }
 const RECEPTION_VENUE = {
-  name: "Chat's Resort Hotel & Events Place",
-  address: "Mc Arthur highway Cambio, San Miguel, 3011 Bulakan",
-  map: "https://maps.app.goo.gl/XBBqUeQBtBcSpnFn7",
-  photos: ["/Details/new-ceremony (1).jpg", "/Details/new-ceremony (2).jpg", "/Details/new-ceremony (3).jpg"],
+  name: "Venue 88 Hotel & Events Place",
+  address: "Mabuhay Rd, General Santos City (Dadiangas), South Cotabato, Philippines", // ⚠ previous venue's address
+  map: "https://maps.app.goo.gl/fe5SqqiSjtpowSZ37", // ⚠ previous venue's map link
+  photos: ["/Details/venue (1).png", "/Details/venue (2).png", "/Details/venue (3).png","/Details/venue (4).png"],
 }
 
 // ── Venue cards (Event Details section) ─────────────────────────────────────
@@ -112,28 +118,28 @@ const VENUE_CARDS = {
   layout: "combined" as "separate" | "combined",
   // Used when layout is "combined"
   combined: {
-    badge: "Ceremony & Reception",
+    badge: "Nikkah & Walimah",
     sectionLabel: "Venue",
     showDate: true,
     showArrival: true,
-    // Time rows on the card, e.g. "Ceremony 4:30 PM | Reception 7:00 PM"
-    ceremonyLabel: "Ceremony",
-    receptionLabel: "Reception",
+    // Time rows on the card, e.g. "Nikkah 10:00 AM | Walimah 12:00 PM"
+    ceremonyLabel: "Nikkah",
+    receptionLabel: "Walimah",
     // false = show only the ceremony time on the combined card
     showReceptionTime: false,
   },
   // Used when layout is "separate"
   ceremony: {
     show: true,
-    badge: "Ceremony",
-    sectionLabel: "Ceremony Venue",
+    badge: "Nikkah",
+    sectionLabel: "Nikkah Venue",
     showDate: true,
     showArrival: true,
   },
   reception: {
     show: true,
-    badge: "Reception",
-    sectionLabel: "Reception Venue",
+    badge: "Walimah",
+    sectionLabel: "Walimah Venue",
     showDate: false,
     showArrival: false,
   },
@@ -145,7 +151,7 @@ const RSVP = {
   coordinator: "{groom} / {bride}", // {groom} / {bride} → couple nicknames
   phone: "to be announced",
 }
-const HASHTAGS = ["#CAPILingbuongDOMINGO", "#thisCARLovestheLLAINEto4ever", "#0123toInfinity"]
+const HASHTAGS = ["#AmeerAndMyleneNikkah", "#TwoPathsOneLove", "#AmeerMylene1213"]
 
 // ── Attire guide (Event Details → Attire Guidelines) ────────────────────────
 // SHOW = which cards to display AND their order, top to bottom. Examples:
@@ -167,12 +173,10 @@ const HASHTAGS = ["#CAPILingbuongDOMINGO", "#thisCARLovestheLLAINEto4ever", "#01
 //     roles:     [{ role, attire, colors }] — colors are the swatches under that role
 // Guest dress code colors — also shown in the "Dress Code" gentle reminder
 const DRESS_CODE_PALETTE: AttireColor[] = [
-  { name: "Warm Sand", hex: "#E1CDC6" },
-  { name: "Seafoam", hex: "#9DC6CA" },
-  { name: "Soft Peach", hex: "#FB9F8A" },
-  { name: "Ocean Teal", hex: "#6BB6BC" },
-  { name: "Coral Rose", hex: "#EA8684" },
-  { name: "Coastal Teal", hex: "#097A88" },
+  { name: "Olive Green", hex: "#5F6F3A" },
+  { name: "Champagne Gold", hex: "#D4B872" },
+  { name: "Beige", hex: "#D8C6A5" },
+  { name: "Cream", hex: "#F1E7D2" },
 ];
 
 // Attire groups shown in the Details section (components/sections/details.tsx).
@@ -332,20 +336,26 @@ const ATTIRE = {
   },
 
   guests: {
-    title: "Guests",
-    image: "/Details/guest-new.png",
-    dressCode: "Semi-Formal Attire",
+    title: "Attire Guideline",
+    image: "/Details/newAttire.png",
+    dressCode: "Formal Attire",
     palette: DRESS_CODE_PALETTE,
+    // Shown in this order, with the palette underneath (replaces ladies / gentlemen on this card)
+    lines: [
+      { label: "Principal Sponsors", text: "Filipiniana, Barong", highlight: "" },
+      { label: "Women", text: "Long dresses, abayas, or formal dresses with appropriate coverage.", highlight: "appropriate coverage" },
+      { label: "Men", text: "Wear suits or traditional formal attire.", highlight: "" },
+    ],
     ladies: {
-      label: "Ladies",
-      details: "Elegant semi-formal dresses in the wedding's peach, coral, teal, seafoam, and warm sand palette. Guests may choose different dress styles while keeping the overall look romantic, refined, and beautifully coordinated.",
-      highlight: "semi-formal dresses",
+      label: "Women",
+      details: "",
+      highlight: "",
       colors: [] as AttireColor[],
       roles: [] as AttireRole[],
     },
     gentlemen: {
-      label: "Gentlemen",
-      details: "Semi-formal dress shirts, tailored trousers, or coordinated suit separates in complementary coastal teal, seafoam, peach, warm sand, beige, or neutral tones for a polished yet relaxed wedding look.",
+      label: "Men",
+      details: "",
       highlight: "",
       colors: [] as AttireColor[],
       roles: [] as AttireRole[],
@@ -370,9 +380,9 @@ const DISPLAY_MODE = "plain" as "photos" | "plain"
 
 // ── Shared images ───────────────────────────────────────────────────────────
 const BRAND = {
-  monogram: "/monogram/Rose-Pink C E Monogram Crest.png",
+  monogram: "/monogram/monogram.png",
   coupleNameImage: "/Details/newcoupelNames.png", // couple-name lettering (loader, envelope)
-  seal: "/monogram/Rose-Pink Monogram Wax Seal.png", // envelope wax seal
+  seal: "/monogram/seal.png", // envelope wax seal
   backgroundMusic: "/background_music/Goodness Of God X Oceans X Gratitude (Wedding Entrance version).mp3",
 }
 
@@ -407,10 +417,10 @@ const CORNER_DECOS = {
 
 // Full-color rose florals (public/deco/deco), shown as-is — love story + gallery corners
 const FLORAL_CORNERS = {
-  topLeft: "/deco/deco/top-left.png",
-  topRight: "/deco/deco/top-right.png",
-  bottomLeft: "/deco/deco/bottom-left.png",
-  bottomRight: "/deco/deco/bottom-right.png",
+  topLeft: "/deco/top-left-deco.png",
+  topRight: "/deco/top-right-deco.png",
+  bottomLeft: "/deco/bottom-left-deco.png",
+  bottomRight: "/deco/bottom-right-deco.png",
 }
 
 // Default decoration set used by most sections (corners + ornament + vine)
@@ -458,8 +468,8 @@ export const siteConfig = {
     time: TIMES.ceremony,
     venue: CEREMONY_VENUE.name,
     tagline: "are getting married!!!!!",
-    theme: "Navy Blue & Blush Pink",
-    motif: "#012E4B, #F69F9D, #F5C5C3",
+    theme: "Olive Green & Gold",
+    motif: "#556B2F, #D4AF37, #EADCC6, #FDF8EC",
   },
   // Opening "Save the Date" loading screen (components/loader/LoadingScreen.tsx).
   // Couple names, wedding date and ceremony details come from couple / wedding / ceremony above.
@@ -471,30 +481,43 @@ export const siteConfig = {
     //   "navy"    = deep navy & rose-gold invitation card with full-color floral corners
     //   "classic" = light botanical card (plainTheme / cornerDecos / plainInvite below)
     plainLayout: "navy" as "navy" | "classic",
+    // Full-screen image behind the loading screen (file in /public; "" = none)
+    backgroundImage: "/Details/backgroundimage.png",
     // Navy invitation card (plainLayout "navy"). Names, date, time and venue come from
     // couple / wedding / ceremony above. Any line left "" is hidden.
     navyInvite: {
       // Full-color corner florals (shown as-is, not tinted)
       decos: {
-        topLeft: "/deco/deco/top-left.png",
-        topRight: "/deco/deco/top-right.png",
-        bottomLeft: "/deco/deco/bottom-left.png",
-        bottomRight: "/deco/deco/bottom-right.png",
+        topLeft: "/deco/top-left-deco.png",
+        topRight: "/deco/top-right-deco.png",
+        bottomLeft: "/deco/bottom-left-deco.png",
+        bottomRight: "/deco/bottom-right-deco.png",
       },
-      // true = blush velvet curtains are drawn open before the card appears
+      // true = velvet curtains are drawn open before the card appears
       curtains: true,
       // true = couple photos (loadingScreen.backgroundPhotos) slide past under a navy tint behind the
       // envelope and the home hero (the loading screen itself stays plain deep blue)
       backgroundMarquee: true,
+      // Arabic line at the very top of the card, with its translation underneath ("" hides either)
+      bismillah: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+      bismillahTranslation: "In the Name of Allah,\nThe Most Gracious, The Most Merciful",
       // Lines above the couple's names, top to bottom
-      linesAbove: [],
+      linesAbove: ["The Nikkah Of"],
       // Joins the two names
       joiner: "and",
-      // true = spell the ceremony time out ("At two o'clock in the afternoon")
-      timeInWords: true,
-      // Shown at the top of the card, above the names
-      verse: "Love never gives up, never loses faith, is always hopeful, and endures through every circumstance.",
-      verseCitation: "1 Corinthians 13:7",
+      // true = spell the ceremony time out ("At two o'clock in the afternoon") — only for dateStyle "block"
+      timeInWords: false,
+      // Verse and its citation
+      verse: "And We created you in pairs.",
+      verseCitation: "Surah An-Naba 78:8",
+      // "top" = above the names; "belowNames" = between the names and the venue/date
+      versePosition: "belowNames" as "top" | "belowNames",
+      // "block" = big Month · Day · Year, then time and venue
+      // "line"  = venue name, then "December 13, 2026 | 10:00 AM"
+      dateStyle: "line" as "block" | "line",
+      // "arch" = ivory arched panel over loadingScreen.backgroundImage (olive text, gold ornaments)
+      // "navy" = light text straight on the dark sky
+      cardStyle: "arch" as "navy" | "arch",
     },
     // Colors used when display is "plain"
     plainTheme: {
@@ -528,11 +551,11 @@ export const siteConfig = {
       lineBelow: "request the honour of your presence",
     },
     // false = the opening page shows only the verse, names and date (no time, venue or countdown)
-    showCeremonyDetails: false,
+    showCeremonyDetails: true,
     eyebrow: "You are invited",
     // Line on the card inside the envelope, between the date and the names (components/loader/Hero.tsx)
-    letterMessage: "With joyful hearts, we invite you to celebrate God's faithfulness in our lives",
-    message: "We can't wait to celebrate with you",
+    letterMessage: "With gratitude to Allah, we joyfully invite you to witness the Nikkah of",
+    message: "In shaa Allah, see you there",
     // Rotates under the progress bar while the invitation loads
     statusMessages: [
       "Gathering our favorite moments",
@@ -562,128 +585,33 @@ export const siteConfig = {
     thumbnailAlt: `${COUPLE_LABEL} — video cover`,
     playLabel: "Play our video",
   },
-  // Thank-you & invitation section (components/sections/love-story.tsx + StorySection)
+  // Love story section (components/sections/love-story.tsx): plain ivory background, corner florals
   loveStory: {
-    title: "With Grateful Hearts",
-    subtitle: "thank you & join us",
-    // Short message under the title, on the navy sky at the top of the section
-    intro:
-      "To our families, our ninongs and ninangs, our friends, and everyone who chose to stand with us — this is for you.",
-    // Shown above a card's title when it has no date, e.g. "Chapter 03"
-    chapterLabel: "Chapter",
-    closingQuote: "I thank my God every time I remember you.",
-    closingCitation: "Philippians 1:3",
-    // Full-color florals in the four corners of the section
-    cornerDecos: { ...FLORAL_CORNERS },
-    eucalyptusDecos: {
-      topLeft: DECOR.sideLeft,
-      bottomRight: DECOR.sideRight,
-      timelineTop: DECOR.headerOrnament,
-      sectionBottom: DECOR.footerVine,
-    },
-    // One block per thank-you. date → small caps line above the title ("" shows "Chapter 0X").
-    // image → photo beside the text ("" for none). {groom} / {bride} → nicknames.
+    title: "Our Love Story",
+    subtitle: "two paths, one love",
+    // One block per paragraph; label → small gold caps above it ("" hides it)
     chapters: [
       {
-        date: "To Our Parents & Families",
-        title: "Where It All Began",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background-new/loveStory (1).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "Before there was an us, there were the homes that raised us. Thank you for your love, your sacrifices and your prayers — everything we are, and everything we hope to build, begins with you.",
-        ],
+        label: "Where It Began",
+        text: "Five years ago, our story began at work, from simple conversations to little dates that turned into love.",
       },
       {
-        date: "To Our Ninongs & Ninangs",
-        title: "Our Guiding Lights",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background-new/loveStory (2).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "Thank you for saying yes to standing beside us as our sponsors. Your wisdom, your example and your prayers will guide us as we begin our life as husband and wife.",
-        ],
+        label: "Through It All",
+        text: "Our journey wasn't always easy. We faced distance, challenges, and differences in faith and traditions. But through it all, we chose to understand, accept, and love each other.",
       },
       {
-        date: "To Our Entourage",
-        title: "Walking With Us",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background-new/loveStory (3).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "To everyone who will light our candles, carry our veil and cord, and walk down the aisle ahead of us — thank you for being part of the moments we will remember for the rest of our lives.",
-        ],
-      },
-      {
-        date: "To Our Friends",
-        title: "The Family We Chose",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background-new/loveStory (4).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "You laughed with us, cheered us on, and stayed with us through every season. Thank you for being the friends who feel like family.",
-        ],
-      },
-      {
-        date: "To Everyone Who Prayed for Us",
-        title: "Held in Prayer",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background-new/loveStory (5).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "Every kind word, every message and every quiet prayer carried us to this day. We are deeply grateful for each one.",
-        ],
-      },
-      {
-        date: "To Those Coming From Near & Far",
-        title: "Worth Every Mile",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background-new/loveStory (6).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "To everyone taking the time and making the trip to be with us — your presence is the greatest gift you could give us.",
-        ],
-      },
-      {
-        date: "To Those Behind the Scenes",
-        title: "Every Little Detail",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background-new/loveStory (7).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "To everyone helping us plan, prepare and bring this day together — thank you for your time, your hands and your hearts.",
-        ],
-      },
-      {
-        date: "Our Invitation",
-        title: "Celebrate With Us",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background-new/loveStory (8).png",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "With hearts full of gratitude, we, {groom} and {bride}, joyfully invite you to witness and celebrate the beginning of our forever. It would mean the world to share this day with you.",
-        ],
-      },
-      {
-        date: "With Love",
-        title: "See You There",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "",
-        imageAlt: "{groom} and {bride}",
-        paragraphs: [
-          "Thank you for choosing to support us, to celebrate with us, and to be part of our story. We can't wait to see you! ♡",
-        ],
+        label: "Our Forever",
+        text: "After five years of choosing one another, with Allah's blessings, we are finally beginning our forever together.",
       },
     ],
+    // Closing line, set large in script
+    highlight: "Two different paths, one love, one beautiful forever.",
+    // Verse under the closing line (Arabic + translation + citation; "" hides a line)
+    closingArabic: "هُنَّ لِبَاسٌ لَّكُمْ وَأَنتُمْ لِبَاسٌ لَّهُنَّ",
+    closingQuote: "They are clothing for you and you are clothing for them.",
+    closingCitation: "Surah Al-Baqarah 2:187",
+    // Full-color florals in the four corners of the section
+    cornerDecos: { ...FLORAL_CORNERS },
   },
   // Gallery section (components/sections/gallery.tsx)
   // Verse & invitation section below the love story (components/sections/countdown.tsx, id "countdown")
@@ -754,7 +682,7 @@ export const siteConfig = {
     // Cards, colors, images and which groups show → QUICK SETUP → ATTIRE
     attire: {
       title: "Attire Guidelines",
-      description: "We'd love for everyone to dress in the colors of our day — please follow the guide for your role below.",
+      description: "Kindly dress modestly and elegantly in the colors of our day: olive green, champagne gold, beige and cream.",
       // Shown above a card's palette
       paletteTitle: "Dress Code Palette",
       paletteSubtitle: "", // script line under the palette title — "" hides it
@@ -769,16 +697,57 @@ export const siteConfig = {
     },
     reminders: {
       title: "Gentle Reminders",
-      description: "A few thoughtful notes to help everyone enjoy our celebration.",
+      description: "A few thoughtful notes so we can all honor this blessed day together.",
       images: COUPLE_PHOTOS.slice(0, 4),
       // showPalette: shows the dress code palette after the first paragraph
       items: [
         {
-          title: "Adults-Only Celebration",
+          title: "Arrival",
+          variant: "soft" as "accent" | "soft",
+          showPalette: false,
+          paragraphs: [
+            "Kindly arrive by {guestsTime} so you can find your seat and settle in before the Nikkah begins at {ceremonyTime}.",
+          ],
+        },
+        {
+          title: "During the Nikkah",
           variant: "accent" as "accent" | "soft",
           showPalette: false,
           paragraphs: [
-            "As much as we love your little ones, we kindly request that our wedding celebration be for adults only. We hope you understand and enjoy this special day with us. Thank you for your understanding!",
+            "The Nikkah is a sacred moment. We kindly ask everyone to remain seated, keep conversations to a minimum, and set phones to silent during the khutbah and the exchange of vows.",
+          ],
+        },
+        {
+          title: "Modest Attire",
+          variant: "accent" as "accent" | "soft",
+          showPalette: true,
+          paragraphs: [
+            "Kindly dress modestly in formal attire, in our olive green, champagne gold, beige and cream palette.",
+            "Loose, full-coverage outfits are appreciated, and sisters are welcome to bring a light scarf or shawl. Please avoid casual clothes and all-white outfits.",
+          ],
+        },
+        {
+          title: "Unplugged Nikkah",
+          variant: "soft" as "accent" | "soft",
+          showPalette: false,
+          paragraphs: [
+            "We kindly ask that photos during the Nikkah be kept to a minimum and that our official photographers are not blocked. Please be present with us — professional photos will be shared after the event.",
+          ],
+        },
+        {
+          title: "Walimah",
+          variant: "accent" as "accent" | "soft",
+          showPalette: false,
+          paragraphs: [
+            "Please stay and join us for the walimah, our wedding feast, after the Nikkah. All food served is halal, and our celebration is alcohol-free.",
+          ],
+        },
+        {
+          title: "Adults-Only Celebration",
+          variant: "soft" as "accent" | "soft",
+          showPalette: false,
+          paragraphs: [
+            "As much as we love your little ones, we kindly request that our celebration be for adults only. Thank you for your understanding.",
           ],
         },
         {
@@ -790,36 +759,11 @@ export const siteConfig = {
           ],
         },
         {
-          title: "Unplugged Ceremony",
-          variant: "soft" as "accent" | "soft",
-          showPalette: false,
-          paragraphs: [
-            "We're having a mostly unplugged ceremony. Guests may take photos, but we kindly ask that it be kept minimal. Please avoid blocking or crowding our official photographers so they can capture the special moments. We'd love for everyone to stay present and share the moment with us. Don't worry—professional photos will be shared with you after the event. Thank you for your understanding.",
-          ],
-        },
-        {
-          title: "Dress Code",
-          variant: "accent" as "accent" | "soft",
-          showPalette: true,
-          paragraphs: [
-            "Guests, kindly come in semi-formal attire in our light blue, light yellow or light green palette (florals are welcome!).",
-            "Please avoid casual clothes and all-white outfits.",
-          ],
-        },
-        {
-          title: "Arrival",
-          variant: "soft" as "accent" | "soft",
-          showPalette: false,
-          paragraphs: [
-            "To ensure everything runs smoothly, please arrive at {guestsTime}. This will give you enough time to find your seat, settle in comfortably, and fully enjoy the beautiful ceremony before it begins at {ceremonyTime}. We truly appreciate your punctuality and look forward to celebrating this special moment with you.",
-          ],
-        },
-        {
-          title: "Reception Details",
+          title: "Your Du’a",
           variant: "accent" as "accent" | "soft",
           showPalette: false,
           paragraphs: [
-            "Please join us for early dinner, laughter, and dancing after the ceremony.",
+            "Your presence is a blessing, and your du’a for our marriage is the most beautiful gift you can give us. Jazakum Allahu khayran.",
           ],
         },
       ],
@@ -827,13 +771,13 @@ export const siteConfig = {
   },
   // Wedding day timeline (components/sections/wedding-timeline.tsx)
   weddingTimeline: {
-    kicker: "Join us as we tie the knot!",
-    title: "Timeline",
-    subtitle: "our wedding day",
+    kicker: "Join us as we begin our journey together, in shaa Allah",
+    title: "Nikkah Timeline",
+    subtitle: "our blessed day",
     description:
-      "From the first arrival to the last farewell, here is how we will spend this day together.",
+      "From the first arrival to the closing du’a, here is how we will spend this blessed day together.",
     quote: "", // "" hides the quote + citation under the timeline
-    quoteCitation: "Isaiah 60:22",
+    quoteCitation: "",
     // Optional corner decorations — leave "" to hide
     decos: {
       topLeft: "",
@@ -847,71 +791,72 @@ export const siteConfig = {
     //   location: text shown under the title; {ceremony} / {reception} are replaced
     //             with ceremony.location / reception.location ("" to hide)
     //   image:    line-art illustration from /public/weddingtimeline; "" to use the icon instead
-    //   icon:     fallback icon when there is no image —
-    //             "arrival" | "rings" | "departure" | "cocktail" | "fireworks" | "dance"
+    //   icon:     line icon drawn in the section (used when image is "") —
+    //             "arch" | "crescent" | "camera" | "teacup" | "lantern" | "feast" | "departure"
+    //             (also "arrival" | "rings" | "cocktail" | "fireworks" | "dance")
     //   description: optional extra line ("" to hide)
     events: [
       {
         show: true,
         time: TIMES.entourageCall,
-        title: "Assembly",
+        title: "Arrival of Guests",
         description: "",
         location: "{ceremony}",
-        image: "/weddingtimeline/assemble.png",
-        icon: "arrival" as TimelineIconName,
+        image: "",
+        icon: "arch" as TimelineIconName,
       },
       {
         show: true,
         time: TIMES.ceremony,
-        title: "Wedding Ceremony",
-        description: "",
+        title: "Nikkah Ceremony",
+        description: "Khutbah, ijab & qabul, and the signing of the Nikkah contract",
         location: "{ceremony}",
-        image: "/weddingtimeline/WeddingCeremony.png",
-        icon: "rings" as TimelineIconName,
+        image: "",
+        icon: "crescent" as TimelineIconName,
       },
       {
         show: true,
         time: "4:00 PM",
-        title: "Photo Op",
+        title: "Photo Session",
         description: "",
         location: "{ceremony}",
-        image: "/weddingtimeline/PhotoSession.png",
-        icon: "rings" as TimelineIconName,
+        image: "",
+        icon: "camera" as TimelineIconName,
       },
       {
         show: true,
         time: "4:30 PM",
-        title: "Cocktails",
+        title: "Refreshments",
         description: "",
         location: "{reception}",
-        image: "/weddingtimeline/CockTailHour.png",
-        icon: "cocktail" as TimelineIconName,
+        image: "",
+        icon: "teacup" as TimelineIconName,
       },
       {
         show: true,
         time: TIMES.reception,
-        title: "Start of Program",
+        title: "Walimah Program",
         description: "",
         location: "{reception}",
-        image: "/weddingtimeline/reception welcom.png",
-        icon: "fireworks" as TimelineIconName,
+        image: "",
+        icon: "lantern" as TimelineIconName,
       },
       {
         show: true,
         time: "7:00 PM",
-        title: "Dinner",
+        title: "Walimah Feast",
         description: "",
         location: "{reception}",
-        image: "/weddingtimeline/DinnerService.png",
-        icon: "cocktail" as TimelineIconName,
+        image: "",
+        icon: "feast" as TimelineIconName,
       },
       {
         show: true,
         time: "9:00 PM",
-        title: "End of Program",
+        title: "Closing Du’a & Farewell",
         description: "",
         location: "{reception}",
-        image: "/weddingtimeline/SendOff.png",
+        image: "",
         icon: "departure" as TimelineIconName,
       },
       // Spare illustrations — set show: true and a time to use them
@@ -938,12 +883,12 @@ export const siteConfig = {
   // Wedding entourage (components/sections/entourage.tsx)
   // Names and roles come from the Google Sheet (googleAPI.entourage); couple names from couple above.
   entourage: {
-    eyebrow: "Our People",
-    title: "Wedding Entourage",
-    subtitle: "standing with us",
-    description: "Honoring those who stand with us on our special day",
-    coupleKicker: "Together as one",
-    coupleLine: "The beginning of our forever",
+    eyebrow: "Our Beloved Families & Friends",
+    title: "Nikkah Entourage",
+    subtitle: "witnesses to our union",
+    description: "Honoring our families, sponsors and loved ones who stand with us as we complete half of our deen",
+    coupleKicker: "United in Nikkah",
+    coupleLine: "By the will of Allah, our forever begins",
     coupleHeading: "The Couple",
     groomRole: "Groom",
     brideRole: "Bride",
@@ -973,6 +918,10 @@ export const siteConfig = {
       "To light our path": "To light our path",
       "To Cloth us as one": "To Cloth us as one",
       "To bind us together": "To bind us together",
+      // Nikkah wording for headings carried over from the sheet
+      "Officiating Minister": "Officiating Imam",
+      "OFFICIATING MINISTER": "Officiating Imam",
+      "Bible Bearer": "Qur’an Bearer",
     } as Record<string, string>,
   },
   // RSVP / guest list (components/sections/guest-list.tsx) — card, search, RSVP form and all modals.
@@ -981,8 +930,8 @@ export const siteConfig = {
   rsvp: {
     headerOrnament: DECOR.headerOrnament, // "" to hide
     title: "RSVP",
-    script: "Are you going",
-    intro: "Kindly confirm your attendance so we may prepare a place for you at our celebration.",
+    script: "will you join us",
+    intro: "Kindly confirm your attendance so we may prepare a place for you at our Nikkah and walimah, in shaa Allah.",
     deadlineLabel: "RSVP Deadline",
     openButton: "Tap here to respond",
     search: {
@@ -992,20 +941,20 @@ export const siteConfig = {
       loading: "Preparing the guest list. We'll keep trying until names appear.",
       refine: "Keep typing to refine results",
       notFoundTitle: "Not finding your name?",
-      notFoundText: "We'd love to have you with us. Send a request to join the celebration.",
+      notFoundText: "We'd love to have you with us, in shaa Allah. Send a request to join our celebration.",
       requestButton: "Request to Join",
     },
     invite: {
       title: "You are Invited",
-      scriptFallback: "to our celebration",
-      greeting: "Hello {name}, you are invited to our wedding!",
+      scriptFallback: "to our nikkah",
+      greeting: "Assalamu alaikum, {name}! You are warmly invited to our Nikkah and walimah.",
       seats: "We've reserved {count} for you.",
       seatSingular: "seat",
       seatPlural: "seats",
     },
     responded: {
       title: "Thank You for Responding!",
-      text: "We've received your RSVP and look forward to celebrating with you!",
+      text: "We've received your RSVP. Jazakum Allahu khayran — we look forward to celebrating with you, in shaa Allah!",
       attending: "You're Attending!",
       declined: "Unable to Attend",
       guestCountLabel: "Number of Guests",
@@ -1013,8 +962,8 @@ export const siteConfig = {
     },
     form: {
       attendLabel: "Can you attend? *",
-      yes: "Yes!",
-      no: "Sorry, No",
+      yes: "Yes, in shaa Allah",
+      no: "Unable to Attend",
       companionsLabel: "Who's Coming With You?",
       companionsHint: "Please provide names and relationships for your {count} additional {guests}",
       guestSingular: "guest",
@@ -1024,9 +973,9 @@ export const siteConfig = {
       companionNamePlaceholder: "Name of guest {n}",
       relationshipLabel: "Relationship with {name}",
       relationshipFallbackName: "Primary Guest",
-      relationshipPlaceholder: "e.g., Spouse, Friend, Child, Parent",
+      relationshipPlaceholder: "e.g., Spouse, Child, Parent, Relative",
       // One-tap relationship choices shown under the relationship field
-      relationshipOptions: ["Spouse", "Partner", "Child", "Parent", "Sibling", "Friend"],
+      relationshipOptions: ["Spouse", "Child", "Parent", "Sibling", "Relative", "Friend"],
       companionProgress: "Guest {n} of {total}",
       companionsAdded: "{done} of {total} added",
       prevButton: "Back",
@@ -1047,19 +996,19 @@ export const siteConfig = {
     },
     success: {
       title: "RSVP Confirmed",
-      attending: "We're thrilled you'll be joining us — your spot is saved!",
-      declined: "We'll miss you, but thank you for letting us know.",
-      neutral: "Thank you for your response!",
+      attending: "Alhamdulillah, we're delighted you'll be joining us — your seat is saved!",
+      declined: "We'll miss you. Thank you for letting us know, and please keep us in your du’a.",
+      neutral: "Jazakum Allahu khayran for your response!",
       messagePrompt:
-        "Before you go, leave a message for the couple — your words will be a cherished memory they can always look back on.",
-      messageButton: "Leave a Message",
+        "Before you go, leave a du’a for the couple — your words will be a cherished memory they can always look back on.",
+      messageButton: "Leave a Du’a",
       laterButton: "Maybe later — close",
     },
     request: {
       title: "Request",
       script: "to join us",
-      greetingNamed: "Hi {name} — want to celebrate with us? Send a request!",
-      greeting: "Want to celebrate with us? Send a request!",
+      greetingNamed: "Assalamu alaikum, {name} — would you like to join our celebration? Send a request!",
+      greeting: "Would you like to join our celebration? Send a request!",
       optional: "(Optional)",
       nameLabel: "Full Name *",
       namePlaceholder: "Enter your full name",
@@ -1079,7 +1028,7 @@ export const siteConfig = {
       autoClose: "This will close automatically",
     },
     messages: {
-      thankYou: "Thank you for your response!",
+      thankYou: "Jazakum Allahu khayran for your response!",
       requestSubmitted: "Request submitted! We'll review and get back to you.",
       loadFailed: "Failed to load guest list",
       selectAttendance: "Please select if you can attend",
@@ -1099,22 +1048,22 @@ export const siteConfig = {
   // Book of guests (components/sections/book-of-guests.tsx) — confirmed guests come from the guest list API.
   bookOfGuests: {
     title: "Book of Guests",
-    subtitle: "celebrating with us",
+    subtitle: "honored to have you",
     description:
-      "Meet the cherished souls joining us in celebration — your presence makes our day truly special.",
-    statsEyebrow: "Our Celebration",
+      "Meet the beloved family and friends joining us, in shaa Allah — your presence makes this blessed day complete.",
+    statsEyebrow: "Our Blessed Gathering",
     guestSingular: "Guest",
     guestPlural: "Guests",
-    statsCaption: "Celebrating With Us",
+    statsCaption: "Joining Our Nikkah",
     rsvpSingular: "RSVP",
     rsvpPlural: "RSVPs",
     partySingular: "Party",
     partyPlural: "Parties",
-    thankYou: "Thank you for confirming your RSVP — your presence means the world to us.",
+    thankYou: "Jazakum Allahu khayran for confirming your RSVP — your presence and du’a mean the world to us.",
     updatedLabel: "Updated",
     refreshLabel: "Refresh guest counts",
     listEyebrow: "Joining Us",
-    listDescription: "A glimpse of the wonderful guests celebrating with us",
+    listDescription: "A glimpse of the beloved guests sharing this blessed day with us",
     vipLabel: "VIP",
     noTable: "No Table Yet",
     companionsLabel: "With Them",
@@ -1141,23 +1090,45 @@ export const siteConfig = {
     title: "Frequently Asked Questions",
     subtitle: "everything you need to know",
     description:
-      "Helpful notes so you can simply arrive, celebrate, and enjoy this new chapter with us.",
+      "Helpful notes so you can simply arrive, witness our Nikkah, and celebrate this blessed day with us, in shaa Allah.",
     // Full-color florals in the four corners of the section (leave a path "" to hide it)
     cornerDecos: { ...FLORAL_CORNERS },
     // Answers: blank line = new paragraph, "• " = bullet, [label](#section) or [label](https://…) = link.
     // {deadline} {coordinator} {contact} {groom} {bride} are filled in automatically.
+    // Kept in step with the Gentle Reminders in Event Details (eventDetails.reminders).
     items: [
       {
-        question: "When is the wedding?",
-        answer: `Our wedding will be held on ${WEDDING_DAY}, ${WEDDING_DATE}. The ceremony begins at ${TIMES.ceremony}, and the reception follows at ${TIMES.reception}.`,
+        question: "When and where is the Nikkah?",
+        answer: `In shaa Allah, our Nikkah will be held on ${WEDDING_DAY}, ${WEDDING_DATE}, at ${TIMES.ceremony}, at ${CEREMONY_VENUE.name}, ${CEREMONY_VENUE.address}. The walimah (wedding feast) follows at the same venue. [Open in Google Maps](${CEREMONY_VENUE.map})`,
       },
       {
-        question: "What time should I arrive for the ceremony?",
-        answer: `Please arrive by ${TIMES.guestArrival} so you have time to find your seat and settle in. The ceremony will begin promptly at ${TIMES.ceremony}.`,
+        question: "What time should I arrive?",
+        answer: `Kindly arrive by ${TIMES.guestArrival} so you can find your seat and settle in before the Nikkah begins at ${TIMES.ceremony}.`,
       },
       {
-        question: "Where will the ceremony and reception take place?",
-        answer: `Both the ceremony and the reception will be held at ${CEREMONY_VENUE.name}, ${CEREMONY_VENUE.address}. [Open in Google Maps](${CEREMONY_VENUE.map})`,
+        question: "What happens during the Nikkah?",
+        answer:
+          "The Nikkah is a short and sacred ceremony:\n\n• A khutbah (marriage sermon)\n• The ijab and qabul — the offer and acceptance — in the presence of the wali and witnesses\n• The signing of the Nikkah contract\n• A closing du\u2019a for the couple\n\nWe kindly ask everyone to remain seated, keep conversations to a minimum, and set phones to silent during the ceremony.",
+      },
+      {
+        question: "I am not Muslim. Am I welcome to attend?",
+        answer:
+          "Absolutely! Our families and friends of every faith are warmly welcome. There is nothing special you need to do — simply dress modestly and join us in witnessing and celebrating this blessed day.",
+      },
+      {
+        question: "What is the dress code?",
+        answer:
+          "Modest formal attire in our olive green, champagne gold, beige and cream palette. Please see the [attire guide](#attire) in Event Details.\n\n• Women: long dresses, abayas, or formal dresses with appropriate coverage\n• Men: suits or traditional formal attire\n• Principal Sponsors: Filipiniana and Barong\n\nKindly avoid casual clothes and all-white outfits.",
+      },
+      {
+        question: "Do women need to cover their hair?",
+        answer:
+          "It is not required for guests, but sisters are welcome to bring a light scarf or shawl, especially during the Nikkah. Loose, full-coverage outfits are always appreciated.",
+      },
+      {
+        question: "Is the food halal? Will alcohol be served?",
+        answer:
+          "All food served at the walimah is halal, and our celebration is alcohol-free. We kindly ask that no alcoholic drinks be brought to the venue.",
       },
       {
         question: "How do I RSVP?",
@@ -1167,33 +1138,33 @@ export const siteConfig = {
       {
         question: 'Do we really need to RSVP? We already said "Yes" to the couple.',
         answer:
-          "Yes, please. We will be needing your formal RSVP to consolidate guest details and finalize the headcount for catering and seating purposes.",
+          "Yes, please. We need your formal RSVP to finalize the headcount for the walimah and the seating arrangement.",
       },
       {
-        question: "May we choose our own seats at the reception?",
+        question: "May we choose our own seats at the walimah?",
         answer:
-          "We kindly ask that you take the place reserved for you. Each seat has been arranged with care so everyone may be comfortably seated with those we hoped you would share the evening with.",
+          "We kindly ask that you take the place reserved for you. Each seat has been arranged with care so everyone may be comfortably seated with family and friends.",
       },
       {
-        question: 'Can I bring a "Plus One" to the event?',
+        question: 'Can I bring a "Plus One"?',
         answer:
-          "As much as we would love to accommodate all our friends and family, we have a limited number of guests. Please understand that this event is strictly by invitation only.",
+          "As much as we would love to accommodate all our friends and family, our guest list is limited. Kindly understand that this celebration is strictly by invitation only.",
       },
       {
-        question: "Can I bring my child to the event?",
+        question: "Can I bring my child?",
         answer:
-          "As much as we love your little ones, we kindly request that our wedding celebration be for adults only. We hope you understand and enjoy this special day with us. Thank you for your understanding!",
+          "As much as we love your little ones, we kindly request that our celebration be for adults only. Thank you for your understanding.",
       },
       {
         question:
-          'I said "No" to the RSVP but I had a change of plans—I can attend now! What should I do?',
+          'I said "No" to the RSVP but my plans changed — I can attend now. What should I do?',
         answer:
-          "Please check with us first as we have a strict guest list. If seats become available, we will let you know as soon as possible. Please do not attend unannounced, as we may not have any available seats for you.",
+          "Please check with us first, as we have a strict guest list. If seats become available, we will let you know as soon as possible. Kindly do not attend unannounced, as we may not have a seat for you.",
       },
       {
-        question: "What if I RSVP'd but cannot attend?",
+        question: "What if I RSVP'd but can no longer attend?",
         answer:
-          "We would love to have you at our wedding, but we understand that there are circumstances beyond our control. However, please let us know as soon as possible so we can reallocate your seat/s.",
+          "We understand that some things are beyond our control. Please let us know as soon as possible so we can reallocate your seat, and do keep us in your du\u2019a.",
       },
       {
         question: "Is there parking available?",
@@ -1201,34 +1172,34 @@ export const siteConfig = {
           "Yes, parking for both cars and motorcycles is available inside the venue. Please arrive a little early so you have time to park comfortably.",
       },
       {
-        question: "What is the dress code?",
+        question: "Will the Nikkah be unplugged?",
         answer:
-          "Please follow the [attire guide](#details) in Event Details. Ladies may wear a floral long dress, or a long dress in light blue, light yellow or light green. Gentlemen may wear a long-sleeve polo in light blue, light yellow or light green with black slacks. Kindly avoid casual clothes and all-white outfits.",
+          "Mostly. We kindly ask that photos during the Nikkah be kept to a minimum and that our official photographers are not blocked. Please be present with us — professional photos will be shared after the event.",
       },
       {
-        question: "Will the ceremony be unplugged?",
+        question: "Can I take photos or videos during the walimah?",
         answer:
-          "Mostly. You may take a few photos, but we kindly ask that you keep it minimal and avoid blocking or crowding our official photographers. We would love for everyone to stay present and share the moment with us. Don't worry—professional photos will be shared with you after the event.",
-      },
-      {
-        question: "Can I take photos or videos during the reception?",
-        answer:
-          "Yes. We would love for you to capture the joy throughout the reception. We prepared this celebration wholeheartedly and we want everyone to enjoy it fully.",
-      },
-      {
-        question: "When would it be most thoughtful to take our leave?",
-        answer:
-          "It would mean so much if you could stay with us through the end of the program. We have prepared the evening with love, and we hope you will laugh, take photos, and celebrate until the night draws to a close.",
+          "Yes! We would love for you to capture the joy of the walimah and share it with us.",
       },
       {
         question: "What if I have dietary restrictions or allergies?",
         answer:
-          "Please let us know about any dietary restrictions or allergies when you RSVP. We want to ensure everyone can enjoy the celebration comfortably.",
+          "Please let us know about any dietary restrictions or allergies when you RSVP, so we can make sure everyone enjoys the feast comfortably.",
       },
       {
-        question: "How can I help the couple have a great time during their wedding?",
+        question: "What gift should we give?",
         answer:
-          "• Pray with us for favorable weather and the continuous blessings of our Lord as we enter this new chapter of our lives as husband and wife.\n• RSVP as soon as your schedule is cleared.\n• Dress according to the attire guide and color palette.\n• Arrive on time.\n• Follow the seating arrangement at the reception.\n• Stay until the end of the program.\n• Join the activities and enjoy!",
+          "Your presence and your du\u2019a are the greatest gifts of all. If you wish to give, please see our [gift guide](#registry).",
+      },
+      {
+        question: "When would it be most thoughtful to take our leave?",
+        answer:
+          "It would mean so much if you could stay with us until the closing du\u2019a at the end of the program.",
+      },
+      {
+        question: "How can I help make the day special?",
+        answer:
+          "• Make du\u2019a for us, that Allah blesses our marriage with love, mercy and barakah.\n• RSVP as soon as your schedule is cleared.\n• Dress modestly according to the attire guide and color palette.\n• Arrive on time.\n• Follow the seating arrangement at the walimah.\n• Stay with us until the closing du\u2019a.",
       },
     ],
   },
@@ -1237,13 +1208,13 @@ export const siteConfig = {
     eyebrow: "A Token of Love",
     title: "Gift Guide",
     subtitle: "with gratitude",
-    description: "Your presence on our wedding day is the greatest gift of all.",
+    description: "Your presence and your du’a on our wedding day are the greatest gifts of all.",
     paragraphs: [
-      "Having you with us on our wedding day is already a precious blessing. If you wish to give, we humbly prefer a love gift rather than material presents. Your love, prayers, and generosity mean so much to us as we begin this new chapter together, trusting in God’s faithfulness.",
+      "Having you with us on our wedding day is already a precious blessing, Alhamdulillah. If you wish to give, we humbly prefer a love gift rather than material presents. Your du’a, kindness, and generosity mean so much to us as we begin this new chapter together, by the will of Allah.",
     ],
     thankYou: "", // "" hides the line
-    signOff: "With joyful hearts,",
-    signature: "{groom} & {bride}", // Carl & Ellaine — keep groom first, same as every other section
+    signOff: "With love and du’a,",
+    signature: "{groom} & {bride}", // Ameer & Mylene — keep groom first, same as every other section
     // Colors — any CSS color or a palette token from app/globals.css (e.g. "var(--color-motif-accent)")
     colors: {
       title: "var(--color-welcome-navy)",                                              // "Gift Guide", account names
@@ -1270,14 +1241,20 @@ export const siteConfig = {
     accountsTitle: "",
     accountsNote: "",
     // Short text beside the QR (left of the QR panel, below the couple names)
-    qrText: "Should you wish to send a love gift, simply scan this QR code. Thank you for your generosity!",
+    qrText: "Should you wish to send a gift, simply scan this QR code. May Allah bless you for your generosity.",
     saveQrLabel: "Save QR",
     scanLabel: "Tap to enlarge", // caption under the QR
     zoomNote: "Scan with your banking or e-wallet app, or save it and upload from your gallery.",
     accounts: [
-      { show: true, label: "", accountName: "", accountNumber: "", qr: "/QR/new-QR-BDO.png" },
-      { show: false, label: "", accountName: "", accountNumber: "", qr: "" },
+      { show: true, label: "BPI", accountName: "Mylene", accountNumber: "********266", qr: "/QR/BPI.png" },
+      { show: true, label: "MariBank", accountName: "Mylene Jechille", accountNumber: "****7386", qr: "/QR/Maribank.png" },
     ] as { show: boolean; label: string; accountName: string; accountNumber: string; qr: string }[],
+    // Closing at the bottom of the card ("" hides a line)
+    closing: {
+      arabic: "جَزَاكُمُ اللَّهُ خَيْرًا",
+      title: "Jazakum Allahu Khairan",
+      text: "May Allah reward you with goodness.",
+    },
     // Leave any path "" to hide that decoration
     decos: { ...SECTION_DECOS },
   },
@@ -1329,14 +1306,14 @@ export const siteConfig = {
       headerEyebrow: "A Personal Invitation",
       headline: "From Our Hearts to Yours", // big title under the eyebrow ("" hides it)
       placeEyebrow: "A Special Place", // lines under the couple illustration ("" hides them)
-      placeTitle: "In Our Wedding",
+      placeTitle: "In Our Nikkah",
       headerScript: "written just for you",
       saveTheDate: "Save the Date",
       roleOffered: "Your role",
       preparedFor: "Written for",
       askQuestion: "Will you be our",
       registeredName: "Your name on our list",
-      returnButton: "Return to Our Wedding Page",
+      returnButton: "Return to Our Nikkah Page",
       saving: "Saving...",
       sending: "Sending...",
       sendButton: "Send My Response",
@@ -1357,14 +1334,14 @@ export const siteConfig = {
     },
     copy: {
       party: {
-        greeting: "Dear",
+        greeting: "Assalamu alaikum,",
         intro: [
           "Before anything else, we wanted you to hear this from us personally.",
-          "We're getting married! After everything we've shared so far, we're ready to begin the next chapter of our lives together, and we couldn't wait to tell you.",
+          "In shaa Allah, we're getting married! After everything we've shared so far, we're ready to begin the next chapter of our lives together through the blessed bond of Nikkah, and we couldn't wait to tell you.",
         ],
         body: [
           "This little letter isn't a general invitation. We wrote it with you in mind.",
-          "When we pictured our wedding day, we thought about the people who have walked with us, laughed with us and cheered us on. Your name came up right away.",
+          "When we pictured our Nikkah day, we thought about the people who have walked with us, laughed with us and cheered us on. Your name came up right away.",
           "We would love for you to be more than a guest. We'd love you right beside us, sharing the nerves, the joy, the happy tears and every memory we'll keep from that day.",
         ],
         askLead: "So, with all our hearts, we'd like to ask you",
@@ -1379,16 +1356,16 @@ export const siteConfig = {
           subheader: "You just made our day",
           roleLine: "Standing with us as our {role}",
           body: [
-            "Thank you, {name}. Knowing you'll be right beside us makes our wedding feel even more like us. We can't wait to celebrate, laugh, and make memories with you. We'll be in touch soon with all the little details!",
+            "Jazakallahu khayran, {name}. Knowing you'll be right beside us makes our Nikkah feel even more like us. We can't wait to celebrate, laugh, and make memories with you, in shaa Allah. We'll be in touch soon with all the little details!",
           ],
-          signOff: "With so much love,",
+          signOff: "With love and du\u2019a,",
         },
         no: {
           title: "Thank You",
           script: "for telling us",
           subheader: "We completely understand",
           body: [
-            "Thank you for taking the time to read our letter and think it over. There are truly no hard feelings. Whether you're beside us or cheering from wherever you are, we're grateful to have you in our lives.",
+            "Thank you for taking the time to read our letter and think it over. There are truly no hard feelings. Whether you're beside us or making du\u2019a for us from wherever you are, we're grateful to have you in our lives.",
           ],
         },
         sent: {
@@ -1396,24 +1373,24 @@ export const siteConfig = {
           script: "with love",
           subheader: "Your reply has reached us",
           body: [
-            "We hope you'll still celebrate with us in your own way. Your love and good wishes mean the world to us.",
+            "We hope you'll still celebrate with us in your own way. Your love and du\u2019a mean the world to us.",
           ],
           signOff: "With love and warmest wishes,",
         },
       },
       sponsor: {
-        greeting: "Dear",
+        greeting: "Assalamu alaikum,",
         intro: [
           "We wanted to share some happy news with you, and we wanted you to hear it from us first.",
-          "We're getting married, and we're about to begin a new life together as husband and wife.",
+          "In shaa Allah, we're getting married, and we're about to begin a new life together as husband and wife through the blessed bond of Nikkah.",
         ],
         body: [
           "This letter is not a general invitation. It's a personal request, written especially for you.",
           "As we prepare for this day, we keep thinking of the people we look up to. You have shown us, in ways you may not even realize, what a loving and faithful life looks like.",
-          "To us, a {role} is more than a name in our program. It is someone whose wisdom we trust, whose prayers we hold dear, and whose example we hope to follow as we build our own home.",
+          "To us, a {role} is more than a name in our program. It is someone whose wisdom we trust, whose du\u2019a we hold dear, and whose example we hope to follow as we build our own home.",
         ],
         askLead: "With deep respect and sincerity, we'd like to ask you",
-        askNote: "Having you stand with us, and having your blessing on our marriage, would mean more to us than we can say.",
+        askNote: "Having you stand with us, and having your du\u2019a for our marriage, would mean more to us than we can say.",
         yesButton: "Yes, I'd Be Honored 🤍",
         noButton: "I Can't, But With Love",
         signOff: "With love and respect,",
@@ -1423,7 +1400,7 @@ export const siteConfig = {
           subheader: "We are truly honored",
           roleLine: "Our {role}",
           body: [
-            "Thank you, {name}, for accepting this role with such an open heart. Your guidance and prayers mean so much to us, and we're grateful to begin our marriage with you beside us. We'll reach out soon with the details.",
+            "Jazakallahu khayran, {name}, for accepting this role with such an open heart. Your guidance and du\u2019a mean so much to us, and we're grateful to begin our marriage with you beside us. We'll reach out soon with the details.",
           ],
           signOff: "With love and heartfelt gratitude,",
         },
@@ -1432,7 +1409,7 @@ export const siteConfig = {
           script: "for your kindness",
           subheader: "We completely understand and respect your decision",
           body: [
-            "Thank you for reading our letter and giving our request your thought. There are no hard feelings at all. We're simply grateful for you, and we'd be happy to have your prayers and blessings in whatever way you can share them.",
+            "Thank you for reading our letter and giving our request your thought. There are no hard feelings at all. We're simply grateful for you, and we'd be happy to have your du\u2019a in whatever way you can share it.",
           ],
         },
         sent: {
@@ -1440,22 +1417,22 @@ export const siteConfig = {
           script: "with gratitude",
           subheader: "Your reply has reached us",
           body: [
-            "Thank you for being part of our story. Your love and good wishes mean the world to us.",
+            "Thank you for being part of our story. Your love and du\u2019a mean the world to us.",
           ],
           signOff: "With love and warmest wishes,",
         },
       },
       bearer: {
-        greeting: "Hi",
+        greeting: "Assalamu alaikum,",
         intro: [
           "Guess what? We have the happiest news, and we wanted to tell you first! 🤍",
-          "{groom} & {bride} are getting married!",
+          "In shaa Allah, {groom} & {bride} are getting married!",
         ],
         body: [
-          "Our wedding is going to be a very special day, and it wouldn't feel complete without you there with us.",
+          "Our Nikkah is going to be a very special day, and it wouldn't feel complete without you there with us.",
         ],
         askLead: "So we have a super important question, just for you:",
-        askNote: "You'd get to walk down the aisle and carry something very precious for our ceremony. We think you'd be amazing at it!",
+        askNote: "You'd get to walk with us and carry something very precious for our Nikkah. We think you'd be amazing at it!",
         yesButton: "Yes, I'd Love To! 🤍",
         noButton: "Maybe Next Time 🤍",
         signOff: "With lots of love,",
@@ -1465,7 +1442,7 @@ export const siteConfig = {
           subheader: "You're officially on our team!",
           roleLine: "Our {role}",
           body: [
-            "We're so excited to have you as our {role}! We can't wait to see you walk down the aisle. You have a very special job, and we know you'll do great. See you on our big day! 🤍",
+            "We're so excited to have you as our {role}! We can't wait to see you walk in with us. You have a very special job, and we know you'll do great. See you on our big day! 🤍",
           ],
           signOff: "With lots of love,",
         },
@@ -1486,16 +1463,16 @@ export const siteConfig = {
         },
       },
       flowerGirl: {
-        greeting: "Hi",
+        greeting: "Assalamu alaikum,",
         intro: [
           "Guess what? We have the happiest news, and we wanted to tell you first! 🤍",
-          "{groom} & {bride} are getting married!",
+          "In shaa Allah, {groom} & {bride} are getting married!",
         ],
         body: [
-          "Our wedding needs a little extra sweetness, lots of smiles, and a sprinkle of magic. We thought of you right away.",
+          "Our Nikkah celebration needs a little extra sweetness, lots of smiles, and a sprinkle of magic. We thought of you right away.",
         ],
         askLead: "And we have a very special role we'd love for you to have:",
-        askNote: "You'd get to walk down the aisle before the bride and make our day even more beautiful. We think you'd be perfect!",
+        askNote: "You'd get to walk in before the bride and make our day even more beautiful. We think you'd be perfect!",
         yesButton: "Yes, I'd Love To! 🌸",
         noButton: "Maybe Next Time 🤍",
         signOff: "With lots of love,",
@@ -1505,7 +1482,7 @@ export const siteConfig = {
           subheader: "We're so happy you'll be our Flower Girl!",
           roleLine: "Our {role}",
           body: [
-            "We can't wait to see you walk down the aisle! Have fun, smile big, and enjoy every moment. See you on our big day! 🤍",
+            "We can't wait to see you walk in before the bride! Have fun, smile big, and enjoy every moment. See you on our big day! 🤍",
           ],
           signOff: "With lots of love,",
         },
@@ -1652,57 +1629,53 @@ Now, as they prepare to say yes before God and the people they love most, Cather
   // Wedding playlist (components/sections/wedding-playlist.tsx). {couple} → "Groom & Bride" nicknames.
   playlist: {
     eyebrow: "Our Soundtrack",
-    title: "A Playlist from our hearts",
-    script: "songs of our love",
-    subtitle: "Songs that have been part of our journey together",
+    title: "Melodies of Our Journey",
+    script: "from our hearts",
+    subtitle: "The songs that have accompanied our journey together, Alhamdulillah",
     // Shown on the playlist card
     cardEyebrow: "Spotify Playlist",
-    playlistName: `${COUPLE_LABEL} Wedding`,
+    playlistName: `${COUPLE_LABEL} Nikkah`,
     cardNote: "Press play and listen along — every song holds a little piece of our story.",
     buttonText: "Open in Spotify",
     // Full-color florals in the four corners of the section (leave a path "" to hide it)
     cornerDecos: { ...FLORAL_CORNERS },
     embedUrl:
     //https://open.spotify.com/embed/playlist/5sT43YjdM8pJ3xtEkrxyEY?utm_source=generator&si=e5e64aa63fd04356
-      "https://open.spotify.com/embed/playlist/5sT43YjdM8pJ3xtEkrxyEY?utm_source=generator&si=e5e64aa63fd04356",
-    spotifyUrl: "https://open.spotify.com/playlist/5sT43YjdM8pJ3xtEkrxyEY",
+      "https://open.spotify.com/embed/playlist/6ft808LQg0IuXBcu0jaZBC?utm_source=generator&si=0f55045919a9473a",
+    spotifyUrl: "https://open.spotify.com/playlist/6ft808LQg0IuXBcu0jaZBC",
   },
   // Closing "See you there!" section (components/sections/see-you-there.tsx).
   //   photos mode (loadingScreen.display "photos") → full-screen couple photo
   //   plain mode  (loadingScreen.display "plain")  → botanical card, no photo
   // {couple} → "Groom & Bride" nicknames.
   seeYouThere: {
+    // Plain ivory card with corner florals (no photos)
+    arabic: "إِنْ شَاءَ اللَّه", // "" hides it
+    eyebrow: "In shaa Allah",
     titleLine1: "See you",
     titleLine2: "there!",
-    eyebrow: "Until we meet",
-    script: "with love, {couple}",
-    message: "We can't wait to celebrate this beautiful day with you.",
-    // Shown in every display mode: three side-by-side panels on desktop, a cross-fading
-    // full-screen photo on mobile. Portrait photos fit best.
-    photos: [
-      "/mobile-background-new/loveStory (2).png",
-      "/mobile-background-new/loveStory (4).png",
-      "/mobile-background-new/loveStory (5).png",
-    ],
-    photoAlt: "{couple}",
+    script: "with love and du’a, {couple}",
+    message: "We look forward to celebrating this blessed day with you. May Allah gather us in goodness.",
+    // Full-color florals in the four corners of the section (leave a path "" to hide it)
+    cornerDecos: { ...FLORAL_CORNERS },
   },
   // Footer (components/sections/footer.tsx).
   // {couple} → "Groom & Bride" nicknames, {year} → current year. Date comes from ceremony, deadline from details.rsvp.
   footer: {
     showMonogram: true, // couple.monogram, tinted to the motif
-    dateLabel: "Wedding Date",
+    dateLabel: "Nikkah Date",
     // Ceremony & reception at a glance (times and places come from ceremony / reception)
     summary: {
       show: true,
-      ceremonyLabel: "Ceremony",
-      receptionLabel: "Reception",
+      ceremonyLabel: "Nikkah",
+      receptionLabel: "Walimah",
     },
     noteTitle: "A Note From Us",
     // Typed out one after another
     quotes: [
-      '"I have found the one whom my soul loves." – Song of Solomon 3:4',
-      "Welcome to our wedding website! We've found a love that's a true blessing, and we give thanks to God for writing the beautiful story of our journey together.",
-      "Thank you for your love, prayers, and support. We can't wait to celebrate this joyful day together!",
+      '"And He placed between you affection and mercy." – Surah Ar-Rum 30:21',
+      "Welcome to our wedding website! Alhamdulillah, we have found a love that is a true blessing, and we thank Allah for writing the beautiful story of our journey together.",
+      "Jazakum Allahu khayran for your love, du’a, and support. We can't wait to celebrate this blessed day with you, in shaa Allah!",
     ],
     rsvp: {
       show: true,
@@ -1740,7 +1713,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       { label: "Messages", href: "#messages" },
       { label: "FAQ", href: "#faq" },
     ],
-    copyright: "© {year} {couple} — crafted with love, prayers, and gratitude.",
+    copyright: "© {year} {couple} — crafted with love, du’a, and gratitude.",
     tagline: "This celebration site was designed to share our story and joy with you.",
     credit: {
       show: true,
@@ -1760,11 +1733,11 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       "https://drive.google.com/drive/folders/1qVjxLcmkcWEmoDRYv_cgFgCKiYMmcf6j?usp=sharing",
     albumQR: "/QR/AlbumQR.png",
     hashtag: HASHTAGS,
-    instructions: "Please scan this QR Code and upload the photos and videos you have taken during our wedding reception. We are delighted to see your snaps too!",
+    instructions: "Please scan this QR code to upload the photos and videos you take during our walimah. Kindly keep photos to a minimum during the Nikkah itself — we would love to see your snaps afterwards!",
     title: "Snap and Share",
     subtitle: "Share your memories",
     description:
-      "Help us remember the little moments of {couple}'s day — every smile, embrace, and candid laugh. Your photos and clips complete our love story.",
+      "Help us remember the little moments of {couple}'s Nikkah and walimah — every smile, du\u2019a, and joyful laugh. Your photos and clips complete our story.",
     // "Our Favorite Moments" photo card — always hidden when loadingScreen.display is "plain"
     moments: {
       show: true,
@@ -1776,7 +1749,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
     // Website QR card — lets guests share the invitation page
     website: {
       show: true,
-      title: "Share Our Wedding Website",
+      title: "Share Our Nikkah Website",
       description:
         "Spread the word about {couple}'s celebration. Share this QR code so friends and family can join us.",
       downloadButton: "Download QR",
@@ -1784,7 +1757,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
     },
     hashtags: {
       show: true,
-      title: "Wedding Hashtags",
+      title: "Our Nikkah Hashtags",
       copy: "Copy",
       copied: "Copied",
       copyAll: "Copy All",
@@ -1793,10 +1766,10 @@ Now, as they prepare to say yes before God and the people they love most, Cather
     social: {
       show: true,
       title: "Share on Social Media",
-      description: "Help spread the word about {couple}'s wedding across your favorite platforms.",
+      description: "Help spread the word about {couple}'s Nikkah across your favorite platforms.",
       // Remove any you don't want: "instagram" | "facebook" | "tiktok" | "twitter"
       platforms: ["instagram", "facebook", "tiktok", "twitter"] as ("instagram" | "facebook" | "tiktok" | "twitter")[],
-      shareText: "Celebrate {couple}'s wedding! Explore the details and share your special memories:",
+      shareText: "Celebrate {couple}'s Nikkah! Explore the details and share your special memories:",
     },
     // Shown only when googleDriveLink is set
     upload: {
@@ -1808,9 +1781,9 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       uploadButton: "Upload Photos",
     },
     closing:
-      "Thank you for helping make {couple}'s wedding celebration memorable. Your photos and messages create beautiful memories we will treasure for a lifetime.",
-    closingTag: "Thank you for sharing the joy",
-    // Bible verse panel at the bottom; photos cross-fade behind the verses
+      "Jazakum Allahu khayran for helping make {couple}'s Nikkah memorable. Your photos, messages, and du\u2019a create beautiful memories we will treasure for a lifetime.",
+    closingTag: "Jazakum Allahu khayran for sharing the joy",
+    // Qur'an verse panel at the bottom (Sahih International); photos cross-fade behind the verses
     verses: {
       show: true,
       eyebrow: "Words We Hold Dear",
@@ -1825,11 +1798,10 @@ Now, as they prepare to say yes before God and the people they love most, Cather
         "/mobile-background-new/loveStory (8).png",
       ],
       quotes: [
-        { text: "Love is patient, love is kind. It always protects, always trusts, always hopes, always perseveres.", reference: "1 Corinthians 13:4, 7" },
-        { text: "Therefore what God has joined together, let no one separate.", reference: "Mark 10:9" },
-        { text: "A cord of three strands is not quickly broken.", reference: "Ecclesiastes 4:12" },
-        { text: "And over all these virtues put on love, which binds them all together in perfect unity.", reference: "Colossians 3:14" },
-        { text: "We love because He first loved us.", reference: "1 John 4:19" },
+        { text: "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.", reference: "Surah Ar-Rum 30:21" },
+        { text: "They are clothing for you and you are clothing for them.", reference: "Surah Al-Baqarah 2:187" },
+        { text: "And We created you in pairs.", reference: "Surah An-Naba 78:8" },
+        { text: "Our Lord, grant us from among our wives and offspring comfort to our eyes and make us an example for the righteous.", reference: "Surah Al-Furqan 25:74" },
       ],
     },
   },

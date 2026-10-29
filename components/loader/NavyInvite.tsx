@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Cinzel } from 'next/font/google';
+import { Amiri, Cinzel } from 'next/font/google';
 import localFont from 'next/font/local';
 import { NavyMarquee } from '@/components/loader/navy-marquee';
 import { InfinityLoader } from '@/components/loader/InfinityLoader';
@@ -22,6 +22,13 @@ const theSeasons = localFont({
   variable: '--nv-font-seasons',
 });
 
+// Arabic calligraphy for the Bismillah
+const amiri = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  display: 'swap',
+});
+
 const aboveTheBeyond = localFont({
   src: '../../Font/above-the-beyond-script.otf',
   display: 'swap',
@@ -37,6 +44,16 @@ export interface NavyInviteConfig {
   timeInWords: boolean;
   verse: string;
   verseCitation: string;
+  /** Arabic line at the very top of the card ("" hides it) */
+  bismillah?: string;
+  /** Translation under the Arabic line ("" hides it) */
+  bismillahTranslation?: string;
+  /** "top" = verse above the names; "belowNames" = verse between the names and the details */
+  versePosition?: 'top' | 'belowNames';
+  /** "block" = big Month · Day · Year with time and venue below; "line" = venue, then "Month D, YYYY | time" */
+  dateStyle?: 'block' | 'line';
+  /** "navy" = light text straight on the dark sky; "arch" = ivory arched panel over the background image */
+  cardStyle?: 'navy' | 'arch';
 }
 
 interface NavyInviteProps {
@@ -47,7 +64,6 @@ interface NavyInviteProps {
   ceremonyTime: string;
   venueName: string;
   venueAddress: string;
-  countdownText: string;
   statusMessage?: string;
   statusKey: number;
   reduceMotion: boolean;
@@ -69,6 +85,7 @@ const T = {
   florals: 0,
   floralStagger: 160,
   frame: 300,
+  bismillah: 350,
   verse: 500,
   lines: 650,
   lineStagger: 200,
@@ -81,6 +98,21 @@ const T = {
   time: 4450,
   venue: 4750,
   status: 5600,
+};
+
+// Arch card choreography (ms from mount). The panel already stands behind the closed curtains,
+// so the opening drapes reveal it; the header is in place as they part, then the names are written in.
+const A = {
+  panel: 0,
+  bismillah: 150,
+  translation: 300,
+  title: 450,
+  groom: 1500,
+  joiner: 2050,
+  bride: 2350,
+  verse: 3200,
+  venue: 3700,
+  date: 4000,
 };
 
 // Folds per drape. Index 0 hangs at the wall; the last fold is the leading edge at the centre seam.
@@ -152,14 +184,15 @@ export function NavyInvite({
   ceremonyTime,
   venueName,
   venueAddress,
-  countdownText,
   statusMessage,
   statusKey,
   reduceMotion,
   photos = [],
 }: NavyInviteProps) {
   const curtains = invite.curtains !== false;
-  const stage = curtains ? CURTAIN.stage : 0;
+  const arch = invite.cardStyle === 'arch';
+  // The arch card is revealed by the curtains rather than played in after them
+  const stage = curtains && !arch ? CURTAIN.stage : 0;
   const at = (ms: number) => ({ '--nv-d': `${stage + ms}ms` }) as React.CSSProperties;
 
   const date = weddingDate
@@ -176,10 +209,120 @@ export function NavyInvite({
     : null;
   const timeLine = ceremonyTime && invite.timeInWords ? timeToWords(ceremonyTime) : ceremonyTime;
   const lines = invite.linesAbove.filter(Boolean);
+  const verseBelow = invite.versePosition === 'belowNames';
+  const dateLine = invite.dateStyle === 'line';
+  // Verse below the names plays where the divider used to; the divider follows it
+  const dividerAt = verseBelow ? T.divider + 500 : T.divider;
+  const verse = (position: 'top' | 'below', delay: number) =>
+    invite.verse ? (
+      <figure className={`nv-verse nv-verse--${position} nv-in`} style={at(delay)}>
+        {position === 'top' && invite.verseCitation && (
+          <figcaption className="nv-verse__cite">{invite.verseCitation}</figcaption>
+        )}
+        <blockquote className="nv-verse__text">“{invite.verse}”</blockquote>
+        {position === 'below' && invite.verseCitation && (
+          <figcaption className="nv-verse__cite">{invite.verseCitation}</figcaption>
+        )}
+      </figure>
+    ) : null;
+
+  const archCard = (
+    <main className="nv-card nv-card--arch">
+      <div className="nv-arch" style={at(A.panel)}>
+        {/* Sun rising in the dome (clipped to the panel) */}
+        <span className="nv-arch__sky" aria-hidden="true">
+          <span className="nv-arch__sun" />
+        </span>
+        {/* Light with a fading tail that travels around the outside edge */}
+        <span className="nv-arch__orbit" aria-hidden="true" />
+
+        {/* Content is grouped so the groups can spread evenly down the tall panel */}
+        {(invite.bismillah || invite.bismillahTranslation) && (
+          <header className="nv-arch__group nv-arch__group--top">
+            {invite.bismillah && (
+              <p className={`${amiri.className} nv-arch__arabic nv-in`} style={at(A.bismillah)} lang="ar" dir="rtl">
+                {invite.bismillah}
+              </p>
+            )}
+            {invite.bismillahTranslation && (
+              <p className="nv-arch__translation nv-in" style={at(A.translation)}>
+                “{invite.bismillahTranslation}”
+              </p>
+            )}
+          </header>
+        )}
+
+        <div className="nv-arch__group nv-arch__group--names">
+          {lines.map((line, i) => (
+            <p key={i} className={`${theSeasons.className} nv-arch__title nv-in`} style={at(A.title + i * T.lineStagger)}>
+              {line}
+            </p>
+          ))}
+
+          <h1 className="nv-arch__names" aria-label={`${groom} ${invite.joiner} ${bride}`}>
+            <span className={`${aboveTheBeyond.className} nv-arch__name nv-pen-in`} style={at(A.groom)} aria-hidden="true">
+              {groom}
+            </span>
+            {invite.joiner && (
+              // "and" on its own row, centred between the names
+              <span className={`${aboveTheBeyond.className} nv-arch__joiner nv-pen-in`} style={at(A.joiner)} aria-hidden="true">
+                {invite.joiner}
+              </span>
+            )}
+            <span className={`${aboveTheBeyond.className} nv-arch__name nv-pen-in`} style={at(A.bride)} aria-hidden="true">
+              {bride}
+            </span>
+          </h1>
+        </div>
+
+        {invite.verse && (
+          <figure className="nv-arch__group nv-arch__verse nv-in" style={at(A.verse)}>
+            <blockquote className="nv-arch__verse-text">“{invite.verse}”</blockquote>
+            {invite.verseCitation && <figcaption className="nv-arch__verse-cite">{invite.verseCitation}</figcaption>}
+          </figure>
+        )}
+
+        {(venueName || date) && (
+          <div className="nv-arch__group nv-arch__group--details">
+            {/* Gold hairline with a gem, setting the details apart */}
+            <span className="nv-arch__rule nv-in" style={at(A.venue - 200)} aria-hidden="true" />
+            <ul className="nv-arch__details">
+              {venueName && (
+                <li className="nv-arch__detail nv-in" style={at(A.venue)}>
+                  <svg className="nv-arch__icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
+                    <circle cx="12" cy="10" r="2.4" />
+                  </svg>
+                  <span>{venueName}</span>
+                </li>
+              )}
+              {date && (
+                <li className="nv-arch__detail nv-in" style={at(A.date)}>
+                  <svg className="nv-arch__icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3.5" y="5" width="17" height="15.5" rx="1.5" />
+                    <path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h2M14 13.5h2M8 17h2M14 17h2" />
+                  </svg>
+                  <span>
+                    {date.label}
+                    {ceremonyTime && (
+                      <>
+                        <span className="nv-arch__sep" aria-hidden="true">|</span>
+                        {ceremonyTime}
+                      </>
+                    )}
+                  </span>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+    </main>
+  );
 
   return (
     <div
-      className={`nv-root ${cinzel.variable} ${theSeasons.variable} ${aboveTheBeyond.variable}${curtains ? ' has-curtains' : ''}${photos.length ? ' has-marquee' : ''}`}
+      className={`nv-root${arch ? ' nv-root--arch' : ''} ${cinzel.variable} ${theSeasons.variable} ${aboveTheBeyond.variable}${curtains ? ' has-curtains' : ''}${photos.length ? ' has-marquee' : ''}`}
     >
       <NavyMarquee photos={photos} reduceMotion={reduceMotion} />
 
@@ -237,10 +380,10 @@ export function NavyInvite({
       <div className="nv-corners" aria-hidden="true">
         {(
           [
-            ['tl', invite.decos.topLeft, 720, 584],
-            ['tr', invite.decos.topRight, 714, 615],
-            ['bl', invite.decos.bottomLeft, 733, 454],
-            ['br', invite.decos.bottomRight, 719, 439],
+            ['tl', invite.decos.topLeft, 650, 547],
+            ['tr', invite.decos.topRight, 646, 547],
+            ['bl', invite.decos.bottomLeft, 750, 528],
+            ['br', invite.decos.bottomRight, 745, 530],
           ] as const
         ).map(([pos, src, w, h], i) =>
           src ? (
@@ -253,13 +396,22 @@ export function NavyInvite({
         )}
       </div>
 
+      {arch ? archCard : (
       <main className="nv-card">
-        {invite.verse && (
-          <figure className="nv-verse nv-verse--top nv-in" style={at(T.verse)}>
-            {invite.verseCitation && <figcaption className="nv-verse__cite">{invite.verseCitation}</figcaption>}
-            <blockquote className="nv-verse__text">“{invite.verse}”</blockquote>
-          </figure>
+        {(invite.bismillah || invite.bismillahTranslation) && (
+          <div className="nv-bismillah nv-in" style={at(T.bismillah)}>
+            {invite.bismillah && (
+              <p className={`${amiri.className} nv-bismillah__arabic`} lang="ar" dir="rtl">
+                {invite.bismillah}
+              </p>
+            )}
+            {invite.bismillahTranslation && (
+              <p className="nv-bismillah__translation">“{invite.bismillahTranslation}”</p>
+            )}
+          </div>
         )}
+
+        {!verseBelow && verse('top', T.verse)}
 
         {lines.length > 0 && (
           <div className="nv-lines">
@@ -284,13 +436,30 @@ export function NavyInvite({
           <NameLetters name={bride} start={T.bride} at={at} />
         </h1>
 
-        <div className="nv-divider" style={at(T.divider)} aria-hidden="true">
+        {verseBelow && verse('below', T.divider)}
+
+        <div className="nv-divider" style={at(dividerAt)} aria-hidden="true">
           <span className="nv-divider__line" />
           <span className="nv-divider__gem" />
           <span className="nv-divider__line" />
         </div>
 
-        {date && (
+        {dateLine && (venueName || date) && (
+          <div className="nv-details">
+            {venueName && (
+              <p className="nv-venue__name nv-wipe" style={at(T.date)}>
+                {venueName}
+              </p>
+            )}
+            {date && (
+              <p className="nv-time nv-wipe" style={at(T.time)}>
+                {[date.label, ceremonyTime].filter(Boolean).join('  |  ')}
+              </p>
+            )}
+          </div>
+        )}
+
+        {!dateLine && date && (
           <div className="nv-date" role="img" aria-label={date.label}>
             <div className="nv-date__row">
               <span className="nv-date__side nv-date__side--month" style={at(T.date + 350)}>
@@ -314,13 +483,13 @@ export function NavyInvite({
           </div>
         )}
 
-        {timeLine && (
+        {!dateLine && timeLine && (
           <p className="nv-time nv-wipe" style={at(T.time)}>
             {timeLine}
           </p>
         )}
 
-        {(venueName || venueAddress) && (
+        {!dateLine && (venueName || venueAddress) && (
           <div className="nv-venue" style={at(T.venue)}>
             {venueName && <p className="nv-venue__name nv-wipe">{venueName}</p>}
             {venueAddress && (
@@ -332,10 +501,10 @@ export function NavyInvite({
         )}
 
       </main>
+      )}
 
       {/* Loading progress, anchored to the bottom of the screen below the card */}
       <div className="nv-status nv-in" style={at(T.status)}>
-        {countdownText && <p className="nv-status__countdown">{countdownText}</p>}
         <InfinityLoader className="nv-loader" label="Loading invitation" />
         {statusMessage && (
           <p key={statusKey} className="nv-status__message">

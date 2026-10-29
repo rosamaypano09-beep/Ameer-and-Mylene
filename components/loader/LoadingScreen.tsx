@@ -104,6 +104,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
   // Plain mode can use the navy & rose-gold invitation card instead of the light botanical one
   const isNavy = isPlain && (content.plainLayout ?? defaultSiteConfig.loadingScreen.plainLayout) === 'navy';
   const navyInvite = content.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite;
+  const backgroundImage = content.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage;
 
   const reduceMotion = useReducedMotion();
   const [fadeOut, setFadeOut] = useState(false);
@@ -218,15 +219,24 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
     };
   }, [isPlain, onComplete, onFadeStart, reduceMotion, totalDurationMs]);
 
+  // Full-screen picture behind everything, with a veil so the card text stays readable
+  const backgroundLayer = backgroundImage ? (
+    <div className="loading-screen__bg-image" aria-hidden="true">
+      <Image src={backgroundImage} alt="" fill priority sizes="100vw" className="object-cover" />
+      <div className="loading-screen__bg-image-veil" />
+    </div>
+  ) : null;
+
   if (isNavy) {
     return (
       <div
-        className={`loading-screen loading-screen--navy fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
+        className={`loading-screen loading-screen--navy${backgroundImage ? ' has-bg-image' : ''}${navyInvite.cardStyle === 'arch' ? ' is-arch' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
         aria-live="polite"
         aria-busy={!fadeOut}
         aria-label="Loading invitation"
         style={{ pointerEvents: fadeOut ? 'none' : 'auto' }}
       >
+        {backgroundLayer}
         <NavyInvite
           invite={navyInvite}
           groom={siteConfig.couple.groomNickname}
@@ -235,7 +245,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
           ceremonyTime={content.showCeremonyDetails ? ceremonyLine : ''}
           venueName={content.showCeremonyDetails ? siteConfig.ceremony.location ?? '' : ''}
           venueAddress={content.showCeremonyDetails ? siteConfig.ceremony.venue ?? '' : ''}
-          countdownText={content.showCeremonyDetails ? countdownText : ''}
           statusMessage={statusMessages[statusIndex]}
           statusKey={statusIndex}
           reduceMotion={!!reduceMotion}
@@ -248,7 +257,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
 
   return (
     <div
-      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
+      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''}${backgroundImage ? ' has-bg-image' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
       aria-live="polite"
       aria-busy={!fadeOut}
       aria-label="Loading invitation"
@@ -275,7 +284,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
 
       {isPlain && (
         <>
-          <BackgroundVideo veil={0.45} />
+          {backgroundLayer ?? <BackgroundVideo veil={0.45} />}
           <div className="loading-screen__plain-corners" aria-hidden="true">
             {(
               [

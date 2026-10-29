@@ -5,9 +5,9 @@
    ========================================================================== */
 
 .loading-screen--navy {
-  --nv-navy: var(--color-ink-deep, #012E4B);
-  --nv-blush: var(--color-motif-accent, #F69F9D);
-  --nv-pale: var(--color-motif-cream, #F5C5C3);
+  --nv-navy: var(--color-ink-deep, #556B2F);
+  --nv-blush: var(--color-motif-accent, #D4AF37);
+  --nv-pale: var(--color-motif-cream, #EADCC6);
   --nv-rose: var(--nv-blush);
   --nv-rose-light: var(--nv-pale);
   --nv-rose-deep: color-mix(in srgb, var(--nv-blush) 72%, var(--nv-navy));
@@ -16,15 +16,15 @@
     var(--nv-rose-deep) 0%,
     var(--nv-rose) 18%,
     var(--nv-rose-light) 34%,
-    #fff4f3 42%,
+    #FFF9EC 42%,
     var(--nv-rose-light) 50%,
     var(--nv-rose) 66%,
     var(--nv-rose-deep) 82%,
     var(--nv-rose) 100%
   );
   /* Blush satin: deep rose in the fold, coral blush body, soft-blush sheen */
-  --nv-velvet-shadow: color-mix(in srgb, var(--nv-blush) 58%, #6e2633);
-  --nv-velvet-deep: color-mix(in srgb, var(--nv-blush) 80%, #a8485a);
+  --nv-velvet-shadow: color-mix(in srgb, var(--nv-blush) 58%, #1F2A0E);
+  --nv-velvet-deep: color-mix(in srgb, var(--nv-blush) 80%, #3A4A1F);
   --nv-velvet: var(--nv-blush);
   --nv-velvet-sheen: color-mix(in srgb, var(--nv-pale) 65%, #fff);
   --nv-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -94,7 +94,7 @@
 
 .nv-marquee {
   /* Also used outside the loader (envelope, home hero), where --nv-navy isn't set */
-  --nv-navy: var(--color-ink-deep, #012E4B);
+  --nv-navy: var(--color-ink-deep, #556B2F);
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -230,7 +230,7 @@
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
-  background: radial-gradient(circle, #fff4f3 0%, var(--nv-rose) 55%, transparent 72%);
+  background: radial-gradient(circle, #FFF9EC 0%, var(--nv-rose) 55%, transparent 72%);
   box-shadow: 0 0 6px color-mix(in srgb, var(--nv-rose) 70%, transparent);
   opacity: 0;
   animation: nv-rise var(--dur) linear var(--delay) infinite;
@@ -255,7 +255,8 @@
 .nv-curtains {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  /* In front of everything (florals, card, status) until the drapes part */
+  z-index: 20;
   overflow: hidden;
   pointer-events: none;
   contain: strict;
@@ -289,7 +290,7 @@
   height: 104%;
   margin-top: -2%;
   background:
-    linear-gradient(180deg, rgb(50 8 18 / 34%) 0%, transparent 16%, transparent 78%, rgb(50 8 18 / 44%) 100%),
+    linear-gradient(180deg, rgb(24 30 10 / 34%) 0%, transparent 16%, transparent 78%, rgb(24 30 10 / 44%) 100%),
     linear-gradient(
       90deg,
       var(--nv-velvet-shadow) 0%,
@@ -300,7 +301,7 @@
       var(--nv-velvet-deep) 84%,
       var(--nv-velvet-shadow) 100%
     );
-  box-shadow: -6px 0 14px rgb(40 6 14 / 32%);
+  box-shadow: -6px 0 14px rgb(20 26 8 / 32%);
   transform-origin: 0 0;
   will-change: transform;
   backface-visibility: hidden;
@@ -314,7 +315,7 @@
   --tx: calc(var(--i) * 88%);
   --skew: calc(var(--i) * -0.9deg - 2deg);
   transform-origin: 100% 0;
-  box-shadow: 6px 0 14px rgb(40 6 14 / 32%);
+  box-shadow: 6px 0 14px rgb(20 26 8 / 32%);
 }
 
 /* Soft-blush bullion fringe along the hem */
@@ -326,7 +327,7 @@
   bottom: 2%;
   height: clamp(9px, 1.5dvh, 15px);
   background:
-    linear-gradient(180deg, #fff4f3, var(--nv-rose-deep)) top / 100% 2px no-repeat,
+    linear-gradient(180deg, #FFF9EC, var(--nv-rose-deep)) top / 100% 2px no-repeat,
     repeating-linear-gradient(90deg, color-mix(in srgb, var(--nv-pale) 92%, transparent) 0 1.5px, transparent 1.5px 4px);
 }
 
@@ -337,7 +338,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #fff4f3, var(--nv-rose-deep) 50%, #fff4f3);
+  background: linear-gradient(180deg, #FFF9EC, var(--nv-rose-deep) 50%, #FFF9EC);
   box-shadow: 0 0 10px color-mix(in srgb, var(--nv-pale) 60%, transparent);
 }
 .nv-curtain--left .nv-curtain__fold:last-child::before { right: 0; }
@@ -351,7 +352,7 @@
   left: 50%;
   width: 2px;
   margin-left: -1px;
-  background: linear-gradient(180deg, transparent, #fff4f3 25%, var(--nv-pale) 75%, transparent);
+  background: linear-gradient(180deg, transparent, #FFF9EC 25%, var(--nv-pale) 75%, transparent);
   box-shadow: 0 0 24px 6px color-mix(in srgb, var(--nv-pale) 55%, transparent);
   opacity: 0;
   animation: nv-seam 1.4s ease-out 0.05s forwards;
@@ -934,4 +935,513 @@
 
 .loading-screen--navy.is-reduced-motion .nv-curtains {
   display: none;
+}
+
+/* ---------- Background image (loadingScreen.backgroundImage) ----------
+   The picture sits under the sky; the sky drops its solid fill and keeps only
+   its glow, and an olive veil (deeper in the centre) keeps the card readable. */
+.loading-screen__bg-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.loading-screen__bg-image-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 60% 62% at 50% 50%,
+      color-mix(in srgb, var(--color-ink-deep, #556B2F) 72%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink-deep, #556B2F) 50%, transparent) 75%,
+      color-mix(in srgb, var(--color-ink-deep, #556B2F) 38%, transparent) 100%
+    );
+}
+.loading-screen--navy.has-bg-image .nv-sky {
+  background: radial-gradient(60% 40% at 85% 100%, color-mix(in srgb, var(--nv-blush) 12%, transparent) 0%, transparent 70%);
+}
+.loading-screen--navy.has-bg-image .nv-sky__stars { opacity: 0.25; }
+
+/* ---------- Bismillah (navyInvite.bismillah) ---------- */
+.nv-bismillah {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: clamp(0.75rem, 3vh, 1.75rem);
+}
+
+.nv-bismillah__arabic {
+  margin: 0;
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+  line-height: 1.6;
+  color: var(--nv-rose);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 45%);
+}
+
+.nv-bismillah__translation {
+  margin: 0;
+  max-width: 18rem;
+  font-family: var(--nv-goudy);
+  font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+  font-style: italic;
+  line-height: 1.4;
+  white-space: pre-line;
+  color: var(--nv-pale);
+}
+
+/* Verse between the names and the details: citation underneath */
+.nv-verse--below {
+  max-width: 22rem;
+  margin-top: clamp(0.5rem, 2vh, 1.1rem);
+}
+
+.nv-verse--below .nv-verse__cite {
+  margin-top: 0.4rem;
+}
+
+/* Venue + "Month D, YYYY | time" (navyInvite.dateStyle "line") */
+.nv-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ==========================================================================
+   Arch card (navyInvite.cardStyle "arch")
+   An ivory arched panel over the background image: olive ink, gold ornaments,
+   script names, and olive velvet curtains that match the drapes in the photo.
+   ========================================================================== */
+
+.loading-screen--navy.is-arch {
+  --nv-gold: var(--color-motif-accent, #D4AF37);
+  /* Gold deep enough to read on ivory */
+  --nv-gold-ink: color-mix(in srgb, var(--nv-gold) 62%, #4A3A0C);
+  --nv-paper: var(--color-motif-soft, #FDF8EC);
+  --nv-velvet-shadow: color-mix(in srgb, var(--nv-navy) 55%, #0E1305);
+  --nv-velvet-deep: color-mix(in srgb, var(--nv-navy) 82%, #0E1305);
+  --nv-velvet: var(--nv-navy);
+  --nv-velvet-sheen: color-mix(in srgb, var(--nv-navy) 45%, var(--nv-pale));
+  background: var(--nv-paper);
+  color: var(--nv-navy);
+}
+
+/* Let the scene show: only a soft vignette and a warm glow behind the panel */
+.loading-screen--navy.is-arch .loading-screen__bg-image-veil {
+  background:
+    radial-gradient(ellipse 46% 60% at 50% 48%, color-mix(in srgb, var(--nv-paper) 35%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 85% at 50% 50%, transparent 55%, color-mix(in srgb, var(--nv-navy) 28%, transparent) 100%);
+}
+.loading-screen--navy.is-arch .loading-screen__bg-image img {
+  filter: blur(3px) saturate(1.05);
+  transform: scale(1.04);
+}
+.loading-screen--navy.is-arch .nv-sky,
+.loading-screen--navy.is-arch .nv-frame { display: none; }
+
+/* Corners stay clear of the panel */
+.nv-root--arch .nv-corner { filter: drop-shadow(0 8px 16px rgb(20 26 8 / 28%)); }
+.nv-root--arch .nv-corner--tl,
+.nv-root--arch .nv-corner--tr { width: clamp(140px, 40vw, 400px); }
+.nv-root--arch .nv-corner--bl,
+.nv-root--arch .nv-corner--br { width: clamp(150px, 42vw, 420px); }
+
+.nv-card--arch {
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  max-width: none;
+  /* Bottom leaves just enough room for the compact loader pinned below the panel */
+  padding:
+    calc(env(safe-area-inset-top, 0px) + clamp(0.9rem, 3vh, 2.25rem))
+    clamp(0.75rem, 3vw, 1rem)
+    calc(env(safe-area-inset-bottom, 0px) + clamp(4.5rem, 10vh, 6rem));
+}
+
+/* ---------- Panel ---------- */
+
+.nv-arch {
+  /* Half the panel width, so the top is a true half circle */
+  --arch-r: min(calc(50vw - clamp(0.75rem, 3vw, 1rem)), 16.5rem);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* The content groups spread down the whole panel instead of bunching in the middle */
+  justify-content: space-evenly;
+  gap: clamp(0.5rem, 1.6vh, 1.1rem);
+  width: min(100%, 33rem);
+  /* Tall panel: fills the space above the status */
+  flex: 1 1 auto;
+  min-height: min(100%, 34rem);
+  max-height: 52rem;
+  padding: calc(var(--arch-r) * 0.3) clamp(1rem, 4.5vw, 2.5rem) clamp(1.25rem, 3.5vh, 2.5rem);
+  border-radius: var(--arch-r) var(--arch-r) 16px 16px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #fff 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--nv-paper) 94%, transparent), color-mix(in srgb, var(--nv-paper) 88%, transparent));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--nv-gold) 55%, transparent),
+    0 24px 60px -18px rgb(20 26 8 / 45%),
+    0 2px 10px rgb(20 26 8 / 10%);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  animation: nv-arch-in 1.4s var(--nv-ease) var(--nv-d, 0ms) forwards;
+}
+
+/* Inner gold rule following the arch */
+.nv-arch::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid color-mix(in srgb, var(--nv-gold) 45%, transparent);
+  border-radius: calc(var(--arch-r) - 7px) calc(var(--arch-r) - 7px) 10px 10px;
+  pointer-events: none;
+}
+
+/* ---------- Sun in the dome: warm glow with fine gold rays, turning slowly ---------- */
+.nv-arch__sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.nv-arch__sun {
+  position: absolute;
+  top: calc(var(--arch-r) * 0.18);
+  left: 50%;
+  width: calc(var(--arch-r) * 2.3);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--nv-gold) 34%, transparent) 0%, color-mix(in srgb, var(--nv-gold) 12%, transparent) 26%, transparent 60%),
+    repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--nv-gold) 24%, transparent) 0deg 1.2deg, transparent 1.2deg 7.5deg);
+  -webkit-mask: radial-gradient(circle, #000 14%, transparent 60%);
+  mask: radial-gradient(circle, #000 14%, transparent 60%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  animation:
+    nv-sun-rise 2.4s var(--nv-ease) calc(var(--nv-d, 0ms) + 400ms) forwards,
+    nv-sun-turn 90s linear calc(var(--nv-d, 0ms) + 400ms) infinite,
+    nv-sun-breathe 6s ease-in-out calc(var(--nv-d, 0ms) + 2.8s) infinite alternate;
+}
+
+@keyframes nv-sun-rise {
+  to { opacity: 1; }
+}
+@keyframes nv-sun-turn {
+  from { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  to { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+}
+@keyframes nv-sun-breathe {
+  from { opacity: 1; }
+  to { opacity: 0.65; }
+}
+
+/* ---------- Light tail circling the outside edge ---------- */
+@property --nv-orbit {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* The glow is on the wrapper so it isn't cut off by the ring mask */
+.nv-arch__orbit {
+  position: absolute;
+  inset: -3px;
+  z-index: 2;
+  border-radius: calc(var(--arch-r) + 3px) calc(var(--arch-r) + 3px) 19px 19px;
+  pointer-events: none;
+  opacity: 0;
+  filter:
+    drop-shadow(0 0 4px var(--nv-gold))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--nv-gold) 70%, transparent));
+  animation: nv-sun-rise 1.2s ease calc(var(--nv-d, 0ms) + 1.2s) forwards;
+}
+
+/* A 2px ring: a bright head with a gold tail fading out behind it */
+.nv-arch__orbit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--nv-orbit),
+    transparent 0deg 250deg,
+    color-mix(in srgb, var(--nv-gold) 35%, transparent) 300deg,
+    var(--nv-gold) 345deg,
+    #fff 358deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: nv-orbit 7s linear infinite;
+}
+
+@keyframes nv-orbit {
+  to { --nv-orbit: 360deg; }
+}
+
+/* Behind the curtains the panel is already standing still; the drapes reveal it */
+.has-curtains .nv-arch {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes nv-arch-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Type ---------- */
+
+.nv-arch__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+}
+
+.nv-arch__group--top { gap: 0.15rem; }
+
+.nv-arch__arabic {
+  margin: 0;
+  font-size: clamp(1.9rem, 8.6vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--nv-navy);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+.nv-arch__translation {
+  margin: 0;
+  max-width: 20rem;
+  font-family: var(--nv-goudy);
+  font-size: clamp(0.88rem, 3.7vw, 1.05rem);
+  font-style: italic;
+  line-height: 1.4;
+  white-space: pre-line;
+  color: color-mix(in srgb, var(--nv-navy) 85%, black);
+}
+
+.nv-arch__group--names { gap: clamp(0.6rem, 2vh, 1.1rem); }
+
+/* "The Nikkah Of": The Seasons in spaced capitals, with gold hairlines either side */
+.nv-arch__title {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0;
+  font-size: clamp(0.95rem, 4.2vw, 1.3rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--nv-navy) 82%, black);
+}
+.nv-arch__title::before,
+.nv-arch__title::after {
+  content: '';
+  width: clamp(1.25rem, 7vw, 2.5rem);
+  height: 1px;
+}
+.nv-arch__title::before { background: linear-gradient(90deg, transparent, var(--nv-gold)); }
+.nv-arch__title::after { background: linear-gradient(90deg, var(--nv-gold), transparent); }
+
+.nv-arch__names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  /* The script's loops rise high above and drop well below each line, so the rows need air */
+  gap: 0.12em;
+  margin: 0.15em 0 0.2em;
+  font-size: clamp(2.9rem, 13.5vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.nv-arch__name {
+  color: var(--nv-navy);
+  white-space: nowrap;
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 70%),
+    0 6px 18px color-mix(in srgb, var(--nv-navy) 18%, transparent);
+}
+
+/* "and": smaller gold script on its own row, centred between the names */
+.nv-arch__joiner {
+  margin: 0;
+  font-size: 0.5em;
+  line-height: 1;
+  color: var(--nv-gold-ink);
+}
+
+/* Script written in left to right, like a pen stroke */
+.nv-pen-in {
+  display: inline-block;
+  /* Script swashes reach well past the letters; the mask clips at this box, so give them room */
+  padding: 0.45em 0.6em 0.5em;
+  margin: -0.45em -0.6em -0.5em;
+  opacity: 0;
+  -webkit-mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 250% 100% no-repeat;
+  mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 250% 100% no-repeat;
+  animation: nv-pen 1.3s cubic-bezier(0.5, 0.1, 0.3, 1) var(--nv-d, 0ms) forwards;
+}
+
+.nv-arch__verse { max-width: 22rem; }
+
+.nv-arch__verse-text {
+  margin: 0;
+  font-family: var(--nv-goudy);
+  font-size: clamp(1.02rem, 4.3vw, 1.2rem);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--nv-navy) 85%, black);
+}
+
+.nv-arch__verse-cite {
+  margin-top: 0.3rem;
+  font-family: var(--nv-cinzel);
+  font-size: clamp(0.62rem, 2.5vw, 0.72rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--nv-gold-ink) 85%, var(--nv-navy));
+}
+
+.nv-arch__group--details { gap: clamp(0.6rem, 1.8vh, 1rem); }
+
+/* Gold hairline with a small gem in the middle */
+.nv-arch__rule {
+  position: relative;
+  width: min(62%, 14rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nv-gold) 30%, var(--nv-gold) 70%, transparent);
+}
+.nv-arch__rule::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--nv-gold);
+  box-shadow: 0 0 0 3px var(--nv-paper);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Venue + date rows, each with a gold icon */
+.nv-arch__details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nv-arch__detail {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--nv-goudy);
+  font-size: clamp(0.95rem, 4vw, 1.12rem);
+  line-height: 1.3;
+  text-align: left;
+  color: color-mix(in srgb, var(--nv-navy) 88%, black);
+}
+
+.nv-arch__icon {
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+  fill: none;
+  stroke: var(--nv-gold-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nv-arch__sep {
+  margin: 0 0.5em;
+  color: var(--nv-gold-ink);
+}
+
+/* ---------- Hand-off to the envelope ----------
+   The envelope screen fades in on top with the identical background, so the loader
+   stays fully opaque underneath (no dip) and only its card tucks away, shrinking
+   toward where the envelope arrives. */
+.loading-screen--navy.is-arch {
+  transition: opacity 0.3s ease 2s;
+}
+
+.loading-screen--navy.is-arch.is-fading .nv-card {
+  opacity: 0;
+  transform: translateY(3vh) scale(0.88);
+  filter: blur(6px);
+  transition:
+    opacity 0.7s var(--nv-ease),
+    transform 0.9s var(--nv-ease),
+    filter 0.7s var(--nv-ease);
+}
+
+.loading-screen--navy.is-arch.is-fading .nv-status {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* ---------- Status under the panel: compact gold loader + message ---------- */
+
+.loading-screen--navy.is-arch .nv-status {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(0.85rem, 2.4vh, 1.75rem));
+  gap: 0.35rem;
+}
+
+.loading-screen--navy.is-arch .nv-loader {
+  --infinity-from: var(--nv-gold);
+  --infinity-to: var(--nv-paper);
+  width: 56px;
+  height: 28px;
+}
+
+.loading-screen--navy.is-arch .nv-status__message {
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--nv-paper) 80%, transparent);
+  color: var(--nv-navy);
+}
+
+/* ---------- Phones: narrow screens ---------- */
+
+@media (max-width: 380px) {
+  .nv-arch__translation { font-size: 0.84rem; }
+  .nv-arch__detail { font-size: 0.9rem; gap: 0.5rem; }
+  .nv-arch__sep { margin: 0 0.35em; }
+}
+
+/* ---------- Fit shorter screens ---------- */
+
+@media (max-height: 760px) {
+  .nv-arch { gap: 0.4rem; min-height: 0; padding-top: calc(var(--arch-r) * 0.28); padding-bottom: 1.1rem; }
+  .nv-arch__arabic { font-size: clamp(1.6rem, 7.4vw, 2.3rem); line-height: 1.3; }
+  .nv-arch__names { font-size: clamp(2.6rem, 12vw, 3.9rem); line-height: 1.1; }
+  .nv-arch__group--names { gap: 0.5rem; }
+}
+
+@media (max-height: 660px) {
+  .nv-arch__translation { font-size: 0.8rem; }
+  .nv-arch__names { font-size: clamp(2.3rem, 11vw, 3.3rem); }
+  .nv-arch__verse-cite { display: none; }
 }

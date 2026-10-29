@@ -2725,13 +2725,13 @@
    one touch of sunshine (the glow around the wax seal).
    ========================================================================== */
 .env-invite-screen--plain {
-  --env-sky: var(--color-motif-medium);        /* #F69F9D */
-  --env-blue: var(--color-welcome-heading);    /* #012E4B */
-  --env-navy: var(--color-welcome-navy);       /* #012E4B */
-  --env-ink: var(--color-welcome-text);        /* #012E4B */
-  --env-leaf: var(--color-motif-yellow);       /* #F69F9D sage */
+  --env-sky: var(--color-motif-medium);        /* #D4AF37 */
+  --env-blue: var(--color-welcome-heading);    /* #556B2F */
+  --env-navy: var(--color-welcome-navy);       /* #556B2F */
+  --env-ink: var(--color-welcome-text);        /* #556B2F */
+  --env-leaf: var(--color-motif-yellow);       /* #D4AF37 sage */
   --env-leaf-ink: color-mix(in srgb, var(--color-motif-yellow) 78%, #3C4424);
-  --env-sun: var(--color-motif-accent);        /* #F69F9D */
+  --env-sun: var(--color-motif-accent);        /* #D4AF37 */
   --env-shadow-tint: var(--env-navy);
 }
 
@@ -3002,7 +3002,7 @@
 /* ---- Navy photo marquee behind the envelope (loadingScreen.navyInvite.backgroundMarquee) ----
    The navy loader's marquee carries on here, so the text outside the card turns light. */
 .env-invite-screen--plain.env-invite-screen--marquee {
-  background: var(--color-ink-deep, #012E4B);
+  background: var(--color-ink-deep, #556B2F);
 }
 
 .env-invite-screen--plain.env-invite-screen--marquee::before {
@@ -3013,8 +3013,8 @@
 .env-invite-screen--marquee .env-invite-days-to-go,
 .env-invite-screen--marquee .env-invite-reveal-copy h2,
 .env-invite-screen--marquee .env-invite-reveal-copy p {
-  color: var(--color-motif-cream, #F5C5C3);
-  text-shadow: 0 1px 8px color-mix(in srgb, var(--color-ink-deep, #012E4B) 85%, transparent);
+  color: var(--color-motif-cream, #EADCC6);
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--color-ink-deep, #556B2F) 85%, transparent);
 }
 
 .env-invite-screen--marquee .env-invite-ghost-date {
@@ -3024,7 +3024,7 @@
 /* ── Envelope liner ──────────────────────────────────────────────────────────
    Blush paper with a rose-gold lattice and tiny four-petal blooms, shown on the
    inside of the flap and the back panel once the envelope opens. Colors are
-   baked into the tile (SVG can't read CSS variables): rose #E3918A, centre #C9746E. */
+   baked into the tile (SVG can't read CSS variables): rose #E3918A, centre #B8962E. */
 .env-invite-envelope {
   --env-liner: var(--color-envelope-liner);
   --env-liner-ink: var(--color-envelope-liner-ink);
@@ -3096,9 +3096,9 @@
    light rose, shading comes from rose/cocoa tones only, and a fine grain and
    rose-gold details give the paper some texture. Kept last so it wins. */
 .env-invite-screen .env-invite-envelope {
-  --env-highlight: color-mix(in srgb, #1E4A8A 75%, #0B2A5B);
-  --env-envelope: color-mix(in srgb, #0B2A5B 85%, #1E4A8A);
-  --env-rose-gold: color-mix(in srgb, #C9746E 70%, #E8B9A0);
+  --env-highlight: color-mix(in srgb, #6B8540 75%, #3F5022);
+  --env-envelope: color-mix(in srgb, #3F5022 85%, #6B8540);
+  --env-rose-gold: color-mix(in srgb, #B8962E 70%, #E8D08A);
   --env-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .02 0 0 0 0 .07 0 0 0 0 .18 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -3211,3 +3211,188 @@
   font-size: 1.4em;
   letter-spacing: 0.06em;
 }
+
+/* ---- Nikkah card inside the envelope (arch loader) ----
+   A larger card so the text breathes: Bismillah, invitation line, script names,
+   then the date, time and venue — olive ink and gold, like the loader card. */
+.env-invite-screen--arch {
+  --env-letter-w: clamp(272px, calc(var(--env-width) * 0.84), 380px);
+  --env-letter-h: clamp(372px, calc(var(--env-width) * 1.16), 500px);
+}
+
+/* Taller card, still tucked: its lower part stays inside the pocket (see the card's bottom padding) */
+.env-invite-screen--arch .env-invite-emerge-stack .env-invite-letter,
+.env-invite-screen--arch[data-phase="rising"] .env-invite-emerge-stack .env-invite-letter,
+.env-invite-screen--arch[data-phase="photos"] .env-invite-emerge-stack .env-invite-letter,
+.env-invite-screen--arch[data-phase="revealed"] .env-invite-emerge-stack .env-invite-letter,
+.env-invite-screen--arch[data-phase="cta"] .env-invite-emerge-stack .env-invite-letter {
+  top: -50%;
+}
+
+.env-invite-screen--arch .env-nikkah-card {
+  --nk-ink: var(--color-ink-deep, #556B2F);
+  --nk-text: color-mix(in srgb, var(--nk-ink) 85%, black);
+  --nk-gold: var(--color-motif-accent, #D4AF37);
+  --nk-gold-ink: color-mix(in srgb, var(--nk-gold) 62%, #4A3A0C);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 0.3rem;
+  height: 100%;
+  /* The bottom of the card sits inside the envelope pocket, so the text keeps clear of it */
+  padding: 0.9rem 0.9rem 27%;
+  text-align: center;
+}
+
+/* Short phones: tighter type so the card fits above the pocket */
+@media (max-height: 700px) {
+  .env-invite-screen--arch {
+    --env-letter-h: clamp(340px, calc(var(--env-width) * 1.08), 440px);
+  }
+  .env-nikkah-card__bismillah { font-size: 1.05rem; line-height: 1.35; }
+  .env-nikkah-card__message { font-size: 0.78rem; }
+  .env-nikkah-card__names { font-size: 1.8rem; line-height: 1.05; }
+  .env-nikkah-card__gem,
+  .env-nikkah-card__weekday { display: none; }
+  .env-nikkah-card__date { font-size: 0.95rem; }
+  .env-nikkah-card__venue { font-size: 0.76rem; }
+}
+
+.env-nikkah-card__bismillah {
+  margin: 0;
+  font-size: clamp(1.15rem, 5.2vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--nk-ink);
+}
+
+.env-nikkah-card__gem {
+  width: 5px;
+  height: 5px;
+  background: var(--nk-gold);
+  transform: rotate(45deg);
+  box-shadow:
+    -1.1rem 1.1rem 0 -1.5px color-mix(in srgb, var(--nk-gold) 60%, transparent),
+    1.1rem -1.1rem 0 -1.5px color-mix(in srgb, var(--nk-gold) 60%, transparent);
+}
+
+.env-nikkah-card__message {
+  max-width: 15rem;
+  margin: 0;
+  font-family: "SortsMillGoudy", Georgia, "Times New Roman", serif;
+  font-size: clamp(0.82rem, 3.5vw, 0.95rem);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--nk-text);
+}
+
+.env-nikkah-card__names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* The script's loops rise and drop well past each line; keep them off the text around */
+  margin: 0.22em 0 0.28em;
+  font-size: clamp(2.3rem, 10.5vw, 3.1rem);
+  font-weight: 400;
+  line-height: 1.12;
+  color: var(--nk-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+.env-nikkah-card__and {
+  margin: -0.05em 0;
+  font-size: 0.5em;
+  line-height: 1;
+  color: var(--nk-gold-ink);
+}
+
+.env-nikkah-card__rule {
+  width: min(70%, 11rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nk-gold), transparent);
+}
+
+.env-nikkah-card__weekday,
+.env-nikkah-card__date {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.env-nikkah-card__weekday {
+  font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  color: var(--nk-gold-ink);
+}
+
+.env-nikkah-card__date {
+  margin-top: -0.2rem;
+  font-size: clamp(1rem, 4.4vw, 1.2rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--nk-ink);
+}
+
+.env-nikkah-card__venue {
+  max-width: 100%;
+  margin: 0;
+  font-family: "SortsMillGoudy", Georgia, "Times New Roman", serif;
+  font-size: clamp(0.8rem, 3.4vw, 0.92rem);
+  line-height: 1.35;
+  color: var(--nk-text);
+}
+
+/* ---- Arch loader hand-off (loadingScreen.navyInvite.cardStyle "arch") ----
+   The envelope sits on the loader's background picture, softly blurred, with the
+   same corner florals at the same size so nothing jumps between the two screens. */
+.env-invite-bg-image {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.env-invite-bg-image img {
+  filter: blur(3px) saturate(1.05);
+  transform: scale(1.04);
+}
+
+/* Soft vignette in the olive ink so the edges settle and the centre stays bright */
+.env-invite-bg-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 85% at 50% 50%, transparent 55%, color-mix(in srgb, var(--color-ink-deep, #556B2F) 28%, transparent) 100%);
+}
+
+/* Same glow as the loader's veil, so the background doesn't shift at the hand-off */
+.env-invite-screen--plain.env-invite-screen--arch::before {
+  background: radial-gradient(ellipse 46% 60% at 50% 48%, color-mix(in srgb, var(--color-motif-soft, #FDF8EC) 35%, transparent) 0%, transparent 70%);
+}
+
+/* The envelope settles in from where the loader's card shrank away */
+.env-invite-screen--arch.is-arriving .env-invite-stage {
+  animation: env-arrive-arch 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-invite-screen--arch.is-arriving .env-invite-stage {
+    animation: none;
+  }
+}
+
+@keyframes env-arrive-arch {
+  from { opacity: 0; transform: translateY(4vh) scale(0.9); filter: blur(8px); }
+  55% { filter: blur(0); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+.env-invite-screen--arch .env-invite-navy-corner {
+  filter: drop-shadow(0 8px 16px rgb(20 26 8 / 28%));
+}
+.env-invite-screen--arch .env-invite-navy-corner--tl,
+.env-invite-screen--arch .env-invite-navy-corner--tr { width: clamp(140px, 40vw, 400px); }
+.env-invite-screen--arch .env-invite-navy-corner--bl,
+.env-invite-screen--arch .env-invite-navy-corner--br { width: clamp(150px, 42vw, 420px); }

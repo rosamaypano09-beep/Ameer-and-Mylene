@@ -7,7 +7,8 @@ import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { Music2, Disc3 } from "lucide-react"
 import { motion, useReducedMotion, type Variants } from "motion/react"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
+import Image from "next/image"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
 import { CornerFlorals } from "@/components/corner-florals"
 
 interface SpotifyPlaybackUpdate {
@@ -114,17 +115,20 @@ const BODY = "var(--color-welcome-text)"
 const ACCENT = "var(--color-welcome-heading)"
 const HAIRLINE = "color-mix(in srgb, var(--color-motif-medium) 60%, transparent)"
 
-// Section background = the circle pattern used across the invitation (PlainBubbles paints the base)
-const sectionBg = "var(--color-bg-pattern-base)"
+// Section background: cream under the loader's (softly blurred) background picture — same as Details
+const sectionBg = "var(--color-motif-soft, #FDF8EC)"
 
-// Text sitting directly on the navy part of the sky: light ink with a navy edge
-const textGlow = "0 1px 2px rgb(1 46 75 / 85%), 0 0 18px rgb(1 46 75 / 60%)"
+// Text sitting directly on the background picture: olive ink with a soft white edge
+const textGlow = "0 1px 0 rgb(255 255 255 / 90%), 0 0 14px rgb(255 255 255 / 85%)"
 const onBg = {
-  color: "var(--color-motif-soft)",
+  color: "var(--color-ink-deep, #556B2F)",
   textShadow: textGlow,
 } as const
-// Eyebrow + script lines on the navy pick up the blush accent
-const onBgBlue = { color: "var(--color-motif-accent)", textShadow: textGlow } as const
+// Eyebrow + script lines in a gold deep enough to read on the light picture
+const onBgBlue = {
+  color: "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)",
+  textShadow: textGlow,
+} as const
 
 const cardStyle = {
   background:
@@ -216,6 +220,8 @@ export function WeddingPlaylist() {
   const { groomNickname, brideNickname } = siteConfig.couple
   const fillCouple = (text: string) => text.split("{couple}").join(`${groomNickname} & ${brideNickname}`)
   const playlistName = fillCouple(content.playlistName)
+  const backgroundImage =
+    siteConfig.loadingScreen?.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
   const reduceMotion = useReducedMotion()
   const initial = reduceMotion ? false : "hidden"
   const spotifyUri = getSpotifyUri(spotifyUrl)
@@ -292,11 +298,19 @@ export function WeddingPlaylist() {
 
   return (
     <div
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}
+      // overflow-clip (not hidden) so the sticky background can stick
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-clip`}
       style={{ background: sectionBg }}
     >
-      {/* Same circle pattern as the hero */}
-      <PlainBubbles />
+      {/* Same blurred picture as the loader, hero and Details (styles: .details-bg in loading-screen.css) */}
+      {backgroundImage ? (
+        <div className="details-bg" aria-hidden="true">
+          <div className="details-bg__frame">
+            <Image src={backgroundImage} alt="" fill sizes="100vw" className="details-bg__img object-cover" />
+            <div className="details-bg__veil" />
+          </div>
+        </div>
+      ) : null}
       <section
         id="playlist"
         // Extra top / bottom room so the corner florals clear the header and the card

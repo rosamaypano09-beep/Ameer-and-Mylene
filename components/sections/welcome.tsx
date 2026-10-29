@@ -4,12 +4,29 @@ import localFont from "next/font/local"
 import { motion } from "motion/react"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { sectionType, welcomeTitleSize } from "@/lib/section-typography"
-import { Cinzel } from "next/font/google"
+import { Amiri, Cinzel } from "next/font/google"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
 })
+
+// Arabic calligraphy — same face as the Bismillah on the loader and home hero
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  display: "swap",
+})
+
+// Gold deep enough to read on ivory (matches the arch card's citations)
+const GOLD_INK = "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)"
+
+// The marriage verse read at most Nikkahs (Sahih International translation)
+const VERSE = {
+  arabic: "وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+  text: "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.",
+  citation: "Surah Ar-Rum 30:21",
+}
 
 const theSeasons = localFont({
   src: "../../Font/Fontspring-DEMO-theseasons-reg.otf",
@@ -124,27 +141,62 @@ export function Welcome() {
 
           <div className="relative flex flex-col gap-8 sm:gap-9 md:gap-10">
             <header className="space-y-3 pt-2 text-center sm:space-y-3.5 sm:pt-3 md:space-y-4 md:pt-4">
+              {/* Salam greeting above the title */}
+              <div className="mb-4 sm:mb-5">
+                <p
+                  className={`${amiri.className} text-[clamp(1.5rem,6.5vw,2.1rem)] font-bold leading-[1.4]`}
+                  style={{ color: "var(--color-welcome-navy)" }}
+                  lang="ar"
+                  dir="rtl"
+                >
+                  السَّلَامُ عَلَيْكُمْ
+                </p>
+                <p
+                  className={`${cinzel.className} mt-1 text-[clamp(0.6rem,2.4vw,0.72rem)] font-semibold uppercase tracking-[0.24em]`}
+                  style={{ color: GOLD_INK }}
+                >
+                  Peace be upon you
+                </p>
+              </div>
               <LayeredWelcomeTitle />
               <OrnamentalDivider compact />
             </header>
 
-            <figure className="mx-auto max-w-[36rem] text-center">
-              <blockquote>
+            {/* Qur'anic verse: Arabic line, translation, gold citation */}
+            <figure
+              className="relative mx-auto max-w-[34rem] rounded-xl px-4 py-5 text-center sm:px-8 sm:py-6"
+              style={{
+                background:
+                  "radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--color-motif-accent, #D4AF37) 10%, transparent), transparent 70%)",
+                border: "1px solid color-mix(in srgb, var(--color-motif-accent, #D4AF37) 35%, transparent)",
+              }}
+            >
+              <p
+                className={`${amiri.className} text-[clamp(1.45rem,6vw,2rem)] font-bold leading-[1.6]`}
+                style={{ color: "var(--color-welcome-navy)" }}
+                lang="ar"
+                dir="rtl"
+              >
+                {VERSE.arabic}
+              </p>
+              <blockquote className="mt-2 sm:mt-3">
                 <p
                   className={`font-goudy-italic ${sectionType.textSnug}`}
                   style={{ color: "var(--color-welcome-navy)" }}
                 >
-                  &ldquo;He has made everything beautiful in His time.&rdquo;
+                  &ldquo;{VERSE.text}&rdquo;
                 </p>
-                <figcaption className="mt-2 sm:mt-2.5">
-                  <cite
-                    className={`${cinzel.className} ${sectionType.label} not-italic uppercase tracking-[0.2em] sm:tracking-[0.24em]`}
-                    style={{ color: "var(--color-welcome-navy)" }}
-                  >
-                    Ecclesiastes 3:11
-                  </cite>
-                </figcaption>
               </blockquote>
+              <figcaption className="mt-3 flex items-center justify-center gap-2.5">
+                <span className="h-px w-6 sm:w-8" style={{ background: `linear-gradient(to right, transparent, ${GOLD_INK})` }} aria-hidden />
+                <cite
+                  className={`${cinzel.className} ${sectionType.label} font-semibold not-italic uppercase tracking-[0.2em] sm:tracking-[0.24em]`}
+                  style={{ color: GOLD_INK }}
+                >
+                  {VERSE.citation}
+                </cite>
+                <span className="h-px w-6 sm:w-8" style={{ background: `linear-gradient(to left, transparent, ${GOLD_INK})` }} aria-hidden />
+              </figcaption>
             </figure>
 
             <div
@@ -152,18 +204,19 @@ export function Welcome() {
               style={{ color: "var(--color-welcome-navy)" }}
             >
               <p>
-                Dear family and friends, we are overjoyed to begin this new chapter together and
-                grateful to God for every step that led us here. What began as a simple story has
-                grown into a love we cherish deeply — and we cannot imagine celebrating without you.
+                Dear family and friends, Alhamdulillah — by the will and mercy of Allah, our paths
+                have met, and with full hearts we are preparing to complete half of our deen through
+                the blessed bond of Nikkah.
               </p>
               <p>
-                This invitation holds everything you may need for our wedding day: the schedule,
-                venue details, and a few gentle reminders along the way. Whether near or far, your
-                presence, prayers, and warm wishes will mean more to us than words can say.
+                This invitation holds everything you may need for the day: the schedule, venue
+                details, and a few gentle reminders along the way. Whether you join us in person or
+                from afar, your presence and your du&rsquo;a mean more to us than words can say.
               </p>
               <p>
-                Thank you for being part of our journey. We look forward to sharing this beautiful
-                day with the people who have shaped our lives and our hearts.
+                May Allah bless this union, fill our home with sakinah, mawaddah and rahmah, and
+                reward you for every prayer you make for us. We look forward to celebrating with
+                the people who have shaped our lives and our hearts.
               </p>
             </div>
 
@@ -176,7 +229,7 @@ export function Welcome() {
                 className={`${aboveTheBeyond.className} ${sectionType.script}`}
                 style={{ color: "var(--color-welcome-navy)" }}
               >
-                With all our love,
+                With love and du&rsquo;a,
               </p>
               <p
                 className={`${cinzel.className} ${sectionType.subheader} font-semibold tracking-[0.12em] sm:tracking-[0.16em] md:tracking-[0.18em]`}

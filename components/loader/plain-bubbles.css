@@ -11,12 +11,12 @@
 .plain-sky {
   --sky-band: 60%;
   --sky-rest: calc(100% - var(--sky-band));
-  --sky-navy: var(--color-ink-deep, #012E4B);
+  --sky-navy: var(--color-ink-deep, #556B2F);
   --sky-teal: color-mix(in srgb, #0E5876 80%, var(--sky-navy));
   --sky-mauve: color-mix(in srgb, #8C7088 85%, var(--sky-teal));
   --sky-rose: color-mix(in srgb, var(--sky-blush) 70%, var(--sky-mauve));
-  --sky-blush: var(--color-motif-accent, #F69F9D);
-  --sky-pale: var(--color-motif-cream, #F5C5C3);
+  --sky-blush: var(--color-motif-accent, #D4AF37);
+  --sky-pale: var(--color-motif-cream, #EADCC6);
   position: absolute;
   inset: 0;
   z-index: 1;

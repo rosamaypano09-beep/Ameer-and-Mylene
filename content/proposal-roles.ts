@@ -23,9 +23,9 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     descriptions: {
       "Matron of Honor":
-        "To stand beside the bride with love and grace — lending a steady hand through every step of the day, sharing in her joy and excitement, and helping make each moment leading up to and on our wedding day truly unforgettable.",
+        "To stand beside the bride with love and grace — lending a steady hand through every step of the day, sharing in her joy and excitement, and helping make each moment leading up to and on our Nikkah day truly unforgettable.",
       "Maid of Honor":
-        "To stand beside the bride with love and loyalty — lending a steady hand through every step of the day, sharing in her joy and excitement, and helping make each moment leading up to and on our wedding day truly unforgettable.",
+        "To stand beside the bride with love and loyalty — lending a steady hand through every step of the day, sharing in her joy and excitement, and helping make each moment leading up to and on our Nikkah day truly unforgettable.",
     },
   },
   {
@@ -53,7 +53,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Flower Girls",
     description:
-      "To scatter petals down the aisle with delight and wonder — bringing sweetness, innocence, and a touch of magic to the ceremony that will make our walk toward forever even more beautiful.",
+      "To scatter petals with delight and wonder — bringing sweetness, innocence, and a touch of magic to our Nikkah, and making our walk toward forever even more beautiful.",
   },
   {
     id: "ring-bearer",
@@ -62,7 +62,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Ring Bearer",
     description:
-      "To carry the rings with care and present them at the altar — holding symbols of our promise with pride and tenderness, and playing a cherished part in the moment we exchange our vows.",
+      "To carry the rings with care during our Nikkah — holding symbols of our promise with pride and tenderness, and playing a cherished part in the moment we begin our marriage.",
   },
   {
     id: "coin-bearer",
@@ -71,16 +71,16 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Coin Bearer",
     description:
-      "To carry the arrhae with reverence during our wedding ceremony — honoring this beautiful Filipino tradition and representing the blessings, prosperity, and shared future we gratefully begin together.",
+      "To carry the coins with care during our Nikkah — honoring this beautiful Filipino tradition and representing the blessings, provision, and shared future we gratefully begin together, by the will of Allah.",
   },
   {
     id: "bible-bearer",
-    title: "Bible Bearer",
+    title: "Qur’an Bearer",
     category: "Entourage",
     type: "entourage",
-    roleCategory: "Bible Bearer",
+    roleCategory: "Bible Bearer", // sheet category kept so existing links and rows still match
     description:
-      "To carry the Bible with reverence during our wedding ceremony — honoring the Word that guides our faith and our marriage, and playing a meaningful part as we pledge our lives to one another before God.",
+      "To carry the Holy Qur’an with reverence during our Nikkah — honoring the Book that guides our faith and our marriage, and playing a meaningful part as we pledge our lives to one another before Allah.",
   },
   {
     id: "herald-bearer",
@@ -89,7 +89,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Herald Bearer",
     description:
-      "To carry the herald with reverence during our wedding ceremony — honoring the symbol of our faith and our marriage, and playing a meaningful part as we pledge our lives to one another before God.",
+      "To carry the herald with reverence during our Nikkah — honoring the symbol of our faith and our marriage, and playing a meaningful part as we pledge our lives to one another before Allah.",
   },
   {
     id: "little-bride",
@@ -98,7 +98,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Little Bride",
     description:
-      "To walk gracefully down the aisle and add a touch of innocence and charm — bringing light and joy to our ceremony and making the beginning of our forever feel even more special.",
+      "To walk gracefully down the aisle and add a touch of innocence and charm — bringing light and joy to our Nikkah and making the beginning of our forever feel even more special.",
   },
   {
     id: "candle-sponsor",
@@ -116,7 +116,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Veil Sponsors",
     description:
-      "To place the veil over us as a symbol of unity and protection — covering us with love and grace, and blessing our marriage with the warmth of your presence and prayers.",
+      "To place the veil over us as a symbol of unity and protection — covering us with love and grace, and blessing our marriage with the warmth of your presence and du’a.",
   },
   {
     id: "cord-sponsor",
@@ -125,7 +125,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Cord Sponsors",
     description:
-      "To bind the cord around us, signifying our lifelong bond — a beautiful act of faith that ties our hearts together and blesses the commitment we make before God and those we love.",
+      "To bind the cord around us, signifying our lifelong bond — a beautiful act of faith that ties our hearts together and blesses the commitment we make before Allah and those we love.",
   },
   {
     id: "principal-sponsor-ninong",
@@ -134,7 +134,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "sponsor-ninong",
     roleCategory: "Principal Sponsors",
     description:
-      "To serve as our Ninong and principal sponsor — a spiritual guide and second father whose wisdom, prayers, and steady support will help light our path as husband and wife through every season of married life.",
+      "To serve as our Ninong and principal sponsor — a guide and second father whose wisdom, du’a, and steady support will help light our path as husband and wife through every season of married life.",
   },
   {
     id: "principal-sponsor-ninang",
@@ -143,7 +143,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "sponsor-ninang",
     roleCategory: "Principal Sponsors",
     description:
-      "To serve as our Ninang and principal sponsor — a spiritual guide and second mother whose love, counsel, and prayers will surround our marriage with grace, strength, and enduring blessing.",
+      "To serve as our Ninang and principal sponsor — a guide and second mother whose love, counsel, and du’a will surround our marriage with grace, strength, and enduring blessing.",
   },
 ]
 

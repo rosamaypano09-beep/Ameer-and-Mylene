@@ -3384,13 +3384,13 @@
    Sunshine yellow is used once — the glowing dot on the progress bar.
    ========================================================================== */
 .loading-screen--plain {
-  --ls-sky: var(--color-motif-medium);          /* #F69F9D */
-  --ls-blue: var(--color-welcome-heading);      /* #012E4B */
-  --ls-navy: var(--color-welcome-navy);         /* #012E4B */
-  --ls-ink: var(--color-welcome-text);          /* #012E4B */
-  --ls-leaf: var(--color-motif-yellow);         /* #F69F9D sage */
+  --ls-sky: var(--color-motif-medium);          /* #D4AF37 */
+  --ls-blue: var(--color-welcome-heading);      /* #556B2F */
+  --ls-navy: var(--color-welcome-navy);         /* #556B2F */
+  --ls-ink: var(--color-welcome-text);          /* #556B2F */
+  --ls-leaf: var(--color-motif-yellow);         /* #D4AF37 sage */
   --ls-leaf-ink: color-mix(in srgb, var(--color-motif-yellow) 78%, #3C4424);
-  --ls-sun: var(--color-motif-accent);          /* #F69F9D */
+  --ls-sun: var(--color-motif-accent);          /* #D4AF37 */
 
   --ls-text-dark: var(--ls-ink);
   --ls-text-accent-dark: var(--ls-blue);
@@ -3498,12 +3498,12 @@
    holds up over bright frames. Sage + sunshine appear only as accents.
    ========================================================================== */
 .home-hero--plain {
-  --hh-navy: var(--color-welcome-navy);       /* #012E4B */
-  --hh-blue: var(--color-welcome-heading);    /* #012E4B */
-  --hh-ink: var(--color-welcome-text);        /* #012E4B */
-  --hh-sky: var(--color-motif-medium);        /* #F69F9D */
-  --hh-leaf: var(--color-motif-yellow);       /* #F69F9D */
-  --hh-butter: var(--color-motif-silver);     /* #F5C5C3 */
+  --hh-navy: var(--color-welcome-navy);       /* #556B2F */
+  --hh-blue: var(--color-welcome-heading);    /* #556B2F */
+  --hh-ink: var(--color-welcome-text);        /* #556B2F */
+  --hh-sky: var(--color-motif-medium);        /* #D4AF37 */
+  --hh-leaf: var(--color-motif-yellow);       /* #D4AF37 */
+  --hh-butter: var(--color-motif-silver);     /* #EADCC6 */
   /* Tight white edge: keeps thin strokes crisp instead of washing them out */
   --hh-edge:
     0 0 1px rgb(255 255 255 / 100%),
@@ -3845,19 +3845,19 @@
    Carries on from the navy loader and envelope: light ink with a navy edge instead of
    navy ink with a white edge. Scoped to the text block so the countdown band keeps its navy. */
 .home-hero--marquee .home-hero-mist ~ * {
-  --hh-navy: var(--color-motif-cream, #F5C5C3);
-  --hh-blue: var(--color-motif-accent, #F69F9D);
-  --hh-ink: var(--color-motif-cream, #F5C5C3);
+  --hh-navy: var(--color-motif-cream, #EADCC6);
+  --hh-blue: var(--color-motif-accent, #D4AF37);
+  --hh-ink: var(--color-motif-cream, #EADCC6);
   --hh-edge:
-    0 1px 2px color-mix(in srgb, var(--color-ink-deep, #012E4B) 85%, transparent),
-    0 2px 14px color-mix(in srgb, var(--color-ink-deep, #012E4B) 70%, transparent);
+    0 1px 2px color-mix(in srgb, var(--color-ink-deep, #556B2F) 85%, transparent),
+    0 2px 14px color-mix(in srgb, var(--color-ink-deep, #556B2F) 70%, transparent);
 }
 
 .home-hero--marquee .home-hero-mist {
   background: radial-gradient(
     ellipse at center,
-    color-mix(in srgb, var(--color-ink-deep, #012E4B) 55%, transparent) 0%,
-    color-mix(in srgb, var(--color-ink-deep, #012E4B) 35%, transparent) 45%,
+    color-mix(in srgb, var(--color-ink-deep, #556B2F) 55%, transparent) 0%,
+    color-mix(in srgb, var(--color-ink-deep, #556B2F) 35%, transparent) 45%,
     transparent 72%
   );
 }
@@ -3870,11 +3870,11 @@
    ========================================================================== */
 .love-story-root--sky {
   --ls-band: clamp(30rem, 74vh, 46rem);
-  --ls-navy: var(--color-ink-deep, #012E4B);
+  --ls-navy: var(--color-ink-deep, #556B2F);
   --ls-teal: color-mix(in srgb, #0E5876 80%, var(--ls-navy));
-  --ls-blush: var(--color-motif-accent, #F69F9D);
-  --ls-pale: var(--color-motif-cream, #F5C5C3);
-  --ls-paper: var(--color-motif-soft, #FEF3F2);
+  --ls-blush: var(--color-motif-accent, #D4AF37);
+  --ls-pale: var(--color-motif-cream, #EADCC6);
+  --ls-paper: var(--color-motif-soft, #FDF8EC);
   isolation: isolate;
   background: var(--ls-pale);
 }
@@ -3990,4 +3990,354 @@
   .ls-corner {
     animation: none;
   }
+}
+
+/* ==========================================================================
+   Home hero over the arch loader's background (loadingScreen.navyInvite.cardStyle "arch")
+   Carries on from the loader and envelope: the same softly blurred picture and
+   full-color florals, with the text set on an ivory arched panel in olive and gold.
+   ========================================================================== */
+.home-hero--arch {
+  --hh-navy: var(--color-ink-deep, #556B2F);
+  --hh-blue: color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C);
+  --hh-ink: color-mix(in srgb, var(--color-ink-deep, #556B2F) 85%, black);
+  --hh-leaf: var(--color-motif-accent, #D4AF37);
+  --hh-butter: var(--color-motif-cream, #EADCC6);
+  --hh-paper: var(--color-motif-soft, #FDF8EC);
+  --hh-edge: 0 1px 0 rgb(255 255 255 / 75%);
+  background: var(--hh-paper);
+}
+
+.home-hero-bg-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home-hero-bg-image img {
+  filter: blur(3px) saturate(1.05);
+  transform: scale(1.04);
+}
+
+/* Soft vignette so the edges settle and the panel lifts off the scene */
+.home-hero-bg-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 55% at 50% 50%, color-mix(in srgb, var(--hh-paper) 30%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 85% at 50% 50%, transparent 55%, color-mix(in srgb, var(--hh-navy) 28%, transparent) 100%);
+}
+
+.home-hero-arch-corners {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Same size and shadow as the loader's corners */
+.home-hero-arch-corner {
+  position: absolute;
+  /* Clear of the fixed navbar the section tucks under (-mt-12 / sm:-mt-14 / md:-mt-16) */
+  top: 3rem;
+  width: clamp(140px, 40vw, 400px);
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(0 8px 16px rgb(20 26 8 / 28%));
+}
+.home-hero-arch-corner--tl { left: 0; }
+.home-hero-arch-corner--tr { right: 0; }
+
+@media (min-width: 640px) {
+  .home-hero-arch-corner { top: 3.5rem; }
+}
+
+@media (min-width: 768px) {
+  .home-hero-arch-corner { top: 4rem; }
+}
+
+.home-hero--arch .home-hero-mist,
+.home-hero--arch .home-hero-title-glow {
+  display: none;
+}
+
+/* ---------- Panel ---------- */
+.home-hero-arch {
+  /* Half the panel width, so the top is a true half circle */
+  --arch-r: min(calc(50vw - 1.25rem), 15rem);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Fills the room between the navbar and the countdown; the groups spread evenly inside */
+  flex: 1 1 auto;
+  justify-content: space-evenly;
+  gap: clamp(0.55rem, 1.6vh, 1rem);
+  width: min(100%, 30rem);
+  max-height: 48rem;
+  padding:
+    calc(var(--arch-r) * 0.3)
+    clamp(1rem, 5vw, 2.5rem)
+    clamp(1.1rem, 3vh, 2rem);
+  border-radius: var(--arch-r) var(--arch-r) 16px 16px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #fff 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--hh-paper) 94%, transparent), color-mix(in srgb, var(--hh-paper) 88%, transparent));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--hh-leaf) 55%, transparent),
+    0 24px 60px -18px rgb(20 26 8 / 45%),
+    0 2px 10px rgb(20 26 8 / 10%);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  /* Keeps the rays inside the dome */
+  overflow: hidden;
+}
+
+/* Inner gold rule following the arch */
+.home-hero-arch::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--hh-leaf) 45%, transparent);
+  border-radius: calc(var(--arch-r) - 7px) calc(var(--arch-r) - 7px) 10px 10px;
+  pointer-events: none;
+}
+
+/* Fine gold rays in the dome, like the loader's rising sun */
+.home-hero-arch::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--arch-r) * 0.18);
+  left: 50%;
+  z-index: -2;
+  width: calc(var(--arch-r) * 2.3);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--hh-leaf) 30%, transparent) 0%, transparent 60%),
+    repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--hh-leaf) 20%, transparent) 0deg 1.2deg, transparent 1.2deg 7.5deg);
+  -webkit-mask: radial-gradient(circle, #000 14%, transparent 60%);
+  mask: radial-gradient(circle, #000 14%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ---------- Type ---------- */
+.home-hero--arch .home-hero-title-main {
+  color: var(--hh-navy);
+  letter-spacing: 0.08em;
+  text-shadow: var(--hh-edge);
+}
+
+/* "Invited!" in gold script, with room for its swashes */
+.home-hero--arch .home-hero-title-script {
+  color: var(--hh-blue);
+  line-height: 1.1;
+  text-shadow: var(--hh-edge);
+}
+
+.home-hero--arch .home-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  color: var(--hh-ink);
+  font-size: clamp(1rem, 4.3vw, 1.3rem);
+  text-shadow: none;
+}
+
+.home-hero--arch .home-hero-eyebrow::before,
+.home-hero--arch .home-hero-eyebrow::after {
+  content: "";
+  flex: 0 0 clamp(1.25rem, 6vw, 2.5rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hh-leaf));
+}
+
+.home-hero--arch .home-hero-eyebrow::after {
+  background: linear-gradient(90deg, var(--hh-leaf), transparent);
+}
+
+.home-hero--arch .home-hero-date,
+.home-hero--arch .home-hero-date-block {
+  -webkit-text-stroke: 0;
+}
+
+.home-hero--arch .home-hero-date-weekday {
+  color: var(--hh-blue);
+  text-shadow: none;
+}
+
+.home-hero--arch .home-hero-date-side {
+  min-width: 4.4em;
+  padding-left: 0.24em; /* balance the trailing letter-spacing */
+  color: var(--hh-navy);
+  border-color: color-mix(in srgb, var(--hh-leaf) 70%, transparent);
+  text-shadow: none;
+}
+
+.home-hero--arch .home-hero-date-day {
+  color: var(--hh-navy);
+  -webkit-text-stroke: 0;
+  text-shadow: var(--hh-edge), 0 6px 18px color-mix(in srgb, var(--hh-navy) 18%, transparent);
+}
+
+.home-hero--arch .home-hero-meta {
+  width: min(100%, 17rem);
+  padding-top: clamp(0.55rem, 1.6vh, 0.9rem);
+  border-top: 1px solid color-mix(in srgb, var(--hh-leaf) 45%, transparent);
+  font-weight: 400;
+  text-shadow: none;
+}
+
+.home-hero--arch .home-hero-meta-time {
+  color: var(--hh-blue);
+  text-shadow: none;
+}
+
+.home-hero--arch .home-hero-meta-venue {
+  color: var(--hh-ink);
+  font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+  text-shadow: none;
+}
+
+/* Bismillah at the top of the dome, translation in italic serif */
+.home-hero-bismillah {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.home-hero-bismillah__arabic {
+  margin: 0;
+  font-size: clamp(1.75rem, 8vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--hh-navy);
+  text-shadow: var(--hh-edge);
+}
+
+.home-hero-bismillah__translation {
+  margin: 0;
+  max-width: 20rem;
+  font-family: "SortsMillGoudy", Georgia, "Times New Roman", serif;
+  font-size: clamp(0.85rem, 3.6vw, 1rem);
+  font-style: italic;
+  line-height: 1.4;
+  white-space: pre-line;
+  color: var(--hh-ink);
+}
+
+/* Verse closing the panel: gold gem, italic quote, small-caps citation */
+.home-hero-verse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 22rem;
+  margin: 0;
+}
+
+.home-hero-verse__gem {
+  width: 6px;
+  height: 6px;
+  margin-bottom: clamp(0.55rem, 1.6vh, 0.9rem);
+  background: var(--hh-leaf);
+  transform: rotate(45deg);
+  box-shadow:
+    -1.4rem 1.4rem 0 -2px color-mix(in srgb, var(--hh-leaf) 60%, transparent),
+    1.4rem -1.4rem 0 -2px color-mix(in srgb, var(--hh-leaf) 60%, transparent);
+}
+
+.home-hero-verse__text {
+  margin: 0;
+  font-family: "SortsMillGoudy", Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 4.2vw, 1.2rem);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--hh-ink);
+}
+
+.home-hero-verse__cite {
+  margin-top: 0.35rem;
+  font-size: clamp(0.62rem, 2.5vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hh-blue);
+}
+
+/* ---------- Countdown band: olive, fading up into the scene ---------- */
+.home-hero--arch .home-hero-countdown-bar {
+  padding-top: clamp(1rem, 3vh, 1.75rem);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--hh-navy) 92%, transparent) 0%,
+    color-mix(in srgb, var(--hh-navy) 70%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+.home-hero--arch .home-hero-countdown-label {
+  color: var(--hh-butter);
+}
+
+/* The panel's own spacing replaces the stacked margins of the other hero styles */
+.home-hero--arch .home-hero-arch > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Phones: the panel starts just under the navbar and stops just above the countdown */
+@media (max-width: 639px) {
+  .home-hero--arch > .relative.z-10.flex-1 {
+    padding-top: 4.25rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Short phones: tighten the type so the countdown stays on the first screen */
+@media (max-height: 700px) {
+  .home-hero-bismillah__arabic { font-size: clamp(1.5rem, 7vw, 2.1rem); line-height: 1.3; }
+  .home-hero-bismillah__translation { font-size: 0.8rem; }
+  .home-hero--arch .home-hero-date-day { font-size: clamp(2.6rem, 12vw, 3.6rem); }
+  .home-hero-verse__text { font-size: 0.95rem; }
+}
+
+/* ---- Details section background (components/sections/details.tsx) ----
+   The loader's picture, softly blurred under a cream veil so the cards and the
+   olive text stay readable. The frame is one screen tall and sticks while the
+   long section scrolls past, so the picture never stretches. */
+.details-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.details-bg__frame {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+}
+
+.details-bg__img {
+  filter: blur(4px) saturate(1.05);
+  transform: scale(1.05);
+}
+
+.details-bg__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, color-mix(in srgb, var(--color-motif-soft, #FDF8EC) 55%, transparent) 0%, transparent 80%),
+    color-mix(in srgb, var(--color-motif-soft, #FDF8EC) 35%, transparent);
 }

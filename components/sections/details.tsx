@@ -11,7 +11,7 @@ import localFont from "next/font/local"
 import { Cinzel } from "next/font/google"
 import { Shirt, Copy, Check, Navigation, Heart, MapPin } from "lucide-react"
 import { motion, useReducedMotion, type Variants } from "motion/react"
-import { PlainBubbles } from "@/components/loader/PlainBubbles"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
 import { CornerFlorals } from "@/components/corner-florals"
 
 const cinzel = Cinzel({
@@ -39,24 +39,27 @@ const C = {
   label: "var(--color-welcome-heading)",
   script: "var(--color-welcome-script)",
   accent: "var(--color-motif-accent)",
-  // Deeper blush for small labels on the white attire cards (plain #F69F9D is too faint there)
-  rose: "color-mix(in srgb, var(--color-motif-accent) 78%, #B03A48)",
+  // Deeper gold for small labels on the white attire cards (plain #D4AF37 is too faint there)
+  rose: "color-mix(in srgb, var(--color-motif-accent) 78%, #8B6F2A)",
   blue: "var(--color-welcome-heading)",
   green: "var(--color-welcome-green)",
   paper: "var(--color-welcome-bg-soft)",
   light: "var(--color-motif-soft)",
 } as const
 
-// Section background = the hero's circle pattern (PlainBubbles paints its own aqua base)
-const sectionBg = "var(--color-bg-pattern-base)"
+// Section background: cream under the loader's (softly blurred) background picture
+const sectionBg = "var(--color-motif-soft, #FDF8EC)"
 
-// Text sitting directly on the navy part of the sky: light ink with a navy edge
+// Text sitting directly on the background picture: olive ink with a soft white edge
 const onBg = {
-  color: "var(--color-motif-soft)",
-  textShadow: "0 1px 2px rgb(1 46 75 / 85%), 0 0 18px rgb(1 46 75 / 60%)",
+  color: "var(--color-ink-deep, #556B2F)",
+  textShadow: "0 1px 0 rgb(255 255 255 / 90%), 0 0 14px rgb(255 255 255 / 85%)",
 } as const
-// Eyebrow + script lines on the navy pick up the blush accent
-const onBgAccent = { ...onBg, color: "var(--color-motif-accent)" } as const
+// Eyebrow + script lines in a gold deep enough to read on the light picture
+const onBgAccent = {
+  ...onBg,
+  color: "color-mix(in srgb, var(--color-motif-accent, #D4AF37) 62%, #4A3A0C)",
+} as const
 
 const hairline = "color-mix(in srgb, var(--color-motif-medium) 55%, transparent)"
 
@@ -142,8 +145,6 @@ const ct = {
   sectionTitle: "text-sm sm:text-lg md:text-xl lg:text-2xl",
   attireCardTitle: "text-sm sm:text-lg md:text-xl lg:text-2xl",
   btn: "text-xs sm:text-sm md:text-base",
-  reminderHead: "text-[0.8rem] sm:text-sm md:text-base",
-  reminderBody: "text-xs sm:text-sm md:text-[0.95rem]",
 } as const
 
 type PaletteColor = { name: string; hex: string }
@@ -188,16 +189,24 @@ function DressCodePaletteHeader({
       </div>
 
       <p
-        className={`${cinzel.className} mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.18em] sm:text-xs md:text-sm`}
+        className={`${cinzel.className} mt-4 text-[0.75rem] font-semibold uppercase tracking-[0.18em] sm:text-xs md:text-sm`}
         style={{ color: C.rose }}
       >
         {guideTitle}
       </p>
-      <p className="font-goudy-italic mt-1.5 text-[0.72rem] leading-relaxed sm:text-xs md:text-sm" style={{ color: C.heading }}>
+      <p className="font-goudy-italic mt-1.5 text-[0.9rem] leading-relaxed sm:text-sm md:text-base" style={{ color: C.heading }}>
         {guideNote}
       </p>
     </div>
   )
+}
+
+// True for pale swatches (cream, beige) that need dark text instead of white
+function isLightColor(hex: string) {
+  const m = hex.replace("#", "").match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i)
+  if (!m) return false
+  const [r, g, b] = m.slice(1).map((v) => parseInt(v, 16))
+  return 0.299 * r + 0.587 * g + 0.114 * b > 170
 }
 
 // Full-width strip of equal swatches, color names written vertically
@@ -225,11 +234,13 @@ function DressCodePaletteSwatches({ palette }: { palette: readonly PaletteColor[
         >
           {color.name ? (
             <span
-              className="text-[7px] font-semibold uppercase tracking-[0.14em] text-white sm:text-[8px] md:text-[9px]"
+              className="text-[9px] font-semibold uppercase tracking-[0.14em] sm:text-[10px] md:text-[11px]"
               style={{
                 writingMode: "vertical-rl",
                 textOrientation: "mixed",
-                textShadow: "0 1px 2px rgb(0 0 0 / 45%), 0 0 6px rgb(0 0 0 / 25%)",
+                ...(isLightColor(color.hex)
+                  ? { color: "var(--color-ink-deep, #556B2F)", textShadow: "none" }
+                  : { color: "#FFFFFF", textShadow: "0 1px 2px rgb(0 0 0 / 45%), 0 0 6px rgb(0 0 0 / 25%)" }),
               }}
             >
               {color.name}
@@ -305,8 +316,8 @@ function FadeRule({ className = "" }: { className?: string }) {
 
 const revealEase = [0.22, 1, 0.36, 1] as const
 
-// Gentle Reminders card is hidden for now; set to true to show it again
-const SHOW_REMINDERS = false
+// Gentle Reminders card; set to false to hide it
+const SHOW_REMINDERS = true
 
 const reminderListVariants: Variants = {
   hidden: {},
@@ -318,16 +329,25 @@ const reminderItemVariants: Variants = {
   show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: revealEase } },
 }
 
+// One reminder: gold diamond, gold small-caps title, then upright serif sized for phones
 function ReminderItem({ title, children }: { title: string; children: ReactNode }) {
   return (
     <motion.div variants={reminderItemVariants} className="mx-auto flex max-w-xl flex-col items-center text-center">
+      <span
+        className="mb-2.5 block h-2 w-2 rotate-45"
+        style={{ background: C.accent, boxShadow: "0 0 0 3px #FFFFFF, 0 0 0 4px color-mix(in srgb, var(--color-motif-accent) 40%, transparent)" }}
+        aria-hidden
+      />
       <h4
-        className={`${cinzel.className} ${ct.reminderHead} font-semibold uppercase tracking-[0.16em]`}
-        style={{ color: C.heading }}
+        className={`${cinzel.className} text-[0.8rem] font-semibold uppercase tracking-[0.2em] sm:text-sm`}
+        style={{ color: C.rose }}
       >
         {title}
       </h4>
-      <div className={`font-goudy-italic ${ct.reminderBody} mt-1.5 leading-relaxed sm:mt-2`} style={{ color: C.body }}>
+      <div
+        className="mt-2 text-[1rem] leading-[1.6] sm:text-[1.05rem]"
+        style={{ fontFamily: '"SortsMillGoudy", Georgia, "Times New Roman", serif', color: C.heading }}
+      >
         {children}
       </div>
     </motion.div>
@@ -348,6 +368,26 @@ function highlightPhrase(text: string, phrase?: string): ReactNode {
       </strong>
       {text.slice(index + phrase.length)}
     </>
+  )
+}
+
+// One attire line, sized for phones: gold small-caps label over upright serif text
+function AttireLine({ label, text }: { label: string; text: ReactNode }) {
+  return (
+    <div className="mx-auto w-full max-w-md text-center">
+      <p
+        className={`${cinzel.className} text-[0.78rem] font-semibold uppercase tracking-[0.2em] sm:text-sm`}
+        style={{ color: C.rose }}
+      >
+        {label}
+      </p>
+      <p
+        className="mt-1.5 px-1 text-[1.05rem] leading-[1.55] sm:text-lg"
+        style={{ fontFamily: '"SortsMillGoudy", Georgia, "Times New Roman", serif', color: C.heading }}
+      >
+        {text}
+      </p>
+    </div>
   )
 }
 
@@ -769,6 +809,8 @@ export function Details() {
   const [reminderImageIndex, setReminderImageIndex] = useState(0)
   const [rotationOffset, setRotationOffset] = useState(0)
   const reduceMotion = useReducedMotion()
+  const backgroundImage =
+    siteConfig.loadingScreen?.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
 
   // "combined" = one card for both events at the ceremony venue (eventDetails.venues.layout)
   const isCombined = venues.layout === "combined"
@@ -834,11 +876,19 @@ export function Details() {
 
   return (
     <div
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-hidden`}
+      // overflow-clip (not hidden) so the sticky background can stick
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative w-full overflow-clip`}
       style={{ background: sectionBg }}
     >
-      {/* Same circle pattern as the hero */}
-      <PlainBubbles />
+      {/* Same blurred picture as the loader and hero; it stays put (sticky) while the long section scrolls */}
+      {backgroundImage ? (
+        <div className="details-bg" aria-hidden="true">
+          <div className="details-bg__frame">
+            <Image src={backgroundImage} alt="" fill sizes="100vw" className="details-bg__img object-cover" />
+            <div className="details-bg__veil" />
+          </div>
+        </div>
+      ) : null}
       <Section
         id="details"
         // Extra top / bottom room so the corner florals clear the header and the last card
@@ -972,6 +1022,56 @@ export function Details() {
               const halves = [group.ladies, group.gentlemen].filter(
                 (half) => half.details.trim() || half.roles.length > 0,
               )
+              // Cards with "lines" read top to bottom, then show the palette underneath
+              const lines = "lines" in group ? group.lines : []
+              if (lines.length > 0) {
+                return (
+                  <AttireCard
+                    key={group.id}
+                    title={group.title}
+                    image={group.image}
+                    alt={`${group.title} attire guide`}
+                    belowImage={
+                      group.dressCode ? (
+                        <p
+                          className={`${aboveTheBeyond.className} px-4 pt-5 text-center text-[2rem] leading-none sm:pt-6 sm:text-[2.4rem]`}
+                          style={{ color: C.rose }}
+                        >
+                          {group.dressCode}
+                        </p>
+                      ) : null
+                    }
+                  >
+                    <div className="space-y-5 sm:space-y-6">
+                      {lines.map((line, i) => (
+                        <Fragment key={line.label}>
+                          {i > 0 ? (
+                            <span
+                              className="mx-auto block h-px w-1/3 max-w-[8rem]"
+                              style={{ background: "linear-gradient(to right, transparent, var(--color-motif-accent), transparent)" }}
+                              aria-hidden
+                            />
+                          ) : null}
+                          <AttireLine label={line.label} text={highlightPhrase(line.text, line.highlight)} />
+                        </Fragment>
+                      ))}
+                      {hasPalette ? (
+                        <div className="pt-1">
+                          <DressCodePaletteHeader
+                            title={attire.paletteTitle}
+                            subtitle=""
+                            guideTitle={attire.colorGuideTitle}
+                            guideNote={attire.colorGuideNote}
+                          />
+                          <div className="mt-4">
+                            <DressCodePaletteSwatches palette={palette} />
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </AttireCard>
+                )
+              }
               return (
                 <AttireCard
                   key={group.id}
@@ -1046,7 +1146,7 @@ export function Details() {
                   >
                     {reminders.title}
                   </h3>
-                  <p className={`font-goudy-italic ${ct.body} mx-auto mt-1.5 max-w-md leading-relaxed`} style={{ color: C.soft }}>
+                  <p className="font-goudy-italic mx-auto mt-2 max-w-md text-[0.95rem] leading-relaxed sm:text-base" style={{ color: C.heading }}>
                     {reminders.description}
                   </p>
                   <FadeRule className="mt-3.5 sm:mt-4" />
@@ -1058,7 +1158,7 @@ export function Details() {
                       {index > 0 ? (
                         <motion.span
                           variants={reminderItemVariants}
-                          className="mx-auto my-4 block h-px w-1/2 max-w-[14rem] sm:my-5"
+                          className="mx-auto my-5 block h-px w-1/3 max-w-[9rem] sm:my-6"
                           style={{ background: "linear-gradient(to right, transparent, var(--color-motif-medium), transparent)" }}
                           aria-hidden
                         />

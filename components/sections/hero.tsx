@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import Image from "next/image"
 import { motion, useReducedMotion } from "motion/react"
-import { Cinzel } from "next/font/google"
+import { Amiri, Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { parseWeddingDate } from "@/lib/wedding-date"
@@ -16,6 +17,13 @@ import { TintedDeco } from "@/components/tinted-deco"
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+})
+
+// Arabic calligraphy for the Bismillah (same as the loader card)
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  display: "swap",
 })
 
 const theSeasons = localFont({
@@ -35,6 +43,12 @@ const heroTitleSize = {
   main: "clamp(3.35rem, min(16vw, 18cqi), 8.25rem)",
   script: "clamp(2.55rem, min(12vw, 14cqi), 5.6rem)",
   overlap: "clamp(-0.95rem, min(-3.8vw, -3.2cqi), -1.85rem)",
+} as const
+// Inside the arch panel the title has less width to fill
+const archTitleSize = {
+  main: "clamp(2.5rem, min(12vw, 15cqi), 5.25rem)",
+  script: "clamp(2.6rem, min(12.5vw, 15cqi), 4.9rem)",
+  overlap: "clamp(0rem, 0.6vw, 0.3rem)",
 } as const
 
 interface TimeLeft {
@@ -219,15 +233,22 @@ export function Hero() {
     loading.cornerDecos ?? defaultSiteConfig.loadingScreen.cornerDecos
   const backgroundPhotos = loading.backgroundPhotos ?? []
   const reduceMotion = useReducedMotion()
+  const isNavy =
+    isPlain && (loading.plainLayout ?? defaultSiteConfig.loadingScreen.plainLayout) === "navy"
+  const navyInvite = loading.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite
+  // Arch loader: same softly blurred background picture and full-color florals as the loader and envelope
+  const isArch = isNavy && navyInvite.cardStyle === "arch"
+  const archBackground = isArch
+    ? loading.backgroundImage ?? defaultSiteConfig.loadingScreen.backgroundImage
+    : ""
+  const titleSize = isArch ? archTitleSize : heroTitleSize
   // Navy loader's photo marquee carries on from the loader and envelope (instead of the video)
   const navyMarqueePhotos = useMemo(
     () =>
-      isPlain &&
-      (loading.plainLayout ?? defaultSiteConfig.loadingScreen.plainLayout) === "navy" &&
-      (loading.navyInvite ?? defaultSiteConfig.loadingScreen.navyInvite).backgroundMarquee !== false
+      isNavy && !archBackground && navyInvite.backgroundMarquee !== false
         ? backgroundPhotos.map((src) => encodeURI(src))
         : [],
-    [isPlain, loading.plainLayout, loading.navyInvite, backgroundPhotos],
+    [isNavy, archBackground, navyInvite.backgroundMarquee, backgroundPhotos],
   )
   const showNavyMarquee = navyMarqueePhotos.length > 0
   const [visible, setVisible] = useState(false)
@@ -262,9 +283,34 @@ export function Hero() {
   return (
     <section
       id="home"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} home-hero relative -mt-12 flex min-h-[100dvh] w-full flex-col overflow-hidden sm:-mt-14 md:-mt-16${isPlain ? " home-hero--plain" : " home-hero--photos"}${showNavyMarquee ? " home-hero--marquee" : ""}`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} home-hero relative -mt-12 flex min-h-[100dvh] w-full flex-col overflow-hidden sm:-mt-14 md:-mt-16${isPlain ? " home-hero--plain" : " home-hero--photos"}${showNavyMarquee ? " home-hero--marquee" : ""}${isArch ? " home-hero--arch" : ""}`}
     >
-      {isPlain ? (
+      {isArch ? (
+        <>
+          <div className="home-hero-bg-image" aria-hidden="true">
+            <Image src={archBackground} alt="" fill sizes="100vw" className="object-cover" />
+          </div>
+          <div className="home-hero-arch-corners" aria-hidden="true">
+            {(
+              [
+                ["tl", navyInvite.decos.topLeft, 650, 547],
+                ["tr", navyInvite.decos.topRight, 646, 547],
+              ] as const
+            ).map(([pos, src, w, h]) =>
+              src ? (
+                <Image
+                  key={pos}
+                  src={src}
+                  alt=""
+                  width={w}
+                  height={h}
+                  className={`home-hero-arch-corner home-hero-arch-corner--${pos}`}
+                />
+              ) : null,
+            )}
+          </div>
+        </>
+      ) : isPlain ? (
         <>
           {showNavyMarquee ? (
             <NavyMarquee photos={navyMarqueePhotos} reduceMotion={!!reduceMotion} />
@@ -300,94 +346,124 @@ export function Hero() {
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-5 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(6rem,24vw,7.5rem)] sm:pb-[clamp(2.5rem,9vh,5rem)] sm:pt-[clamp(3.75rem,10vw,6rem)] text-center sm:px-8">
         {/* Soft frosted mist behind the whole text block — no edges, fades into the video */}
         <span aria-hidden className="home-hero-mist pointer-events-none" />
-        <motion.h1
-          className="relative mx-auto w-full max-w-full @container text-center"
-          style={
-            {
-              "--hero-title-size": heroTitleSize.main,
-              "--hero-script-size": heroTitleSize.script,
-              "--hero-script-overlap": heroTitleSize.overlap,
-            } as React.CSSProperties
-          }
-          {...fadeUp(0.08)}
-        >
-          <span
-            aria-hidden
-            className="home-hero-title-glow pointer-events-none absolute left-1/2 top-[42%] h-[min(18rem,58vw)] w-[min(36rem,96%)] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          />
-          <span className="sr-only">You&apos;re Invited!</span>
-          <span
-            aria-hidden
-            className={`${theSeasons.className} home-hero-title-main relative block uppercase leading-[0.78] tracking-[0.06em] min-[400px]:tracking-[0.09em] sm:tracking-[0.11em] md:tracking-[0.12em]`}
-            style={{ fontSize: "var(--hero-title-size)" }}
+        {/* Arch mode: the text sits on an ivory arched panel like the loader card */}
+        <div className={isArch ? "home-hero-arch" : "contents"}>
+          {isArch && (navyInvite.bismillah || navyInvite.bismillahTranslation) && (
+            <motion.div className="home-hero-bismillah" {...fadeUp(0)}>
+              {navyInvite.bismillah && (
+                <p className={`${amiri.className} home-hero-bismillah__arabic`} lang="ar" dir="rtl">
+                  {navyInvite.bismillah}
+                </p>
+              )}
+              {navyInvite.bismillahTranslation && (
+                <p className="home-hero-bismillah__translation">
+                  &ldquo;{navyInvite.bismillahTranslation}&rdquo;
+                </p>
+              )}
+            </motion.div>
+          )}
+          <motion.h1
+            className="relative mx-auto w-full max-w-full @container text-center"
+            style={
+              {
+                "--hero-title-size": titleSize.main,
+                "--hero-script-size": titleSize.script,
+                "--hero-script-overlap": titleSize.overlap,
+              } as React.CSSProperties
+            }
+            {...fadeUp(0.08)}
           >
-            You
             <span
-              className={`${cinzel.className} relative -top-[0.04em] mx-[0.02em] inline-block font-normal tracking-normal`}
-            >
-              &rsquo;
-            </span>
-            re
-          </span>
-          <span
-            aria-hidden
-            className={`${aboveTheBeyond.className} home-hero-title-script relative z-10 mx-auto block w-fit max-w-full px-1 leading-[0.82] sm:leading-[0.84]`}
-            style={{
-              marginTop: "var(--hero-script-overlap)",
-              fontSize: "var(--hero-script-size)",
-            }}
-          >
-            Invited
+              aria-hidden
+              className="home-hero-title-glow pointer-events-none absolute left-1/2 top-[42%] h-[min(18rem,58vw)] w-[min(36rem,96%)] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            />
+            <span className="sr-only">You&apos;re Invited!</span>
             <span
-              className={`${cinzel.className} home-hero-title-script relative -top-[0.08em] ml-[0.05em] inline-block font-normal`}
+              aria-hidden
+              className={`${theSeasons.className} home-hero-title-main relative block uppercase leading-[0.78] tracking-[0.06em] min-[400px]:tracking-[0.09em] sm:tracking-[0.11em] md:tracking-[0.12em]`}
+              style={{ fontSize: "var(--hero-title-size)" }}
             >
-              !
+              You
+              <span
+                className={`${cinzel.className} relative -top-[0.04em] mx-[0.02em] inline-block font-normal tracking-normal`}
+              >
+                &rsquo;
+              </span>
+              re
             </span>
-          </span>
-        </motion.h1>
+            <span
+              aria-hidden
+              className={`${aboveTheBeyond.className} home-hero-title-script relative z-10 mx-auto block w-fit max-w-full px-1 leading-[0.82] sm:leading-[0.84]`}
+              style={{
+                marginTop: "var(--hero-script-overlap)",
+                fontSize: "var(--hero-script-size)",
+              }}
+            >
+              Invited
+              <span
+                className={`${cinzel.className} home-hero-title-script relative -top-[0.08em] ml-[0.05em] inline-block font-normal`}
+              >
+                !
+              </span>
+            </span>
+          </motion.h1>
 
-        <motion.p
-          className="home-hero-eyebrow mt-5 text-[clamp(1.05rem,4.6vw,1.4rem)] italic leading-snug sm:mt-6"
-          {...fadeUp(0.2)}
-        >
-          We are getting married
-        </motion.p>
-
-        <motion.div className="home-hero-date-block mt-5 flex flex-col items-center sm:mt-6" {...fadeUp(0.28)}>
-          <span
-            className={`${cinzel.className} home-hero-date-weekday text-[clamp(0.66rem,2.8vw,0.8rem)] font-semibold uppercase tracking-[0.42em]`}
+          <motion.p
+            className="home-hero-eyebrow mt-5 text-[clamp(1.05rem,4.6vw,1.4rem)] italic leading-snug sm:mt-6"
+            {...fadeUp(0.2)}
           >
-            {parsedDate.dayOfWeek}
-          </span>
-          <div className="home-hero-date-row mt-2 flex items-center justify-center gap-[clamp(0.75rem,4vw,1.5rem)]">
-            <span
-              className={`${cinzel.className} home-hero-date-side text-[clamp(0.72rem,3vw,0.9rem)] font-semibold uppercase tracking-[0.24em]`}
-            >
-              {parsedDate.month}
-            </span>
-            <span
-              className={`${theSeasons.className} home-hero-date-day text-[clamp(3rem,14vw,4.75rem)] leading-none`}
-            >
-              {pad2(Number(parsedDate.day))}
-            </span>
-            <span
-              className={`${cinzel.className} home-hero-date-side text-[clamp(0.72rem,3vw,0.9rem)] font-semibold uppercase tracking-[0.24em]`}
-            >
-              {parsedDate.year}
-            </span>
-          </div>
-        </motion.div>
+            We are getting married
+          </motion.p>
 
-        <motion.div className="home-hero-meta mt-5 flex flex-col items-center gap-1 sm:mt-6" {...fadeUp(0.36)}>
-          <span
-            className={`${cinzel.className} home-hero-meta-time text-[clamp(0.68rem,2.9vw,0.82rem)] font-semibold uppercase tracking-[0.22em]`}
-          >
-            {ceremonyTimePhrase}
-          </span>
-          <span className="home-hero-meta-venue text-[clamp(1.05rem,4.6vw,1.4rem)] italic leading-tight">
-            {ceremonyName}
-          </span>
-        </motion.div>
+          <motion.div className="home-hero-date-block mt-5 flex flex-col items-center sm:mt-6" {...fadeUp(0.28)}>
+            <span
+              className={`${cinzel.className} home-hero-date-weekday text-[clamp(0.66rem,2.8vw,0.8rem)] font-semibold uppercase tracking-[0.42em]`}
+            >
+              {parsedDate.dayOfWeek}
+            </span>
+            <div className="home-hero-date-row mt-2 flex items-center justify-center gap-[clamp(0.75rem,4vw,1.5rem)]">
+              <span
+                className={`${cinzel.className} home-hero-date-side text-[clamp(0.72rem,3vw,0.9rem)] font-semibold uppercase tracking-[0.24em]`}
+              >
+                {/* Short month ("DEC") keeps the date row compact */}
+                {parsedDate.month.slice(0, 3)}
+              </span>
+              <span
+                className={`${theSeasons.className} home-hero-date-day text-[clamp(3rem,14vw,4.75rem)] leading-none`}
+              >
+                {pad2(Number(parsedDate.day))}
+              </span>
+              <span
+                className={`${cinzel.className} home-hero-date-side text-[clamp(0.72rem,3vw,0.9rem)] font-semibold uppercase tracking-[0.24em]`}
+              >
+                {parsedDate.year}
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div className="home-hero-meta mt-5 flex flex-col items-center gap-1 sm:mt-6" {...fadeUp(0.36)}>
+            <span
+              className={`${cinzel.className} home-hero-meta-time text-[clamp(0.68rem,2.9vw,0.82rem)] font-semibold uppercase tracking-[0.22em]`}
+            >
+              {ceremonyTimePhrase}
+            </span>
+            <span className="home-hero-meta-venue text-[clamp(1.05rem,4.6vw,1.4rem)] italic leading-tight">
+              {ceremonyName}
+            </span>
+          </motion.div>
+
+          {isArch && navyInvite.verse && (
+            <motion.figure className="home-hero-verse" {...fadeUp(0.44)}>
+              <span className="home-hero-verse__gem" aria-hidden="true" />
+              <blockquote className="home-hero-verse__text">&ldquo;{navyInvite.verse}&rdquo;</blockquote>
+              {navyInvite.verseCitation && (
+                <figcaption className={`${cinzel.className} home-hero-verse__cite`}>
+                  {navyInvite.verseCitation}
+                </figcaption>
+              )}
+            </motion.figure>
+          )}
+        </div>
       </div>
 
       <motion.div className="home-hero-countdown-bar relative z-10 mt-auto w-full" {...fadeUp(0.42)}>
