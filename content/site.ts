@@ -383,7 +383,7 @@ const BRAND = {
   monogram: "/monogram/monogram.png",
   coupleNameImage: "/Details/newcoupelNames.png", // couple-name lettering (loader, envelope)
   seal: "/monogram/seal.png", // envelope wax seal
-  backgroundMusic: "/background_music/Goodness Of God X Oceans X Gratitude (Wedding Entrance version).mp3",
+  backgroundMusic: "/background_music/Maher Zain - For The Rest Of My Life Official Music Video (mp3cut.net).mp3",
 }
 
 // Couple photos reused across the site (gallery, loader, reminders, snap & share, closing)
@@ -802,7 +802,7 @@ export const siteConfig = {
         title: "Arrival of Guests",
         description: "",
         location: "{ceremony}",
-        image: "",
+        image: "/weddingtimeline/arrivalimage.png",
         icon: "arch" as TimelineIconName,
       },
       {
@@ -811,7 +811,7 @@ export const siteConfig = {
         title: "Nikkah Ceremony",
         description: "Khutbah, ijab & qabul, and the signing of the Nikkah contract",
         location: "{ceremony}",
-        image: "",
+        image: "/weddingtimeline/WeddingCeremony.png",
         icon: "crescent" as TimelineIconName,
       },
       {
@@ -820,7 +820,7 @@ export const siteConfig = {
         title: "Photo Session",
         description: "",
         location: "{ceremony}",
-        image: "",
+        image: "/weddingtimeline/PhotoSession.png",
         icon: "camera" as TimelineIconName,
       },
       {
@@ -829,7 +829,7 @@ export const siteConfig = {
         title: "Refreshments",
         description: "",
         location: "{reception}",
-        image: "",
+        image: "/weddingtimeline/CockTailHour.png",
         icon: "teacup" as TimelineIconName,
       },
       {
@@ -838,7 +838,7 @@ export const siteConfig = {
         title: "Walimah Program",
         description: "",
         location: "{reception}",
-        image: "",
+        image: "/weddingtimeline/reception welcom.png",
         icon: "lantern" as TimelineIconName,
       },
       {
@@ -847,7 +847,7 @@ export const siteConfig = {
         title: "Walimah Feast",
         description: "",
         location: "{reception}",
-        image: "",
+        image: "/weddingtimeline/DinnerService.png",
         icon: "feast" as TimelineIconName,
       },
       {
@@ -856,10 +856,19 @@ export const siteConfig = {
         title: "Closing Du’a & Farewell",
         description: "",
         location: "{reception}",
-        image: "",
+        image: "/weddingtimeline/SendOff.png",
         icon: "departure" as TimelineIconName,
       },
       // Spare illustrations — set show: true and a time to use them
+      {
+        show: false,
+        time: "",
+        title: "Assembly",
+        description: "",
+        location: "{ceremony}",
+        image: "/weddingtimeline/assemble.png",
+        icon: "arch" as TimelineIconName,
+      },
       {
         show: false,
         time: "",

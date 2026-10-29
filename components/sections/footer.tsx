@@ -50,6 +50,10 @@ const BUTTON_HOVER = "var(--color-welcome-navy)"
 const BUTTON_SHADOW = "0 8px 18px -10px color-mix(in srgb, var(--color-welcome-navy) 60%, transparent)"
 const IVORY = "#FFFFFF"
 const HAIRLINE = "color-mix(in srgb, var(--color-motif-medium) 60%, transparent)"
+// Footer monogram medallion
+const MONOGRAM_INK = "#556B2F"
+const MEDALLION_GOLD = "var(--color-motif-accent, #D4AF37)"
+const MEDALLION_PAPER = "var(--color-motif-soft, #FDF8EC)"
 
 const palette = {
   body: "var(--color-welcome-text)",
@@ -322,14 +326,32 @@ export function Footer() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {content.showMonogram && siteConfig.couple.monogram ? (
-            // Monogram in its own colors (no tint), with a soft navy shadow for lift
-            <motion.div variants={rise} className="relative block h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48">
-              <Image
-                src={siteConfig.couple.monogram}
-                alt={`${coupleDisplayName} monogram`}
-                fill
-                sizes="(min-width: 768px) 192px, (min-width: 640px) 160px, 128px"
-                className="object-contain drop-shadow-[0_2px_10px_rgb(1_46_75_/_45%)]"
+            // Monogram on an ivory medallion with a gold double ring; the artwork is used as a
+            // mask so it is painted in the olive ink (#556B2F) whatever color the file is
+            <motion.div
+              variants={rise}
+              className="relative flex h-36 w-36 items-center justify-center rounded-full sm:h-44 sm:w-44 md:h-52 md:w-52"
+              style={{
+                background: `radial-gradient(circle at 50% 35%, #FFFFFF 0%, ${MEDALLION_PAPER} 70%)`,
+                boxShadow: `0 0 0 1px ${MEDALLION_GOLD}, 0 0 0 6px ${MEDALLION_PAPER}, 0 0 0 7px color-mix(in srgb, ${MEDALLION_GOLD} 55%, transparent), 0 18px 40px -16px rgb(40 52 20 / 45%)`,
+              }}
+              role="img"
+              aria-label={`${coupleDisplayName} monogram`}
+            >
+              <span
+                className="block h-[80%] w-[80%]"
+                style={{
+                  backgroundColor: MONOGRAM_INK,
+                  WebkitMaskImage: `url("${encodeURI(siteConfig.couple.monogram)}")`,
+                  maskImage: `url("${encodeURI(siteConfig.couple.monogram)}")`,
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                }}
+                aria-hidden
               />
             </motion.div>
           ) : (
