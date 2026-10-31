@@ -204,19 +204,12 @@ export function Welcome() {
               style={{ color: "var(--color-welcome-navy)" }}
             >
               <p>
-                Dear family and friends, Alhamdulillah — by the will and mercy of Allah, our paths
-                have met, and with full hearts we are preparing to complete half of our deen through
-                the blessed bond of Nikkah.
+                Alhamdulillah — with full hearts we are completing half of our deen through the
+                blessed bond of Nikkah. Your presence and your du&rsquo;a (prayer) mean the world to us.
               </p>
               <p>
-                This invitation holds everything you may need for the day: the schedule, venue
-                details, and a few gentle reminders along the way. Whether you join us in person or
-                from afar, your presence and your du&rsquo;a mean more to us than words can say.
-              </p>
-              <p>
-                May Allah bless this union, fill our home with sakinah, mawaddah and rahmah, and
-                reward you for every prayer you make for us. We look forward to celebrating with
-                the people who have shaped our lives and our hearts.
+                Inside you&rsquo;ll find the schedule, venue details, and a few gentle reminders for
+                the day. Whether you join us in person or from afar, you are in our hearts.
               </p>
             </div>
 
@@ -229,7 +222,7 @@ export function Welcome() {
                 className={`${aboveTheBeyond.className} ${sectionType.script}`}
                 style={{ color: "var(--color-welcome-navy)" }}
               >
-                With love and du&rsquo;a,
+                With love and du&rsquo;a (prayer),
               </p>
               <p
                 className={`${cinzel.className} ${sectionType.subheader} font-semibold tracking-[0.12em] sm:tracking-[0.16em] md:tracking-[0.18em]`}

@@ -116,7 +116,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "entourage",
     roleCategory: "Veil Sponsors",
     description:
-      "To place the veil over us as a symbol of unity and protection — covering us with love and grace, and blessing our marriage with the warmth of your presence and du’a.",
+      "To place the veil over us as a symbol of unity and protection — covering us with love and grace, and blessing our marriage with the warmth of your presence and du’a (prayer).",
   },
   {
     id: "cord-sponsor",
@@ -134,7 +134,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "sponsor-ninong",
     roleCategory: "Principal Sponsors",
     description:
-      "To serve as our Ninong and principal sponsor — a guide and second father whose wisdom, du’a, and steady support will help light our path as husband and wife through every season of married life.",
+      "To serve as our Ninong and principal sponsor — a guide and second father whose wisdom, du’a (prayer), and steady support will help light our path as husband and wife through every season of married life.",
   },
   {
     id: "principal-sponsor-ninang",
@@ -143,7 +143,7 @@ export const proposalRoleDefinitions: ProposalRoleDefinition[] = [
     type: "sponsor-ninang",
     roleCategory: "Principal Sponsors",
     description:
-      "To serve as our Ninang and principal sponsor — a guide and second mother whose love, counsel, and du’a will surround our marriage with grace, strength, and enduring blessing.",
+      "To serve as our Ninang and principal sponsor — a guide and second mother whose love, counsel, and du’a (prayer) will surround our marriage with grace, strength, and enduring blessing.",
   },
 ]
 

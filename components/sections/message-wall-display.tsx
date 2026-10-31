@@ -390,13 +390,13 @@ export default function MessageWallDisplay({ messages, loading, freshKey = null 
           className={`${cinzel.className} mb-2 font-semibold uppercase tracking-[0.16em] sm:mb-3 ${sectionType.subheader}`}
           style={{ color: NAVY }}
         >
-          No du&rsquo;a yet
+          No du&rsquo;a (prayer) yet
         </h3>
         <p
           className={`font-goudy-italic mx-auto mb-5 max-w-md sm:mb-6 ${sectionType.textRelaxed}`}
           style={{ color: BODY }}
         >
-          Be the first to make du&rsquo;a for the newlyweds.
+          Be the first to make du&rsquo;a (prayer) for the newlyweds.
         </p>
         <div className="flex justify-center">
           <span
@@ -407,7 +407,7 @@ export default function MessageWallDisplay({ messages, loading, freshKey = null 
               borderColor: BUTTON_EDGE,
             }}
           >
-            Your du&rsquo;a will appear here
+            Your du&rsquo;a (prayer) will appear here
           </span>
         </div>
       </div>

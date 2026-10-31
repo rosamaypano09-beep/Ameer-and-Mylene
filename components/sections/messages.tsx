@@ -162,7 +162,7 @@ function MessagesTitle() {
         } as React.CSSProperties
       }
     >
-      <span className="sr-only">Du&rsquo;a and Wishes — for our new beginning</span>
+      <span className="sr-only">Du&rsquo;a (prayer) and Wishes — for our new beginning</span>
       <span
         aria-hidden
         className={`${theSeasons.className} block uppercase leading-[0.9] tracking-[0.04em] min-[400px]:tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.14em]`}
@@ -172,7 +172,7 @@ function MessagesTitle() {
           textShadow: silkTitleShadow,
         }}
       >
-        <SpecialCharFont text={"Du\u2019a & Wishes"} ampColor={BUTTER} />
+        <SpecialCharFont text={"Du\u2019a (prayer) & Wishes"} ampColor={BUTTER} />
       </span>
       <span
         aria-hidden
@@ -237,7 +237,7 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
 
       toast({
         title: "Jazakum Allahu khayran",
-        description: "Your du’a has been sent.",
+        description: "Your du’a (prayer) has been sent.",
         duration: 3000,
       })
 
@@ -307,10 +307,10 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
               className={`${theSeasons.className} ${sectionType.subheader} mb-1.5 font-semibold tracking-[0.08em] uppercase`}
               style={{ color: NAVY }}
             >
-              <SpecialCharFont text={"Send Your Du\u2019a"} />
+              <SpecialCharFont text={"Send Your Du\u2019a (prayer)"} />
             </h3>
             <p className={`font-goudy-italic ${sectionType.text}`} style={{ color: BODY }}>
-              Leave a du&rsquo;a or kind words for {coupleDisplayName} to read and keep.
+              Leave a du&rsquo;a (prayer) or kind words for {coupleDisplayName} to read and keep.
             </p>
           </div>
 
@@ -351,7 +351,7 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                   className={`${cinzel.className} ${sectionType.label} font-semibold uppercase tracking-[0.16em]`}
                   style={{ color: ACCENT }}
                 >
-                  Your Du&rsquo;a or Message
+                  Your Du&rsquo;a (prayer) or Message
                 </label>
                 {messageValue && (
                   <span
@@ -374,7 +374,7 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                 onFocus={() => setFocusedField("message")}
                 onBlur={() => setFocusedField(null)}
                 // The traditional du'a for newlyweds as an example
-                placeholder={`Write your du’a or wishes for ${coupleDisplayName}… e.g. “Barakallahu lakuma wa baraka ‘alaykuma wa jama‘a baynakuma fi khayr”`}
+                placeholder={`Write your du’a (prayer) or wishes for ${coupleDisplayName}… e.g. “Barakallahu lakuma wa baraka ‘alaykuma wa jama‘a baynakuma fi khayr”`}
                 className={`message-form-textarea ${inputClass("message")} min-h-[90px] resize-none placeholder:leading-relaxed sm:min-h-[110px] md:min-h-[130px]`}
                 style={{
                   color: NAVY,
@@ -399,7 +399,7 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                   Sending...
                 </span>
               ) : (
-                "Send Du’a"
+                "Send Du’a (prayer)"
               )}
             </Button>
           </form>
@@ -483,7 +483,7 @@ export function Messages() {
             className={`font-goudy-italic mx-auto mt-4 max-w-2xl px-2 sm:mt-5 md:mt-6 ${sectionType.textRelaxed}`}
             style={{ color: IVORY, textShadow: silkBodyShadow }}
           >
-            Share a heartfelt du&rsquo;a, wish, or kind word for {coupleDisplayName}. Every prayer made for us is a gift we will treasure, in shaa Allah.
+            Share a heartfelt du&rsquo;a (prayer), wish, or kind word for {coupleDisplayName}. Every prayer made for us is a gift we will treasure, in shaa Allah.
           </p>
           <div className="mt-4 flex items-center justify-center sm:mt-5">
             <span className="h-px w-16 sm:w-24 md:w-32" style={lightLineStyle} />
@@ -504,7 +504,7 @@ export function Messages() {
               className={`${theSeasons.className} mb-1.5 font-semibold tracking-[0.08em] uppercase sm:mb-2 ${sectionType.subheader}`}
               style={{ color: IVORY, textShadow: silkTitleShadow }}
             >
-              <SpecialCharFont text={"Du\u2019a from Loved Ones"} />
+              <SpecialCharFont text={"Du\u2019a (prayer) from Loved Ones"} />
             </h3>
             <p
               className={`font-goudy-italic ${sectionType.text}`}
