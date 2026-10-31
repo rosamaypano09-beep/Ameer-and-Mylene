@@ -101,6 +101,10 @@ const ROMAN_NUMERAL = /^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV)$/i
 // Roman numerals, digits and punctuation switch to a different font (The Seasons has no clean glyphs for them)
 const SPECIAL_GLYPH = /^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|&|\+|\d+|[.’'`´,()\/:;!?"“”-]|—|–)$/i
 const SPECIAL_SPLIT = /(\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV)\b|&|\+|\d+|[.’'`´,()\/:;!?"“”-]|—|–)/g
+// Professional suffixes / credentials that must stay fully capitalized (e.g. "Dela Cruz, RMT")
+const UPPERCASE_ACRONYMS = /^(RC|RMT)$/i
+// Credentials with fixed mixed casing (e.g. "Dela Cruz, RCrim")
+const FIXED_CASE_WORDS: Record<string, string> = { rcrim: "RCrim" }
 const DASH_GLYPH = /^[-—–]$/
 const PLUS_GLYPH = /^\+$/
 
@@ -118,7 +122,9 @@ function toDisplayName(value: string) {
           const match = part.match(/^([^\p{L}\d]*)(.*?)([^\p{L}\d]*)$/u)
           const [, lead = "", core = part, trail = ""] = match ?? []
           if (!core) return part
-          if (ROMAN_NUMERAL.test(core)) return lead + core.toUpperCase() + trail
+          const fixedCase = FIXED_CASE_WORDS[core.toLowerCase()]
+          if (fixedCase) return lead + fixedCase + trail
+          if (ROMAN_NUMERAL.test(core) || UPPERCASE_ACRONYMS.test(core)) return lead + core.toUpperCase() + trail
           return lead + core.charAt(0).toUpperCase() + core.slice(1).toLowerCase() + trail
         })
         .join("-"),
