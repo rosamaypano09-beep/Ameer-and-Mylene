@@ -114,8 +114,12 @@ function toDisplayName(value: string) {
         .split("-")
         .map((part) => {
           if (!part) return part
-          if (ROMAN_NUMERAL.test(part)) return part.toUpperCase()
-          return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+          // Keep leading/trailing punctuation (e.g. "(LATE)") and capitalize the word inside it
+          const match = part.match(/^([^\p{L}\d]*)(.*?)([^\p{L}\d]*)$/u)
+          const [, lead = "", core = part, trail = ""] = match ?? []
+          if (!core) return part
+          if (ROMAN_NUMERAL.test(core)) return lead + core.toUpperCase() + trail
+          return lead + core.charAt(0).toUpperCase() + core.slice(1).toLowerCase() + trail
         })
         .join("-"),
     )
