@@ -365,9 +365,11 @@ const ATTIRE = {
 // ── Website address (used for QR codes, link previews, table finder) ────────
 // NEXT_PUBLIC_SITE_URL (env) overrides this when set.
 const SITE_URL = "https://ameer-and-mylene.weddinginvitationrsvp.com/"
-// Image shown when the link is shared (Facebook, Messenger, Viber, X, …) — 1200×630 JPG in /public
-// URL-encoded (spaces → %20) because it goes straight into the og:image URL
-const LINK_PREVIEW_IMAGE = "/Details/LinkPreview.png"
+// Image shown when the link is shared (Facebook, Messenger, Viber, X, …)
+// Must be an exactly 1200×630 JPG, under ~300 KB, with no spaces in the path.
+// When you change the image, give it a NEW filename (e.g. link-preview-v2.jpg) so
+// Facebook/Messenger don't keep showing their cached copy of the old one.
+const LINK_PREVIEW_IMAGE = "/link-preview.jpg"
 
 // Site address with env override applied and no trailing slash — no need to edit
 export const canonicalSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL).replace(/\/$/, "")
