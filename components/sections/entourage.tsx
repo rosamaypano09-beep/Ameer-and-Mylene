@@ -1202,29 +1202,15 @@ export function Entourage({ sponsorsList }: { sponsorsList?: SponsorsList } = {}
                             <GroupDivider />
                           </div>
                         )}
-                        {/* Siblings of the Groom: two columns of names */}
+                        {/* Siblings of the Groom: one centred column */}
                         {familyGroom.length > 0 && (
                           <TwoColumnLayout singleTitle="Family of the Groom" centerContent={true}>
                             {familyGroom.map((member, idx) => (
                               <div
                                 key={`family-groom-${idx}-${member.name}`}
-                                className={`min-w-0 overflow-hidden px-0.5 sm:px-1 md:px-1.5 ${
-                                  // A lone last name sits centred under the two columns
-                                  familyGroom.length % 2 === 1 && idx === familyGroom.length - 1
-                                    ? "col-span-2 flex justify-center"
-                                    : ""
-                                }`}
+                                className="col-span-2 flex justify-center min-w-0 overflow-hidden px-0.5 sm:px-1"
                               >
-                                <NameItem
-                                  member={member}
-                                  align={
-                                    familyGroom.length % 2 === 1 && idx === familyGroom.length - 1
-                                      ? "center"
-                                      : idx % 2 === 0
-                                        ? "right"
-                                        : "left"
-                                  }
-                                />
+                                <NameItem member={member} align="center" />
                               </div>
                             ))}
                           </TwoColumnLayout>

@@ -185,7 +185,7 @@ const DRESS_CODE_PALETTE: AttireColor[] = [
 //   Each side (ladies / gentlemen) has a label, an optional intro (details, with an
 //   optional highlighted phrase) and an optional list of roles with what they wear.
 const ATTIRE = {
-  show: ["guests"] as AttireGroupId[],
+  show: ["guests", "sponsors"] as AttireGroupId[],
 
   entourage: {
     title: "Entourage",
@@ -277,61 +277,41 @@ const ATTIRE = {
   },
 
   sponsors: {
-    title: "Principal & Secondary Sponsors",
-    image: "/Details/attire/sponsors.png",
-    dressCode: "Formal Attire",
+    title: "Principal Sponsors",
+    image: "/Details/sponsorsAttire.png",
+    dressCode: "Beige Palette",
     palette: [
-      { name: "Champagne", hex: "#EBD0BA" },
-      { name: "Beige", hex: "#D6AE8A" },
-      { name: "Yellow", hex: "#F0C04F" },
-      { name: "Blue", hex: "#7E9ED3" },
-      { name: "Light Blue", hex: "#A9C6EC" },
-      { name: "Off-White", hex: "#EDE3D3" },
-      { name: "Black", hex: "#1E1E1E" },
+      { name: "Ivory", hex: "#F3EADB" },
+      { name: "Cream", hex: "#E9DCC4" },
+      { name: "Beige", hex: "#D8C3A0" },
+      { name: "Sand", hex: "#C2A47C" },
     ] as AttireColor[],
+    // Shown in this order, with the palette underneath (replaces ladies / gentlemen on this card)
+    lines: [
+      {
+        label: "Filipiniana",
+        text: "Ninang: beige Filipiniana gown. Ninong: beige Barong Tagalog with beige trousers.",
+        highlight: "beige",
+      },
+      {
+        label: "Muslim Attire",
+        text: "Ladies: beige abaya or modest gown with hijab. Gentlemen: beige jubbah or kurta with kufi.",
+        highlight: "beige",
+      },
+    ],
     ladies: {
       label: "Ladies",
       details: "",
       highlight: "",
       colors: [] as AttireColor[],
-      roles: [
-        {
-          role: "Ninang",
-          attire: "Champagne or Beige Long Gown",
-          colors: [{ name: "Champagne", hex: "#EBD0BA" }, { name: "Beige", hex: "#D6AE8A" }],
-        },
-        {
-          role: "Secondary Sponsors (Female)",
-          attire: "Light Blue Long Dress",
-          colors: [{ name: "Light Blue", hex: "#A9C6EC" }],
-        },
-      ] as AttireRole[],
+      roles: [] as AttireRole[],
     },
     gentlemen: {
       label: "Gentlemen",
       details: "",
       highlight: "",
       colors: [] as AttireColor[],
-      roles: [
-        {
-          role: "Ninong",
-          attire: "Off-White Barong Tagalog with Black Trousers and Yellow Corsage",
-          colors: [
-            { name: "Off-White", hex: "#EDE3D3" },
-            { name: "Black", hex: "#1E1E1E" },
-            { name: "Yellow", hex: "#F0C04F" },
-          ],
-        },
-        {
-          role: "Secondary Sponsors (Male)",
-          attire: "Off-White Barong Tagalog with Black Trousers and Blue Corsage",
-          colors: [
-            { name: "Off-White", hex: "#EDE3D3" },
-            { name: "Black", hex: "#1E1E1E" },
-            { name: "Blue", hex: "#7E9ED3" },
-          ],
-        },
-      ] as AttireRole[],
+      roles: [] as AttireRole[],
     },
   },
 

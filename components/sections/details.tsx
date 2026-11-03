@@ -821,8 +821,8 @@ export function Details() {
   const reminderImages = !SHOW_REMINDERS || isPlain ? [] : reminders.images
   const paletteHexes = toPaletteColors(attire.palette).map((c) => c.hex)
   // Guard against null entries (e.g. a stray comma in ATTIRE.show).
-  // Principal & Secondary Sponsors and Entourage cards are never shown here.
-  const HIDDEN_ATTIRE_GROUPS = ["sponsors", "entourage"]
+  // Entourage card is never shown here.
+  const HIDDEN_ATTIRE_GROUPS = ["entourage"]
   const attireGroups = attire.groups.filter((g) => g && !HIDDEN_ATTIRE_GROUPS.includes(g.id))
 
   useEffect(() => {
